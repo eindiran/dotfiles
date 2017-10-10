@@ -112,6 +112,21 @@ mcd () {
     pwd
 }
 
+volup () {
+    # Increase volume by 5%
+    amixer -D pulse sset Master 5%+ 
+}
+
+voldown () {
+    # Decrease volume by 5%
+    amixer -D pulse sset Master 5%- 
+}
+
+mute () {
+    # Mute/unmute master volume
+    amixer -D pulse set Master 1+ toggle
+}
+
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
