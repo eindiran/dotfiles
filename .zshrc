@@ -114,12 +114,30 @@ mcd () {
 
 volup () {
     # Increase volume by 5%
-    amixer -D pulse sset Master 5%+ 
+    # if no args given, otherwise do it n times
+    if [ $# -gt 0 ] ; then
+        if [ "$1" -eq 0 ] ; then
+            return
+        fi
+        amixer -D pulse sset Master 5%+ 
+        volup $(($1-1))
+    else
+        amixer -D pulse sset Master 5%+ 
+    fi  
 }
 
 voldown () {
     # Decrease volume by 5%
-    amixer -D pulse sset Master 5%- 
+    # if no args given, otherwise do it n times
+    if [ $# -gt 0 ] ; then
+        if [ "$1" -eq 0 ] ; then
+            return
+        fi
+        amixer -D pulse sset Master 5%- 
+        voldown $(($1-1))
+    else
+        amixer -D pulse sset Master 5%- 
+    fi  
 }
 
 mute () {
