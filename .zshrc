@@ -9,7 +9,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       REVISION:    v1.0.0
+#       REVISION:    v1.0.1
 #
 # ===============================================================================
 
@@ -83,8 +83,7 @@ alias countfiles='ls -lf | wc -l'
 eval $(thefuck --alias redo) # Use idiomatic way of setting alias
 # Don't have both of these lines turned on
 
-## functions
-## I did not write this extract function, but it is incredibly useful
+## General Functions
 extract () {
    if [ -f $1 ] ; then
        case $1 in
@@ -107,6 +106,7 @@ extract () {
  }
 
 mcd () {
+    # Make a directory and cd to it
     mkdir -p $1
     cd $1
     pwd
@@ -145,12 +145,14 @@ mute () {
     amixer -D pulse set Master 1+ toggle
 }
 
+## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=/usr/local/lib:/usr/local/include
 export PERL5LIB=./lib:/home/sconrad/src/atv/2005/data/perl/install/lib/perl5:/home/sconrad/src/atv/2005/data/perl/install/lib64/perl5:$P4HOME/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/perl
 export NAME='eindiran'
+# Git env variables: change these depending on where you are making commits from
 export GIT_AUTHOR_NAME='eindiran'
 export GIT_AUTHOR_EMAIL='eindiran@promptu.com'
 export GIT_COMMITTER_NAME='eindiran'
