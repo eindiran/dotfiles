@@ -1,0 +1,22 @@
+"---------------------------------------------------------------------
+" FILE: .vimrc (Tiny edition)
+" AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
+" DESCRIPTION: Config file for Vim, but without any fanciness
+" CREATED: Sat 08 Jul 2017
+" LAST MODIFIED: Sat 08 Jul 2017
+" VERSION: 1.0.0
+"---------------------------------------------------------------------
+set number
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
+set copyindent
+set ignorecase
+set smartcase
+set nocompatible
+set hlsearch
+" Show tabs not as whitespace
+set list
+set listchars=tab:▸·
