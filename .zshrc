@@ -78,6 +78,9 @@ export P4CLIENT='eindiran'
 
 alias countfiles='ls -lf | wc -l'
 
+# Run homeassistant
+alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
+
 # Std way of setting an alias w/ thefuck
 # alias redo='thefuck'
 eval $(thefuck --alias redo) # Use idiomatic way of setting alias
