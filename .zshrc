@@ -28,7 +28,11 @@ zstyle ':completion:*' rehash true
 setopt COMPLETE_ALIASES
 
 ## history
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
 setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
 ## for sharing history between zsh processes
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
@@ -148,6 +152,12 @@ mute () {
     amixer -D pulse set Master 1+ toggle
 }
 
+histsearch () {
+    # Search through the history for a given word
+    # fc -lim "$@" 1 # not as good
+    history 0 | grep "$1"
+}
+
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
@@ -165,6 +175,7 @@ export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
 export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 export ATV=$P4HOME/atv/2005/
+export SHELL=/bin/zsh
 
 # Enable help command
 autoload -Uz run-help
