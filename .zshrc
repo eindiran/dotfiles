@@ -9,7 +9,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       REVISION:    v1.0.2
+#       REVISION:    v1.0.3
 #
 # ===============================================================================
 
@@ -51,6 +51,8 @@ setopt NO_BEEP
 ## automatically decide when to page a list of completions
 LISTMAX=0
 
+## set coloring prefs
+## used by the zsh-syntax-highlighting plugin
 autoload -U colors
 colors
 export CLICOLOR=1
@@ -65,9 +67,10 @@ alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
 
-alias ll='/bin/ls --color -lFhtr'
+## Convenient 'ls' aliases
 alias ls='/bin/ls --color -AF'
-alias hh='/bin/ls --color -AFlhtr'
+alias ll='/bin/ls --color -lFhtr'
+alias lh='/bin/ls --color -AFlhtr' # don't include implied '.' and '..'
 
 alias ssh='ssh -X -Y'
 
@@ -80,8 +83,6 @@ alias p4-add-cd='find . -type f -print | p4 -x add'
 alias p4-edit-cd='find . -type f -print | p4 -x edit'
 export P4CLIENT='eindiran'
 
-alias countfiles='ls -lf | wc -l'
-
 # Run homeassistant
 alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
 
@@ -91,20 +92,21 @@ eval $(thefuck --alias redo) # Use idiomatic way of setting alias
 # Don't have both of these lines turned on
 
 ## General Functions
+## functions
 extract () {
-   if [ -f $1 ] ; then
-       case $1 in
-           *.tar.bz2)   tar xvjf $1    ;;
-           *.tar.gz)    tar xvzf $1    ;;
-           *.bz2)       bunzip2 $1     ;;
-           *.rar)       unrar x $1     ;;
-           *.gz)        gunzip $1      ;;
-           *.tar)       tar xvf $1     ;;
-           *.tbz2)      tar xvjf $1    ;;
-           *.tgz)       tar xvzf $1    ;;
-           *.zip)       unzip $1       ;;
-           *.Z)         uncompress $1  ;;
-           *.7z)        7z x $1        ;;
+   if [ -f "$1" ] ; then
+       case "$1" in
+           *.tar.bz2)   tar xvjf "$1"    ;;
+           *.tar.gz)    tar xvzf "$1"    ;;
+           *.bz2)       bunzip2 "$1"     ;;
+           *.rar)       unrar x "$1"     ;;
+           *.gz)        gunzip "$1"      ;;
+           *.tar)       tar xvf "$1"     ;;
+           *.tbz2)      tar xvjf "$1"    ;;
+           *.tgz)       tar xvzf "$1"    ;;
+           *.zip)       unzip "$1"       ;;
+           *.Z)         uncompress "$1"  ;;
+           *.7z)        7z x "$1"        ;;
            *)           echo "don't know how to extract '$1'..." ;;
        esac
    else
@@ -113,10 +115,29 @@ extract () {
  }
 
 mcd () {
-    # Make a directory and cd to it
-    mkdir -p $1
-    cd $1
+    mkdir -p "$1"
+    cd "$1"
     pwd
+}
+
+countfiles () {
+    # count the non-hidden files in directory
+    if [ $# -gt 0 ] ; then 
+        total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
+        calc "$total_count"-1 # reduce by one to get count w/o '.'
+    else
+        total_count=$(find . -not -path '*/\.*' -print | wc -l)
+        calc "$total_count"-1
+    fi
+}
+
+lm () {
+    # more advanced version on ls -l | more
+    if [ $# -gt 0 ] ; then
+        lh "$1" | more
+    else
+        lh | more
+    fi
 }
 
 volup () {
@@ -156,6 +177,11 @@ histsearch () {
     # Search through the history for a given word
     # fc -lim "$@" 1 # not as good
     history 0 | grep "$1"
+}
+
+set_title () {
+    # Use this function to set the terminal title
+    printf "\e]2;%s\a" "$*";
 }
 
 ## Exports
