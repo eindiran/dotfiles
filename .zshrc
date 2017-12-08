@@ -91,8 +91,7 @@ alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
 eval $(thefuck --alias redo) # Use idiomatic way of setting alias
 # Don't have both of these lines turned on
 
-## General Functions
-## functions
+## Functions
 extract () {
    if [ -f "$1" ] ; then
        case "$1" in
@@ -115,6 +114,7 @@ extract () {
  }
 
 mcd () {
+    # make a new directory, then cd to it
     mkdir -p "$1"
     cd "$1"
     pwd
@@ -132,11 +132,20 @@ countfiles () {
 }
 
 lm () {
-    # more advanced version on ls -l | more
+    # more advanced version of "ls -l | more"
     if [ $# -gt 0 ] ; then
-        lh "$1" | more
+        lh "$1" | less
     else
-        lh | more
+        lh | less
+    fi
+}
+
+tm () {
+    # more advanced version of "tree | more"
+    if [ $# -gt 0 ] ; then
+        tree "$1" | less
+    else
+        tree | less
     fi
 }
 
