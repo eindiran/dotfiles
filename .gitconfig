@@ -1,0 +1,20 @@
+[user]
+	name = Elliott Indiran
+	email = eindiran@uchicago.edu
+	username = eindiran
+[core]
+	editor = /usr/bin/vim
+	excludesfile = ~/.gitignore
+[web]
+	browser = /usr/bin/vivaldi
+[push]
+	default = simple
+[color]
+	ui = auto
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[github]
+	user = eindiran
+	token = TOKEN
