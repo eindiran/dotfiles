@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 08 Sep 2017
-" VERSION: 1.0.3
+" LAST MODIFIED: Thu 15 Feb 2018
+" VERSION: 1.0.4
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -32,6 +32,7 @@ Plugin 'godlygeek/tabular' " Dependency for MD syntax
 Plugin 'plasticboy/vim-markdown' " MD syntax
 Plugin 'sjurgemeyer/vimport' " Gradle/Groovy imports
 Plugin 'klen/python-mode' " python-mode
+Plugin 'baabelfish/nvim-nim' " Support for nim syntax
 call vundle#end()
 "---------------------------------------------------------------------
 filetype plugin indent on
@@ -173,6 +174,23 @@ function! s:subst(start, end, pat, rep)
     endif
     let lineno = lineno + 1
     endwhile
+endfunction
+"---------------------------------------------------------------------
+" Function for counting from start of a visual block
+"---------------------------------------------------------------------
+function Vline()
+    return line(".")-line("'<")+1
+endfunction
+"---------------------------------------------------------------------
+" Toggle between relativenumber and norelativenumber
+"---------------------------------------------------------------------
+function! ToggleNumber()
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+        set relativenumber
+    endif
 endfunction
 "---------------------------------------------------------------------
 " pymode settings
