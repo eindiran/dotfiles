@@ -193,6 +193,51 @@ set_title () {
     printf "\e]2;%s\a" "$*";
 }
 
+rgp() {
+    # Page the output of rg through less
+    rg -p "$@" | less -RFX
+}
+
+which_shell () {
+    # Find which shell is running
+    which $(ps -p $(echo "$$") | tail -n 1 | awk {'print $NF'})
+}
+
+broken_links () {
+    # Find broken symbolic links in the current directory
+    find . -type l -xtype l -exec ls -l {} \;
+}
+
+max_win () {
+    # Maximize the current window, or if an argument is given
+    # search for a window matching that and maximize it
+    if [ $# -gt 0 ] ; then
+        WINDOW_NAME="$1"
+        WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
+        wmctrl -ir "$WINDOW_ID" -b toggle,maximized_vert,maximized_horz
+    else
+        wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz
+    fi  
+}
+
+close_win () {
+    # close the specified window
+    # Unlike max_win the default is NOT to close the current window
+    WINDOW_NAME="$1"
+    WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
+    wmctrl -ic "$WINDOW_ID"
+}
+
+set_caps () {
+    # Set the behavior of the caps-lock key
+    case "$1" in
+        'shift')    setxkbmap -option caps:'shift'  ;;
+        off)    setxkbmap -option caps:none ;;
+        on) setxkbmap -option caps:capslock ;;
+        *)  printf "Unrecognized argument. Cannot set caps key to \"%s\"\n" "$1"  ;;
+    esac
+}
+
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
@@ -208,7 +253,7 @@ export GIT_COMMITTER_EMAIL='eindiran@promptu.com'
 export USERNAME='Elliott Indiran <eindiran@promptu.com>'
 export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
-export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/eindiran/p4/atv/2005/data/perl:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin
 export ATV=$P4HOME/atv/2005/
 export SHELL=/bin/zsh
 
