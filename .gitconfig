@@ -6,7 +6,7 @@
 	editor = /usr/bin/vim
 	excludesfile = ~/.gitignore
 [web]
-	browser = /usr/bin/vivaldi
+	browser = /usr/bin/firefox
 [push]
 	default = simple
 [color]
