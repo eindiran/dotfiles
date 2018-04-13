@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Thu 15 Feb 2018
-" VERSION: 1.0.4
+" LAST MODIFIED: Fri 13 Apr 2018
+" VERSION: 1.0.6
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -73,13 +73,14 @@ nmap ,po :!p4 opened <C-R>=expand("%")<CR>
 " `p4 diff`
 nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 "---------------------------------------------------------------------
-" Colors <background, syntax colors>
+" Get Tagbar to be toggleable
+nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
+" Colors <background, syntax colors>
 set background=dark " options: <light, dark> 
 colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 "---------------------------------------------------------------------
 " Misc 
-"---------------------------------------------------------------------
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list = [{'path': '~/.wiki/'}]
@@ -92,12 +93,10 @@ set shiftwidth=4
 set shiftround
 "---------------------------------------------------------------------
 " Indenting behavior
-"---------------------------------------------------------------------
 set autoindent
 set copyindent
 "---------------------------------------------------------------------
 " UI Layout 
-"---------------------------------------------------------------------
 set ruler
 set wrap                " Do line wrapping
 set number              " show line numbers
