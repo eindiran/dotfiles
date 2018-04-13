@@ -9,7 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       REVISION:    v1.0.4
+#       MODIFIED:    Fri 13 Apr 2018
+#       REVISION:    v1.0.5
 #
 # ===============================================================================
 
@@ -77,8 +78,6 @@ alias ssh='ssh -X -Y'
 alias rgrep='grep -r'
 alias igrep='grep -i'
 
-alias df='pydf'
-
 alias p4-add-cd='find . -type f -print | p4 -x add'
 alias p4-edit-cd='find . -type f -print | p4 -x edit'
 export P4CLIENT='eindiran'
@@ -86,10 +85,8 @@ export P4CLIENT='eindiran'
 # Run homeassistant
 alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
 
-# Std way of setting an alias w/ thefuck
-# alias redo='thefuck'
-eval $(thefuck --alias redo) # Use idiomatic way of setting alias
-# Don't have both of these lines turned on
+# Set thefuck alias
+eval $(thefuck --alias redo)
 
 ## Functions
 extract () {
@@ -208,6 +205,15 @@ broken_links () {
     find . -type l -xtype l -exec ls -l {} \;
 }
 
+makefile_deps () {
+    if [ $# -gt 0 ] ; then
+        TARGET_NAME="$1"
+        make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
+    else
+        make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
+    fi  
+}
+
 max_win () {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
@@ -236,6 +242,44 @@ set_caps () {
         on) setxkbmap -option caps:capslock ;;
         *)  printf "Unrecognized argument. Cannot set caps key to \"%s\"\n" "$1"  ;;
     esac
+}
+
+# Export used by play_beep()
+export BEEP_NOISE=/usr/share/sounds/KDE-Im-Contact-In.ogg
+
+play_beep() {
+    # Plays a beep noise through headphones
+    # Use as you would 'beep'
+    play $BEEP_NOISE > /dev/null 2>&1
+}
+
+pomodoro() {
+    # Do a pomodoro
+    if [ $# -gt 0 ] ; then
+        ARGUMENT="$1"
+        case "$ARGUMENT" in
+            long|l|--long|-l)
+                echo "Taking a long break."
+                sleep 900 # 15 minutes
+                play_beep
+                zenity --info --text="Break over" > /dev/null 2>&1
+                ;;
+            'break'|b|--'break'|-b|short|s|--short|-s)
+                echo "Taking a short break."
+                sleep 300 # 5 minutes
+                play_beep
+                zenity --info --text="Break over" > /dev/null 2>&1
+                ;;
+            *)
+                echo "Unknown option. Try again."
+                ;;
+        esac
+    else
+        echo "Begin a normal Pomodoro."
+        sleep 1500 # 25 minutes; standard Pomodoro length
+        play_beep
+        zenity --warning --text="25 minutes passed" > /dev/null 2>&1
+    fi
 }
 
 ## Exports
@@ -287,6 +331,5 @@ setopt PUSHD_IGNORE_DUPS
 ## This reverts the +/- operators.
 setopt PUSHD_MINUS
 
-# If I read the docs correctly, this following line MUST BE last for fish-like
-# syntax highlighting to work.
+# This following line MUST BE last for syntax highlighting to work.
 source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
