@@ -85,6 +85,11 @@ export P4CLIENT='eindiran'
 # Run homeassistant
 alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
 
+# Start the Dropbox daemon
+alias dropbox-start='start-stop-daemon -b -o -c $(whoami) -S -u $(whoami) -x "$HOME/.dropbox-dist/dropboxd"'
+# Stop the Dropbox daemon
+alias dropbox-stop='start-stop-daemon -o -c $(whoami) -K -u $(whoami) -x $(/bin/ls -1 $HOME/.dropbox-dist/dropbox-lnx.*/dropbox)'
+
 # Set thefuck alias
 eval $(thefuck --alias redo)
 
