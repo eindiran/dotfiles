@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Fri 13 Apr 2018
-#       REVISION:    v1.0.5
+#       MODIFIED:    Thu 03 May 2018
+#       REVISION:    v1.0.6
 #
 # ===============================================================================
 
@@ -287,6 +287,12 @@ pomodoro() {
     fi
 }
 
+dow() {
+    # Prints the day of the week
+    Days=("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
+    printf "%s\n" "${Days[$(date +%u)]}"
+}
+
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
@@ -305,6 +311,7 @@ export EDITOR=/usr/bin/vim
 export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/eindiran/p4/atv/2005/data/perl:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin
 export ATV=$P4HOME/atv/2005/
 export SHELL=/bin/zsh
+export DROPBOX=$HOME/Dropbox
 
 # Enable help command
 autoload -Uz run-help
