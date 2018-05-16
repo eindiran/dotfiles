@@ -3,14 +3,16 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 13 Apr 2018
-" VERSION: 1.0.6
+" LAST MODIFIED: Tue 15 May 2018
+" VERSION: 1.0.7
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
 " which allows it to use plugins through Vundle
+set encoding=utf-8
+" Work with UTF-8
 "---------------------------------------------------------------------
-filetype off 
+filetype off
 "---------------------------------------------------------------------
 " Preparing to launch Vim Package manager (Vundle)
 " Setting the Runtime Path
@@ -18,7 +20,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 "---------------------------------------------------------------------
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' " Vundle itself
-Plugin 'tpope/vim-fugitive' " Git plugin
 Plugin 'w0rp/ale' " Multi lang linting manager
 Plugin 'WolfgangMehner/awk-support' " awk syntax and inline code running
 Plugin 'vim-scripts/bash-support.vim' " Run bash commands inline
@@ -33,7 +34,12 @@ Plugin 'plasticboy/vim-markdown' " MD syntax
 Plugin 'sjurgemeyer/vimport' " Gradle/Groovy imports
 Plugin 'klen/python-mode' " python-mode
 Plugin 'baabelfish/nvim-nim' " Support for nim syntax
+Plugin 'tmhedberg/SimpylFold' " Do folding
+Plugin 'nvie/vim-flake8'
+Plugin 'scrooloose/nerdtree' " File browsing
+Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
 call vundle#end()
+Bundle 'Valloric/YouCompleteMe'
 "---------------------------------------------------------------------
 filetype plugin indent on
 "---------------------------------------------------------------------
@@ -46,6 +52,7 @@ let g:JavaImpPaths = "/home/eindiran/Workspace"
 "---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 " `syntax enable` is prefered to `syntax on`
 if !exists("g:syntax_on")
     syntax enable
@@ -74,13 +81,16 @@ nmap ,po :!p4 opened <C-R>=expand("%")<CR>
 nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 "---------------------------------------------------------------------
 " Get Tagbar to be toggleable
+"---------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
+"---------------------------------------------------------------------
 set background=dark " options: <light, dark> 
 colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 "---------------------------------------------------------------------
 " Misc 
+"---------------------------------------------------------------------
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list = [{'path': '~/.wiki/'}]
@@ -93,10 +103,12 @@ set shiftwidth=4
 set shiftround
 "---------------------------------------------------------------------
 " Indenting behavior
+"---------------------------------------------------------------------
 set autoindent
 set copyindent
 "---------------------------------------------------------------------
 " UI Layout 
+"---------------------------------------------------------------------
 set ruler
 set wrap                " Do line wrapping
 set number              " show line numbers
@@ -194,24 +206,43 @@ endfunction
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
-let g:pymode_rope = 0
-let g:pymode_rope_completion = 0
+let g:pymode_rope = 0 " Don't use Rope
+let g:pymode_rope_completion = 0 " Don't use autocomplete via Rope
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_completion_on_dot = 0
-let g:pymode_folding = 1
+let g:pymode_folding = 0 " Do function folding, but not in Pymode
 let g:pymode_quickfix_maxheight = 4 " Max height of cwindow
-let g:pymode_motion = 1
-let g:pymode_lint = 1 " Use linting
-let g:pymode_lint_on_write = 1 " Lint on modified saves
+let g:pymode_motion = 1 
+let g:pymode_lint = 1 " Use linting = 1; don't = 0
 let g:pymode_python = 'python3'
-let g:pymode_options_max_line_length = 100
+let g:pymode_options_max_line_length = 100 
 let g:pymode_trim_whitespaces = 1 " remove trailing whitespace on save
-" let g:pymode_lint_checkers = ['pylint'] " only lint w/ pylint
 let g:pymode_options_colorcolumn = 1 " Line indicating max line len
-let g:pymode_lint_cwindow = 1 " When the linter complains open cwindow
 "---------------------------------------------------------------------
-" Map <Ctrl> + <O> to open the pymode quickfix window
-" and <Ctrl> + <G> to close it.
+" SimpylFold
 "---------------------------------------------------------------------
-nmap <C-g><C-o> <Plug>window:quickfix:toggle
+let g:SimpylFold_docstring_preview=1
 "---------------------------------------------------------------------
+" Other
+"---------------------------------------------------------------------
+set splitbelow
+set splitright
+" split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+" Unfold w/ spacebar
+nnoremap <space> za
+" python with virtualenv support
+py3 << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
+EOF
