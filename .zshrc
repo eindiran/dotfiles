@@ -293,6 +293,11 @@ dow() {
     printf "%s\n" "${Days[$(date +%u)]}"
 }
 
+clean_perl() {
+    # Cleans untidy or obfuscated perl code
+    perl -MO=Deparse "$1" | perltidy -ce -i=4 -st 
+}
+
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
