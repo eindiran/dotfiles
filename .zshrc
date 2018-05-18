@@ -298,6 +298,27 @@ clean_perl() {
     perl -MO=Deparse "$1" | perltidy -ce -i=4 -st 
 }
 
+jpg_to_png() {
+    # Converts files in dir/subdirs from jpg to png
+    find . -name "*.jpg" -exec mogrify -format png {} \;
+}
+
+png_to_jpg() {
+    # Converts files in dir/subdirs from png to jpg
+    find . -name "*.png" -exec mogrify -format jpg {} \;
+}
+
+transparent_png_to_jpg() {
+    # Converts transparent background png files to jpg files
+    find . -name "*.png" -exec mogrify -format jpg -background black -flatten {} \;
+}
+
+set_dir_permissions() {
+    # Sets ideal directory permissions
+    find . -type d -exec chmod 755 {} \;
+}
+
+
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
