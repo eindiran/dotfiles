@@ -338,6 +338,11 @@ export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/
 export ATV=$P4HOME/atv/2005/
 export SHELL=/bin/zsh
 export DROPBOX=$HOME/Dropbox
+export SPARK_HOME=/usr/local/share/spark/spark-2.3.0-bin-hadoop2.7/
+export PYSPARK_PYTHON=/usr/bin/python3
+export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
 
 # Enable help command
 autoload -Uz run-help
