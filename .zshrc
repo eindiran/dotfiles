@@ -318,6 +318,48 @@ set_dir_permissions() {
     find . -type d -exec chmod 755 {} \;
 }
 
+hidden() {
+    # Finds hidden files recursively in current directory
+    # Handle no argument case
+    if [ $# -eq 0 ] ; then
+        ls -l -d .[!.]?*
+        return
+    fi
+    DIR_TO_SEARCH="$1"
+    shift
+    # Handle first argument
+    case "$DIR_TO_SEARCH" in
+        -h|--help)
+            echo "Usage: hidden <dir> [-d|-f|-r]"
+            return
+            ;;
+        *)
+            if [ ! -d "$DIR_TO_SEARCH" ] ; then
+                printf "%s is not a directory.\n" "$DIR_TO_SEARCH"
+                return
+            fi
+            ;;
+    esac
+    # Handle optional second argument
+    if [ $# -gt 0 ] ; then
+        ARGUMENT="$1"
+        case "$ARGUMENT" in
+            -d|--dirs)
+                find "$DIR_TO_SEARCH" -type d -iname ".*" -ls
+                ;;
+            -f|--files)
+                find "$DIR_TO_SEARCH" -type f -iname ".*" -ls
+                ;;
+            -r|--recursive)
+                find "$DIR_TO_SEARCH" -name ".*" -ls
+                ;;
+            *)
+                echo "Unknown option: hidden <dir> [-d|-f|-r]"
+                ;;
+        esac
+    fi
+}
+
 
 ## Exports
 export P4HOME=/home/eindiran/p4
