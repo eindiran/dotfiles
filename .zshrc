@@ -360,6 +360,50 @@ hidden() {
     fi
 }
 
+yotld() {
+    # This function is a joke
+    echo "$(($(date +%Y)+1)) is the year of the Linux desktop."
+}
+
+qtop() {
+    # Runs qstat repeatedly, giving a top-like interface to torque jobs
+    watch qstat
+}
+
+qkillall() {
+    # Kill all torque jobs associated with a particular user
+    case "$#" in
+        0)
+            # "qkillall" --> kill all jobs for current user
+            qselect -u $(whoami) -s EHQRTW | xargs --no-run-if-empty qdel -a
+            ;;
+        1)
+            # "qkillall <user>" --> kill all jobs for <user>
+            qselect -u "$1" -s EHQRTW | xargs qdel
+            ;;
+        2)
+            # "qkillall <user> <state(s)>" --> kill jobs in listed states for <user>
+            qselect -u "$1" -s "$2" | xargs qdel
+            ;;
+        *)
+            # If given a weird number of args, print usage
+            echo "Usage: qkillall <username> [<state(s)>]"
+            echo "Examples:\n\tqkillall steve EHR"
+            echo "\tqkillall rms"
+            ;;
+    esac
+}
+
+mongodb_stop() {
+    # stop mongod
+    mongo --eval "db.getSiblingDB('admin').shutdownServer()"
+}
+
+resize_tmux_pane() {
+    # calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
+    ~/.tmux/scripts/resize-tmux-pane.sh "$@"
+}
+
 
 ## Exports
 export P4HOME=/home/eindiran/p4
