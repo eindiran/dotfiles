@@ -10,7 +10,7 @@
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Thu 03 May 2018
-#       REVISION:    v1.0.6
+#       REVISION:    v1.0.7
 #
 # ===============================================================================
 
