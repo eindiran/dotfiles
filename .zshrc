@@ -404,6 +404,19 @@ resize_tmux_pane() {
     ~/.tmux/scripts/resize-tmux-pane.sh "$@"
 }
 
+p4() {
+    # I am tired of accidentally typing 'p4 blame' instead of 'p4 annotate'
+    case $* in
+        blame*)
+            shift 1
+            command p4 annotate "$@"
+            ;;
+        *)
+            command p4 "$@"
+            ;;
+    esac
+}
+
 
 ## Exports
 export P4HOME=/home/eindiran/p4
