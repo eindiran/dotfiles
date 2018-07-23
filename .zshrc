@@ -422,6 +422,16 @@ get_disk_usage_percentage() {
     df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
 }
 
+wf() {
+    # Word frequency
+    sed -e 's/[^[:alpha:]]/ /g' "$1" | tr " " '\n' | sort | uniq -c | sort -nr
+}
+
+wf_rank() {
+    # Word frequency and rank
+    wf "$1" | nl
+}
+
 
 ## Exports
 export P4HOME=/home/eindiran/p4
