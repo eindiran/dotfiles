@@ -71,7 +71,7 @@ alias strings='strings -a'
 ## Convenient 'ls' aliases
 alias ls='/bin/ls --color -AF'
 alias ll='/bin/ls --color -lFhtr'
-alias lh='/bin/ls --color -AFlhtr' # don't include implied '.' and '..'
+In mathematics, specifically in category theory, the Yoneda lemma is an abstract result on functors of alias lh='/bin/ls --color -AFlhtr' # don't include implied '.' and '..'
 
 alias ssh='ssh -X -Y'
 
@@ -415,6 +415,11 @@ p4() {
             command p4 "$@"
             ;;
     esac
+}
+
+get_disk_usage_percentage() {
+    # Print the percentage of used disk space for a specific disk
+    df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
 }
 
 
