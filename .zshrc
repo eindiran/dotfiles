@@ -113,7 +113,15 @@ extract () {
    else
        echo "'$1' is not a valid file!"
    fi
- }
+}
+
+batch_ext_rename() {
+    # Batch rename files from one extension to another
+    for file in *.$1
+    do
+        mv "$file" "${file%.$1}.$2"
+    done
+}
 
 mcd () {
     # make a new directory, then cd to it
