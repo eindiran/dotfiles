@@ -7,10 +7,10 @@
 #                    interactive shell or simply open a new shell once changes
 #                    are made.
 #
-#       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
+#       AUTHOR:      Elliott Indiran <eindiran@uchicago.edu>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Mon 13 Aug 2018
-#       REVISION:    v1.0.7
+#       REVISION:    v1.1.0
 #
 # ===============================================================================
 
@@ -68,34 +68,26 @@ alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
 
-## SSH aliases
-alias gandalf="ssh promptu@gandalf.oz.promptu.com"
-
 alias p4-add-cd='find . -type f -print | p4 -x add'
 alias p4-edit-cd='find . -type f -print | p4 -x edit'
 export P4CLIENT='eindiran'
 
-# SSH into frogger
-alias frogger='ssh eindiran@209.234.175.58'
-
 alias irc='irssi -n eindiran'
 
 ## Exports
-export P4HOME=/home/eindiran/p4
-export P4PORT=perforce.mp.promptu.com:1666
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=/usr/local/lib:/usr/local/include
 export PERL5LIB=./lib:/home/sconrad/src/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl
 export NAME='eindiran'
 export GIT_AUTHOR_NAME='eindiran'
-export GIT_AUTHOR_EMAIL='eindiran@promptu.com'
+export GIT_AUTHOR_EMAIL='eindiran@uchicago.edu'
 export GIT_COMMITTER_NAME='eindiran'
-export GIT_COMMITTER_EMAIL='eindiran@promptu.com'
-export USERNAME='Elliott Indiran <eindiran@promptu.com>'
+export GIT_COMMITTER_EMAIL='eindiran@uchicago.edu'
+export USERNAME='Elliott Indiran <eindiran@uchicago.edu>'
 export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
 export GOPATH=$HOME/go
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/eindiran/p4/atv/2005/data/perl:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin:/usr/racket/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin:/usr/racket/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin
 export ATV=$P4HOME/atv/2005
 export SHELL=/bin/zsh
 export DROPBOX=$HOME/Dropbox
@@ -104,30 +96,6 @@ export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
 export SPARK_HOME=/usr/local/share/spark/spark-2.3.0-bin-hadoop2.7/
 export PYSPARK_PYTHON=/usr/bin/python3
 export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
-
-# Short-cuts to current projects inside p4
-export RECORDING_DIR=$ATV/src/speechware/tools/recording/recording-tool-javafx
-export ARPABO_DIR=$ATV/src/speechware/tools/arpabo_validation
-export PERL_DIR=$ATV/data/perl
-export LEXICON_CORRECTIONS=$ATV/src/speechware/v1.0/bl11/eml/en-US/language-models/base/task
-export POCKETSPHINX=$ATV/src/speechware/v2.0/bl12/pocketsphinx/pocketsphinx-0.8
-export PSCLIENT=$ATV/src/speechware/tools/pocketsphinx_related/ps_client
-export JENKINS_DIR=$ATV/src/speechware/tools/jenkins
-export QA_TESTER_ALL=$P4HOME/release/apps
-# LMTD directories and QA Tester directories for individual projects
-export XPEED=$ATV/data/travel/promptu/xpeed_lists
-export XPEED_QA_TESTER=$QA_TESTER_ALL/travel/sdk/java/
-export DENALI=$ATV/data/travel/promptu/denali_lists
-export DENALI_QA_TESTER=$QA_TESTER_ALL/travel/sdk/java/denali
-export AQUA7=$ATV/data/auto/vw/aqua_lists
-export AQUA7_QA_TESTER=$QA_TESTER_ALL/aqua7
-export WHOSONFIRST=$ATV/data/baseball/promptu/whosonfirst_lists
-export WHOSONFIRST_QA_TESTER=$QA_TESTER_ALL/mlb/
-export GODZILLA=$ATV/data/cable/promptu/raptor_lists
-export ASP=$ATV/data/auto/delphi/asp_lists
-export ASP_QA_TESTER=$QA_TESTER_ALL/asp/sdk/java
-export SHOEHORN=$ATV/data/auto/fca/shoehorn_lists
-export CALZANTE=$ATV/data/auto/fca/calzante_lists
 
 # Enable help command
 autoload -Uz run-help
@@ -162,7 +130,5 @@ setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_MINUS
 
 source ~/.shell_utils.sh
-
-# If I read the docs correctly, this following line MUST BE last for fish-like
-# syntax highlighting to work.
+# Keep this line last
 source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
