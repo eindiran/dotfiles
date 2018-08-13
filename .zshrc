@@ -9,7 +9,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Thu 03 May 2018
+#       MODIFIED:    Mon 13 Aug 2018
 #       REVISION:    v1.0.7
 #
 # ===============================================================================
@@ -68,412 +68,25 @@ alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
 
-## Convenient 'ls' aliases
-alias ls='/bin/ls --color -AF'
-alias ll='/bin/ls --color -lFhtr'
-In mathematics, specifically in category theory, the Yoneda lemma is an abstract result on functors of alias lh='/bin/ls --color -AFlhtr' # don't include implied '.' and '..'
-
-alias ssh='ssh -X -Y'
-
-alias rgrep='grep -r'
-alias igrep='grep -i'
+## SSH aliases
+alias gandalf="ssh promptu@gandalf.oz.promptu.com"
 
 alias p4-add-cd='find . -type f -print | p4 -x add'
 alias p4-edit-cd='find . -type f -print | p4 -x edit'
 export P4CLIENT='eindiran'
 
-# Run homeassistant
-alias hass='sudo -u homeassistant -H /srv/homeassistant/bin/hass'
+# SSH into frogger
+alias frogger='ssh eindiran@209.234.175.58'
 
-# Start the Dropbox daemon
-alias dropbox-start='start-stop-daemon -b -o -c $(whoami) -S -u $(whoami) -x "$HOME/.dropbox-dist/dropboxd"'
-# Stop the Dropbox daemon
-alias dropbox-stop='start-stop-daemon -o -c $(whoami) -K -u $(whoami) -x $(/bin/ls -1 $HOME/.dropbox-dist/dropbox-lnx.*/dropbox)'
-
-# Set thefuck alias
-eval $(thefuck --alias redo)
-
-## Functions
-extract () {
-   if [ -f "$1" ] ; then
-       case "$1" in
-           *.tar.bz2)   tar xvjf "$1"    ;;
-           *.tar.gz)    tar xvzf "$1"    ;;
-           *.bz2)       bunzip2 "$1"     ;;
-           *.rar)       unrar x "$1"     ;;
-           *.gz)        gunzip "$1"      ;;
-           *.tar)       tar xvf "$1"     ;;
-           *.tbz2)      tar xvjf "$1"    ;;
-           *.tgz)       tar xvzf "$1"    ;;
-           *.zip)       unzip "$1"       ;;
-           *.Z)         uncompress "$1"  ;;
-           *.7z)        7z x "$1"        ;;
-           *)           echo "don't know how to extract '$1'..." ;;
-       esac
-   else
-       echo "'$1' is not a valid file!"
-   fi
-}
-
-batch_ext_rename() {
-    # Batch rename files from one extension to another
-    for file in *.$1
-    do
-        mv "$file" "${file%.$1}.$2"
-    done
-}
-
-mcd () {
-    # make a new directory, then cd to it
-    mkdir -p "$1"
-    cd "$1"
-    pwd
-}
-
-countfiles () {
-    # count the non-hidden files in directory
-    if [ $# -gt 0 ] ; then 
-        total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
-        calc "$total_count"-1 # reduce by one to get count w/o '.'
-    else
-        total_count=$(find . -not -path '*/\.*' -print | wc -l)
-        calc "$total_count"-1
-    fi
-}
-
-lm () {
-    # more advanced version of "ls -l | more"
-    if [ $# -gt 0 ] ; then
-        lh "$1" | less
-    else
-        lh | less
-    fi
-}
-
-tm () {
-    # more advanced version of "tree | more"
-    if [ $# -gt 0 ] ; then
-        tree "$1" | less
-    else
-        tree | less
-    fi
-}
-
-volup () {
-    # Increase volume by 5%
-    # if no args given, otherwise do it n times
-    if [ $# -gt 0 ] ; then
-        if [ "$1" -eq 0 ] ; then
-            return
-        fi
-        amixer -D pulse sset Master 5%+ 
-        volup $(($1-1))
-    else
-        amixer -D pulse sset Master 5%+ 
-    fi  
-}
-
-voldown () {
-    # Decrease volume by 5%
-    # if no args given, otherwise do it n times
-    if [ $# -gt 0 ] ; then
-        if [ "$1" -eq 0 ] ; then
-            return
-        fi
-        amixer -D pulse sset Master 5%- 
-        voldown $(($1-1))
-    else
-        amixer -D pulse sset Master 5%- 
-    fi  
-}
-
-mute () {
-    # Mute/unmute master volume
-    amixer -D pulse set Master 1+ toggle
-}
-
-histsearch () {
-    # Search through the history for a given word
-    # fc -lim "$@" 1 # not as good
-    history 0 | grep "$1"
-}
-
-set_title () {
-    # Use this function to set the terminal title
-    printf "\e]2;%s\a" "$*";
-}
-
-rgp() {
-    # Page the output of rg through less
-    rg -p "$@" | less -RFX
-}
-
-which_shell () {
-    # Find which shell is running
-    which $(ps -p $(echo "$$") | tail -n 1 | awk {'print $NF'})
-}
-
-broken_links () {
-    # Find broken symbolic links in the current directory
-    find . -type l -xtype l -exec ls -l {} \;
-}
-
-makefile_deps () {
-    if [ $# -gt 0 ] ; then
-        TARGET_NAME="$1"
-        make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
-    else
-        make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
-    fi  
-}
-
-max_win () {
-    # Maximize the current window, or if an argument is given
-    # search for a window matching that and maximize it
-    if [ $# -gt 0 ] ; then
-        WINDOW_NAME="$1"
-        WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
-        wmctrl -ir "$WINDOW_ID" -b toggle,maximized_vert,maximized_horz
-    else
-        wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz
-    fi  
-}
-
-close_win () {
-    # close the specified window
-    # Unlike max_win the default is NOT to close the current window
-    WINDOW_NAME="$1"
-    WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
-    wmctrl -ic "$WINDOW_ID"
-}
-
-set_caps () {
-    # Set the behavior of the caps-lock key
-    case "$1" in
-        'shift')    setxkbmap -option caps:'shift'  ;;
-        off)    setxkbmap -option caps:none ;;
-        on) setxkbmap -option caps:capslock ;;
-        *)  printf "Unrecognized argument. Cannot set caps key to \"%s\"\n" "$1"  ;;
-    esac
-}
-
-# Export used by play_beep()
-export BEEP_NOISE=/usr/share/sounds/KDE-Im-Contact-In.ogg
-
-play_beep() {
-    # Plays a beep noise through headphones
-    # Use as you would 'beep'
-    play $BEEP_NOISE > /dev/null 2>&1
-}
-
-pomodoro() {
-    # Do a pomodoro
-    if [ $# -gt 0 ] ; then
-        ARGUMENT="$1"
-        case "$ARGUMENT" in
-            long|l|--long|-l)
-                echo "Taking a long break."
-                sleep 900 # 15 minutes
-                play_beep
-                zenity --info --text="Break over" > /dev/null 2>&1
-                ;;
-            'break'|b|--'break'|-b|short|s|--short|-s)
-                echo "Taking a short break."
-                sleep 300 # 5 minutes
-                play_beep
-                zenity --info --text="Break over" > /dev/null 2>&1
-                ;;
-            *)
-                echo "Unknown option. Try again."
-                ;;
-        esac
-    else
-        echo "Begin a normal Pomodoro."
-        sleep 1500 # 25 minutes; standard Pomodoro length
-        play_beep
-        zenity --warning --text="25 minutes passed" > /dev/null 2>&1
-    fi
-}
-
-dow() {
-    # Prints the day of the week
-    Days=("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
-    printf "%s\n" "${Days[$(date +%u)]}"
-}
-
-clean_perl() {
-    # Cleans untidy or obfuscated perl code
-    perl -MO=Deparse "$1" | perltidy -ce -i=4 -st 
-}
-
-jpg_to_png() {
-    # Converts files in dir/subdirs from jpg to png
-    find . -name "*.jpg" -exec mogrify -format png {} \;
-}
-
-png_to_jpg() {
-    # Converts files in dir/subdirs from png to jpg
-    find . -name "*.png" -exec mogrify -format jpg {} \;
-}
-
-transparent_png_to_jpg() {
-    # Converts transparent background png files to jpg files
-    find . -name "*.png" -exec mogrify -format jpg -background black -flatten {} \;
-}
-
-set_dir_permissions() {
-    # Sets ideal directory permissions
-    find . -type d -exec chmod 755 {} \;
-}
-
-hidden() {
-    # Finds hidden files recursively in current directory
-    # Handle no argument case
-    if [ $# -eq 0 ] ; then
-        ls -l -d .[!.]?*
-        return
-    fi
-    DIR_TO_SEARCH="$1"
-    shift
-    # Handle first argument
-    case "$DIR_TO_SEARCH" in
-        -h|--help)
-            echo "Usage: hidden <dir> [-d|-f|-r]"
-            return
-            ;;
-        *)
-            if [ ! -d "$DIR_TO_SEARCH" ] ; then
-                printf "%s is not a directory.\n" "$DIR_TO_SEARCH"
-                return
-            fi
-            ;;
-    esac
-    # Handle optional second argument
-    if [ $# -gt 0 ] ; then
-        ARGUMENT="$1"
-        case "$ARGUMENT" in
-            -d|--dirs)
-                find "$DIR_TO_SEARCH" -type d -iname ".*" -ls
-                ;;
-            -f|--files)
-                find "$DIR_TO_SEARCH" -type f -iname ".*" -ls
-                ;;
-            -r|--recursive)
-                find "$DIR_TO_SEARCH" -name ".*" -ls
-                ;;
-            *)
-                echo "Unknown option: hidden <dir> [-d|-f|-r]"
-                ;;
-        esac
-    fi
-}
-
-yotld() {
-    # This function is a joke
-    echo "$(($(date +%Y)+1)) is the year of the Linux desktop."
-}
-
-qtop() {
-    # Runs qstat repeatedly, giving a top-like interface to torque jobs
-    watch qstat
-}
-
-qkillall() {
-    # Kill all torque jobs associated with a particular user
-    case "$#" in
-        0)
-            # "qkillall" --> kill all jobs for current user
-            qselect -u $(whoami) -s EHQRTW | xargs --no-run-if-empty qdel -a
-            ;;
-        1)
-            # "qkillall <user>" --> kill all jobs for <user>
-            qselect -u "$1" -s EHQRTW | xargs qdel
-            ;;
-        2)
-            # "qkillall <user> <state(s)>" --> kill jobs in listed states for <user>
-            qselect -u "$1" -s "$2" | xargs qdel
-            ;;
-        *)
-            # If given a weird number of args, print usage
-            echo "Usage: qkillall <username> [<state(s)>]"
-            echo "Examples:\n\tqkillall steve EHR"
-            echo "\tqkillall rms"
-            ;;
-    esac
-}
-
-mongodb_stop() {
-    # stop mongod
-    mongo --eval "db.getSiblingDB('admin').shutdownServer()"
-}
-
-resize_tmux_pane() {
-    # calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
-    ~/.tmux/scripts/resize-tmux-pane.sh "$@"
-}
-
-p4() {
-    # I am tired of accidentally typing 'p4 blame' instead of 'p4 annotate'
-    case $* in
-        blame*)
-            shift 1
-            command p4 annotate "$@"
-            ;;
-        *)
-            command p4 "$@"
-            ;;
-    esac
-}
-
-git() {
-    # Add aliases for git log commands
-    case $* in
-       adog)
-           command git log --all --decorate --oneline --graph
-           ;;
-        lp*)
-           shift 2
-           command git log --patch --stat "$@"
-           ;;
-        *)
-           command git "$@"
-           ;;
-    esac
-}
-
-get_disk_usage_percentage() {
-    # Print the percentage of used disk space for a specific disk
-    df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
-}
-
-wf() {
-    # Word frequency
-    sed -e 's/[^[:alpha:]]/ /g' "$1" | tr " " '\n' | sort | uniq -c | sort -nr
-}
-
-wf_rank() {
-    # Word frequency and rank
-    wf "$1" | nl
-}
-
-refresh() {
-    # Refresh after updating .zshrc
-    source ~/.zshrc
-}
-
-get_path() {
-    # Print our PATH variable
-    echo "$PATH" | tr ":" "\n"
-}
+alias irc='irssi -n eindiran'
 
 ## Exports
 export P4HOME=/home/eindiran/p4
 export P4PORT=perforce.mp.promptu.com:1666
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=/usr/local/lib:/usr/local/include
-export PERL5LIB=./lib:/home/sconrad/src/atv/2005/data/perl/install/lib/perl5:/home/sconrad/src/atv/2005/data/perl/install/lib64/perl5:$P4HOME/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/perl
+export PERL5LIB=./lib:/home/sconrad/src/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl
 export NAME='eindiran'
-# Git env variables: change these depending on where you are making commits from
 export GIT_AUTHOR_NAME='eindiran'
 export GIT_AUTHOR_EMAIL='eindiran@promptu.com'
 export GIT_COMMITTER_NAME='eindiran'
@@ -481,15 +94,40 @@ export GIT_COMMITTER_EMAIL='eindiran@promptu.com'
 export USERNAME='Elliott Indiran <eindiran@promptu.com>'
 export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
-export PATH=/home/eindiran/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/eindiran/p4/atv/2005/data/perl:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin:/home/eindiran/.cabal/bin
-export ATV=$P4HOME/atv/2005/
+export GOPATH=$HOME/go
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/eindiran/p4/atv/2005/data/perl:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin:/usr/racket/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin
+export ATV=$P4HOME/atv/2005
 export SHELL=/bin/zsh
 export DROPBOX=$HOME/Dropbox
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
 export SPARK_HOME=/usr/local/share/spark/spark-2.3.0-bin-hadoop2.7/
 export PYSPARK_PYTHON=/usr/bin/python3
 export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
+
+# Short-cuts to current projects inside p4
+export RECORDING_DIR=$ATV/src/speechware/tools/recording/recording-tool-javafx
+export ARPABO_DIR=$ATV/src/speechware/tools/arpabo_validation
+export PERL_DIR=$ATV/data/perl
+export LEXICON_CORRECTIONS=$ATV/src/speechware/v1.0/bl11/eml/en-US/language-models/base/task
+export POCKETSPHINX=$ATV/src/speechware/v2.0/bl12/pocketsphinx/pocketsphinx-0.8
+export PSCLIENT=$ATV/src/speechware/tools/pocketsphinx_related/ps_client
+export JENKINS_DIR=$ATV/src/speechware/tools/jenkins
+export QA_TESTER_ALL=$P4HOME/release/apps
+# LMTD directories and QA Tester directories for individual projects
+export XPEED=$ATV/data/travel/promptu/xpeed_lists
+export XPEED_QA_TESTER=$QA_TESTER_ALL/travel/sdk/java/
+export DENALI=$ATV/data/travel/promptu/denali_lists
+export DENALI_QA_TESTER=$QA_TESTER_ALL/travel/sdk/java/denali
+export AQUA7=$ATV/data/auto/vw/aqua_lists
+export AQUA7_QA_TESTER=$QA_TESTER_ALL/aqua7
+export WHOSONFIRST=$ATV/data/baseball/promptu/whosonfirst_lists
+export WHOSONFIRST_QA_TESTER=$QA_TESTER_ALL/mlb/
+export GODZILLA=$ATV/data/cable/promptu/raptor_lists
+export ASP=$ATV/data/auto/delphi/asp_lists
+export ASP_QA_TESTER=$QA_TESTER_ALL/asp/sdk/java
+export SHOEHORN=$ATV/data/auto/fca/shoehorn_lists
+export CALZANTE=$ATV/data/auto/fca/calzante_lists
 
 # Enable help command
 autoload -Uz run-help
@@ -523,5 +161,8 @@ setopt PUSHD_IGNORE_DUPS
 ## This reverts the +/- operators.
 setopt PUSHD_MINUS
 
-# This following line MUST BE last for syntax highlighting to work.
+source ~/.shell_utils.sh
+
+# If I read the docs correctly, this following line MUST BE last for fish-like
+# syntax highlighting to work.
 source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
