@@ -425,6 +425,22 @@ p4() {
     esac
 }
 
+git() {
+    # Add aliases for git log commands
+    case $* in
+       adog)
+           command git log --all --decorate --oneline --graph
+           ;;
+        lp*)
+           shift 2
+           command git log --patch --stat "$@"
+           ;;
+        *)
+           command git "$@"
+           ;;
+    esac
+}
+
 get_disk_usage_percentage() {
     # Print the percentage of used disk space for a specific disk
     df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
@@ -440,6 +456,15 @@ wf_rank() {
     wf "$1" | nl
 }
 
+refresh() {
+    # Refresh after updating .zshrc
+    source ~/.zshrc
+}
+
+get_path() {
+    # Print our PATH variable
+    echo "$PATH" | tr ":" "\n"
+}
 
 ## Exports
 export P4HOME=/home/eindiran/p4
@@ -478,10 +503,12 @@ autoload -Uz run-help-sudo
 
 ## Dirstack
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
+
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
   dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
   [[ -d $dirstack[1] ]] && cd $dirstack[1]
 fi
+
 chpwd() {
   print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
 }
