@@ -12,6 +12,11 @@
 #        AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 #===============================================================================
 
+c() {
+    # Alias for quickly typing 'clear'
+    clear
+}
+
 ls() {
     # Alias for 'ls'
     /bin/ls --color -AF "$@"
@@ -284,6 +289,20 @@ transparent_png_to_jpg() {
 set_dir_permissions() {
     # Sets ideal directory permissions
     find . -type d -exec chmod 755 {} \;
+}
+
+svg_to_png() {
+    # Converts svg files to png
+    for file in $(find . -name "*.svg"); do
+        svgexport "${file}" "${file/svg/png}" 1024:1024 --format png
+    done
+}
+
+svg_to_jpg() {
+    # Converts svg files to jpg
+    for file in $(find . -name "*.svg"); do
+        svgexport "${file}" "${file/svg/jpg}" --format jpg
+    done
 }
 
 hidden() {
