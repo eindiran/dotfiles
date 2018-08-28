@@ -164,6 +164,22 @@ histsearch () {
     history 0 | grep "$1"
 }
 
+bhistory () {
+    # Replace zsh's history command with one that behaves like
+    # bash's history command
+    history 0
+}
+
+nhistory () {
+    # Get the last n history entries
+    if [ $# -eq 0 ] ; then
+        # If no arg passed, return last 100 entries
+        history 0 | tail -n 100
+    else
+        history 0 | tail -n "$1"
+    fi
+}
+
 set_title () {
     # Use this function to set the terminal title
     printf "\e]2;%s\a" "$*";
