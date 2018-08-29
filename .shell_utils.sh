@@ -468,3 +468,8 @@ get_path() {
     # Print our PATH variable
     echo "$PATH" | tr ":" "\n"
 }
+
+browsh() {
+    # Launch a browsh pane
+     sudo docker run --rm -it browsh/browsh
+}
