@@ -81,6 +81,11 @@ extract () {
     fi
 }
 
+targz() {
+    # Tar and gzip a file
+    tar "$@" | gzip
+}
+
 batch_ext_rename() {
     # Batch rename files from one extension to another
     for file in *.$1
@@ -471,5 +476,15 @@ get_path() {
 
 browsh() {
     # Launch a browsh pane
-     sudo docker run --rm -it browsh/browsh
+    sudo docker run --rm -it browsh/browsh
+}
+
+public_ip() {
+    # Display your public IP address
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+local_ip() {
+    # Display your local network IP address
+    hostname -I | cut -f 1 -d' '
 }
