@@ -13,7 +13,7 @@
 #===============================================================================
 
 c() {
-    # Alias for quickly typing 'clear'
+    # Alias for quickly typing clear
     clear
 }
 
@@ -32,17 +32,52 @@ lh() {
     /bin/ls --color -AFlhtr "$@"
 }
 
+lm () {
+    # More advanced version of ls -l | more
+    if [ $# -gt 0 ] ; then
+        lh "$1" | less
+    else
+        lh | less
+    fi
+}
+
+tm () {
+    # More advanced version of tree | more
+    if [ $# -gt 0 ] ; then
+        tree "$1" | less
+    else
+        tree | less
+    fi
+}
+
 ssh() {
     # Add flags to ssh calls
     command ssh -X -Y "$@"
 }
 
-rgrep() {
-    grep -r "$@"
+egrep() {
+    # Add support for egrep
+    grep -E "$@"
+}
+
+fgrep() {
+    # Add support for fgrep
+    grep -F "$@"
 }
 
 igrep() {
+    # Add support for igrep
     grep -i "$@"
+}
+
+rgrep() {
+    # Add support for rgrep
+    grep -r "$@"
+}
+
+rgp() {
+    # Page the output of rg through less
+    rg -p "$@" | less -RFX
 }
 
 dropboxstart() {
@@ -61,6 +96,7 @@ hass() {
 }
 
 extract () {
+    # Extract the contents of a compressed file
     if [ -f "$1" ] ; then
         case "$1" in
             *.tar.bz2)   tar xvjf "$1"    ;;
@@ -74,7 +110,7 @@ extract () {
             *.zip)       unzip "$1"       ;;
             *.Z)         uncompress "$1"  ;;
             *.7z)        7z x "$1"        ;;
-            *)           echo "don't know how to extract '$1'..." ;;
+            *)           echo "Don't know how to extract '$1'..." ;;
         esac
     else
         echo "'$1' is not a valid file!"
@@ -82,7 +118,7 @@ extract () {
 }
 
 targz() {
-    # Tar and gzip a file
+    # Tar and gzip a file or set of files
     tar "$@" | gzip
 }
 
@@ -95,14 +131,14 @@ batch_ext_rename() {
 }
 
 mcd () {
-    # make a new directory, then cd to it
+    # Make a new directory, then cd into it
     mkdir -p "$1"
     cd "$1" || exit 1
     pwd
 }
 
 countfiles () {
-    # count the non-hidden files in directory
+    # Count the non-hidden files in directory
     if [ $# -gt 0 ] ; then
         total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
         calc "$total_count"-1 # reduce by one to get count w/o '.'
@@ -112,26 +148,8 @@ countfiles () {
     fi
 }
 
-lm () {
-    # more advanced version on ls -l | more
-    if [ $# -gt 0 ] ; then
-        lh "$1" | less
-    else
-        lh | less
-    fi
-}
-
-tm () {
-    # more advanced version on ls -l | more
-    if [ $# -gt 0 ] ; then
-        tree "$1" | less
-    else
-        tree | less
-    fi
-}
-
 volup () {
-    # Increase volume by 5%
+    # Increase system volume by 5%
     # if no args given, otherwise do it n times
     if [ $# -gt 0 ] ; then
         if [ "$1" -eq 0 ] ; then
@@ -145,7 +163,7 @@ volup () {
 }
 
 voldown () {
-    # Decrease volume by 5%
+    # Decrease system volume by 5%
     # if no args given, otherwise do it n times
     if [ $# -gt 0 ] ; then
         if [ "$1" -eq 0 ] ; then
@@ -190,11 +208,6 @@ set_title () {
     printf "\e]2;%s\a" "$*";
 }
 
-rgp() {
-    # Page the output of rg through less
-    rg -p "$@" | less -RFX
-}
-
 which_shell () {
     # Find which shell is running
     which "$(ps -p "$$" | tail -n 1 | awk '{print $NF}')"
@@ -206,6 +219,7 @@ broken_links () {
 }
 
 makefile_deps () {
+    # Create a dot-graph of the dependencies in a Makefile
     if [ $# -gt 0 ] ; then
         TARGET_NAME="$1"
         make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
@@ -227,7 +241,7 @@ max_win () {
 }
 
 close_win () {
-    # close the specified window
+    # Close the specified window
     # Unlike max_win the default is NOT to close the current window
     WINDOW_NAME="$1"
     WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
@@ -253,7 +267,7 @@ play_beep() {
 }
 
 pomodoro() {
-    # Do a pomodoro
+    # Start a Pomodoro timer
     if [ $# -gt 0 ] ; then
         ARGUMENT="$1"
         case "$ARGUMENT" in
@@ -307,23 +321,24 @@ transparent_png_to_jpg() {
     find . -name "*.png" -exec mogrify -format jpg -background black -flatten {} \;
 }
 
-set_dir_permissions() {
-    # Sets ideal directory permissions
-    find . -type d -exec chmod 755 {} \;
-}
-
 svg_to_png() {
     # Converts svg files to png
     for file in $(find . -name "*.svg"); do
-        svgexport "${file}" "${file/svg/png}" 1024:1024 --format png
+        svgexport "${file}" "${file/svg/png}" 1024:1024
     done
 }
+
 
 svg_to_jpg() {
     # Converts svg files to jpg
     for file in $(find . -name "*.svg"); do
         svgexport "${file}" "${file/svg/jpg}" --format jpg
     done
+}
+
+set_dir_permissions() {
+    # Sets ideal directory permissions
+    find . -type d -exec chmod 755 {} \;
 }
 
 hidden() {
@@ -418,11 +433,12 @@ mongod_status() {
 }
 
 resize_tmux_pane() {
-    # calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
+    # Calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
     ~/.tmux/scripts/resize-tmux-pane.sh "$@"
 }
 
 p4() {
+    # Wrapper for the p4 command
     case "$*" in
         blame*)
             shift 1
@@ -435,6 +451,7 @@ p4() {
 }
 
 git() {
+    # Wrapper for the git command
     case "$*" in
         adog)
             command git log --all --decorate --oneline --graph
@@ -466,6 +483,7 @@ wf_rank() {
 
 refresh() {
     # Refresh after updating rc files
+    # shellcheck disable=SC1090
     source ~/.zshrc
 }
 
