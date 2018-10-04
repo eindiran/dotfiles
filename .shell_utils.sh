@@ -506,3 +506,47 @@ local_ip() {
     # Display your local network IP address
     hostname -I | cut -f 1 -d' '
 }
+
+devices() {
+    # Display info about a particular device
+    # Wraps the `lspci` command
+    if [ $# -gt 0 ] ; then
+        case "$*" in
+            video|v*)
+                # Video card info
+                lspci -vnn | grep "VGA" -A 10
+                ;;
+            audio|sound*)
+                # Sound card info
+                lspci -vnn | grep "Audio device" -A 7
+                ;;
+            dram)
+                # DRAM controller info
+                lspci -vnn | grep "DRAM" -A 5
+                ;;
+            usb)
+                # USB controller info
+                lspci -vnn | grep "USB" -A 5
+                ;;
+            sata|disk|raid)
+                # RAID bus controller info
+                lspci -vnn | grep "RAID" -A 11
+                ;;
+            all|--all|-a)
+                # All devices
+                lspci -vnn
+                ;;
+            help|--help|-h)
+                echo "Usage: devices <arg>"
+                echo "where <arg> in [all, help, sata, disk, raid, usb, dram, audio, video]"
+                ;;
+            *)
+                # Unknown args
+                printf "Unknown option %s\n" "$*"
+                ;;
+        esac
+    else
+        # If no args passed, show all devices
+        lspci -vnn
+    fi
+}
