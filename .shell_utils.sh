@@ -550,3 +550,8 @@ devices() {
         lspci -vnn
     fi
 }
+
+linker_path() {
+    # Prints out the path used by ld
+    ldconfig -v 2>/dev/null | grep -v ^$'\t' | cut -d':' -f1
+}
