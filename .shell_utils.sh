@@ -553,5 +553,9 @@ devices() {
 
 linker_path() {
     # Prints out the path used by ld
-    ldconfig -v 2>/dev/null | grep -v ^$'\t' | cut -d':' -f1
+    TMP=$(ldconfig -v 2>/dev/null | grep -v ^$'\t' | cut -d':' -f1)
+    if [ -n "$LD_LIBRARY_PATH" ]; then
+        TMP+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<< "$LD_LIBRARY_PATH")
+    fi
+    echo "$TMP" | sort -u
 }
