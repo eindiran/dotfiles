@@ -559,3 +559,8 @@ linker_path() {
     fi
     echo "$TMP" | sort -u
 }
+
+md() {
+    # Compile markdown to html w/ pandoc
+    pandoc -f markdown -t html "$1" > "${1%.md}.html"
+}
