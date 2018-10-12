@@ -456,9 +456,17 @@ git() {
         adog)
             command git log --all --decorate --oneline --graph
             ;;
+        amend*)
+            shift 1  # git amend $@
+            command git commit --amend "$@"
+            ;;
         lp*)
-            shift 2
+            shift 1  # git lp $@
             command git log --patch --stat "$@"
+            ;;
+        rename*)
+            shift 1  # git rename $@
+            command git branch -m "$@"
             ;;
         *)
             command git "$@"
