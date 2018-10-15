@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 15 May 2018
-" VERSION: 1.0.7
+" LAST MODIFIED: Mon 15 Oct 2018
+" VERSION: 1.0.8
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -94,6 +94,19 @@ colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list = [{'path': '~/.wiki/'}]
+let g:ycm_filetype_whitelist = {'*': 1}
+let g:ycm_filetype_blacklist={
+    \ 'notes':1,
+    \ 'markdown':1,
+    \ 'unite':1,
+    \ 'tagbar':1,
+    \ 'pandoc':1,
+    \ 'qf':1,
+    \ 'vimwiki':1,
+    \ 'infolog':1,
+    \ 'mail':1,
+    \ 'org':1
+    \}
 "---------------------------------------------------------------------
 " Spaces & Tabs 
 set tabstop=4           " 4 space per tab press
