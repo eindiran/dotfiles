@@ -97,24 +97,43 @@ hass() {
 
 extract () {
     # Extract the contents of a compressed file
+    # Most common archive types are currently supported
+    # Support for new types can be added using the "case" block below:
     if [ -f "$1" ] ; then
+        # Check that a file actually exists at $1
+        echo "Trying to extract file '$1'..."
         case "$1" in
-            *.tar.bz2)   tar xvjf "$1"    ;;
-            *.tar.gz)    tar xvzf "$1"    ;;
-            *.tar.xz)    tar xvJf "$1"    ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xvf "$1"     ;;
-            *.tbz2)      tar xvjf "$1"    ;;
-            *.tgz)       tar xvzf "$1"    ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "Don't know how to extract '$1'..." ;;
+            *.tar)       tar xvf "$1"                  ;;  # tar
+            *.7z)        7z x "$1"                     ;;  # 7zip
+            *.7zip)      7z x "$1"                     ;;  # "
+            *.7z.+[0-9]) 7z x "$1"                     ;;  # 7zip: format '.7z1'
+            *.tar.bz2)   tar xvjf "$1"                 ;;  # tar + bzip
+            *.tbz2)      tar xvjf "$1"                 ;;  # "
+            *.tar.gz)    tar xvzf "$1"                 ;;  # tar + gzip
+            *.tgz)       tar xvzf "$1"                 ;;  # "
+            *.tar.xz)    tar xvJf "$1"                 ;;  # tar + lmza/lmza2
+            *.txz)       tar xvJf "$1"                 ;;  # "
+            *.tar.lz)    tar --lzip -xvf "$1"          ;;  # tar + lzip
+            *.tlz)       tar --lzip -xvf "$1"          ;;  # "
+            *.tar.7z)    7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
+            *.t7z)       7z x -so "$1" | tar xF - -C . ;;  # "
+            *.bz2)       bunzip2 "$1"                  ;;  # bzip
+            *.gz)        gunzip "$1"                   ;;  # gzip
+            *.lz)        lzip -d -k "$1"               ;;  # lzip
+            *.rar)       unrar x "$1"                  ;;  # rar
+            *.rar+[0-9]) unrar x "$1"                  ;;  # rar: format '.rar1'
+            *.xz)        xz -d "$1"                    ;;  # xz-utils
+            *.zip)       unzip "$1"                    ;;  # zip
+            *.Z)         uncompress "$1"               ;;  # compress
+            *.zlib)      zlib-flate -uncompress "$1"   ;;  # zlib
+            ###################################################################
+            ### Everything has failed to be matched; unknown file extension ###
+            ###################################################################
+            *)           echo "Encountered unknown type (${1##*.}) with file: $1" ;;
         esac
     else
-        echo "'$1' is not a valid file!"
+        echo "'$1', with filetype '${1##*.}', is not a valid file!"
+        echo "Check if the file exists with:  stat '$1'"
     fi
 }
 
