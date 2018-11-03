@@ -435,3 +435,6 @@ settings = {
   "fe-text" = { actlist_sort = "refnum"; };
   "fe-common/core" = { autolog = "yes"; };
 };
+ignores = ( { 
+  level = "CTCPS DCC JOINS PARTS QUITS";
+} );
