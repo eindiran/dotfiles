@@ -592,3 +592,8 @@ md() {
     # Compile markdown to html w/ pandoc
     pandoc -f markdown -t html "$1" > "${1%.md}.html"
 }
+
+prodigy() {
+    # Run Prodigy from the command line
+    python3 -m prodigy
+}
