@@ -597,3 +597,13 @@ prodigy() {
     # Run Prodigy from the command line
     python3 -m prodigy
 }
+
+fdw() {
+    # find writable files in current directory
+    find . -maxdepth 1 -writable
+}
+
+fdnw() {
+    # Find non-writable files in current directory
+    find . -maxdepth 1 ! -writable
+}
