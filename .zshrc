@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <eindiran@uchicago.edu>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Mon 13 Aug 2018
-#       REVISION:    v1.1.0
+#       MODIFIED:    Thu 29 Nov 2018
+#       REVISION:    v1.1.1
 #
 # ===============================================================================
 
@@ -130,5 +130,10 @@ setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_MINUS
 
 source ~/.shell_utils.sh
+source ~/.welcome.sh
+
+# Run welcome/greeting on start
+welcome
+
 # Keep this line last
 source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
