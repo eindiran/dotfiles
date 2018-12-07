@@ -607,3 +607,23 @@ fdnw() {
     # Find non-writable files in current directory
     find . -maxdepth 1 ! -writable
 }
+
+btc() {
+    # Get Bitcoin (BTC) price info
+    curl http://rate.sx/btc
+}
+
+eth() {
+    # Get Ethereum (ETH) price info
+    curl http://rate.sx/eth
+}
+
+xrp() {
+    # Get Ripple (XRP) price info
+    curl http://rate.sx/xrp
+}
+
+moon() {
+    # Get info about the lunar phase
+    curl wttr.in/moon 2> /dev/null | head -n -1
+}
