@@ -1,4 +1,9 @@
+source ~/.shell_utils.sh
+
+# Configure by user
 USER_LOCATION="Menlo Park, CA"
+
+# Horrible terminal color codes
 RED_TC='\033[0;31m' # Red
 BLU_TC='\033[0;34m' # Blue
 BLK_TC='\033[0;30m' # Black
