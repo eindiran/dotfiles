@@ -12,6 +12,18 @@
 #        AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 #===============================================================================
 
+beginswith() {
+    # Check that second argument begins with first argument
+    case "$2" in
+        "$1"*)
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac;
+}
+
 c() {
     # Alias for quickly typing clear
     clear
