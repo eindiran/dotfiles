@@ -10,7 +10,7 @@
 #       AUTHOR:      Elliott Indiran <eindiran@uchicago.edu>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Wed 02 Jan 2019
-#       REVISION:    v1.1.1
+#       REVISION:    v1.1.2
 #
 # ===============================================================================
 
