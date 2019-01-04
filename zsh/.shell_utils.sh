@@ -606,3 +606,8 @@ moon() {
     # Get info about the lunar phase
     curl wttr.in/moon 2> /dev/null | head -n -1
 }
+
+vp() {
+    # Use VLC to play video files
+    vlc "$@" >/dev/null 2>&1
+}
