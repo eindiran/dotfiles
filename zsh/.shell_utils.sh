@@ -611,3 +611,13 @@ vp() {
     # Use VLC to play video files
     vlc "$@" >/dev/null 2>&1
 }
+
+jg() {
+    # Alias for mouse jiggle
+    while true; do
+        xdotool mousemove 0 0
+        sleep 299
+        xdotool mousemove 0 1
+        sleep 299
+    done
+}
