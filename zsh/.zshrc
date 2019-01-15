@@ -7,10 +7,10 @@
 #                    interactive shell or simply open a new shell once changes
 #                    are made.
 #
-#       AUTHOR:      Elliott Indiran <eindiran@uchicago.edu>
+#       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Wed 02 Jan 2019
-#       REVISION:    v1.1.2
+#       MODIFIED:    Mon 14 Jan 2019
+#       REVISION:    v1.1.3
 #
 # ===============================================================================
 
@@ -67,10 +67,6 @@ alias rm='rm -iv'
 alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
-
-alias p4-add-cd='find . -type f -print | p4 -x add'
-alias p4-edit-cd='find . -type f -print | p4 -x edit'
-export P4CLIENT='eindiran'
 
 alias irc='irssi -n eindiran'
 
@@ -132,6 +128,7 @@ setopt PUSHD_MINUS
 # Source the files that host our extra functionality
 source ~/.shell_utils.sh
 source ~/.volume_utils.sh
+source ~/.p4_utils.sh
 source ~/.welcome.sh
 
 # Keep this line last

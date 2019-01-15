@@ -9,7 +9,7 @@
 #                and functions in my .bashrc and .zshrc files.
 # 
 #         NOTES: Source this file in the rc file of your preferred shell.
-#        AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
+#        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
 beginswith() {
@@ -434,19 +434,6 @@ mongod_status() {
 resize_tmux_pane() {
     # Calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
     ~/.tmux/scripts/resize-tmux-pane.sh "$@"
-}
-
-p4() {
-    # Wrapper for the p4 command
-    case "$*" in
-        blame*)
-            shift 1
-            command p4 annotate "$@"
-            ;;
-        *)
-            command p4 "$@"
-            ;;
-    esac
 }
 
 git() {
