@@ -11,11 +11,30 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
+# Set the p4 client name
+export P4CLIENT='eindiran'
+
+# Aliases and utility functions
 p4ev() {
     # p4 sync a file, open for edit, then open in vim
     p4 sync "$@"
     p4 edit "$@"
     vim "$@"
+}
+
+p4a_cd() {
+    # Add all files in the current directory
+    find . -type f -print | /usr/local/bin/p4 -x add
+}
+
+p4e_cd() {
+    # Open all files in the current directory for edit
+    find . -type f -print | /usr/local/bin/p4 -x add
+}
+
+p4r_cd() {
+    # Revert all files in the current directory
+    find . -type f -print | /usr/local/bin/p4 -x revert
 }
 
 p4e() {
