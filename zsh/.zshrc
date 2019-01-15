@@ -68,10 +68,6 @@ alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
 
-alias p4-add-cd='find . -type f -print | p4 -x add'
-alias p4-edit-cd='find . -type f -print | p4 -x edit'
-export P4CLIENT='eindiran'
-
 alias irc='irssi -n eindiran'
 
 ## Exports
