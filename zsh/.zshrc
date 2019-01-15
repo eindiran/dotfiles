@@ -7,10 +7,10 @@
 #                    interactive shell or simply open a new shell once changes
 #                    are made.
 #
-#       AUTHOR:      Elliott Indiran <eindiran@uchicago.edu>
+#       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Wed 02 Jan 2019
-#       REVISION:    v1.1.2
+#       MODIFIED:    Mon 14 Jan 2019
+#       REVISION:    v1.1.3
 #
 # ===============================================================================
 
@@ -132,6 +132,7 @@ setopt PUSHD_MINUS
 # Source the files that host our extra functionality
 source ~/.shell_utils.sh
 source ~/.volume_utils.sh
+source ~/.p4_utils.sh
 source ~/.welcome.sh
 
 # Keep this line last
