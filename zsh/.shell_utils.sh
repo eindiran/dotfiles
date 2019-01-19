@@ -222,6 +222,22 @@ which_shell () {
     which "$(ps -p "$$" | tail -n 1 | awk '{print $NF}')"
 }
 
+which_editor () {
+    # Find out the default editor
+    if [ -z "$EDITOR" ] ; then
+        if [ -t 1 ] ; then
+            # If output is to a terminal just print info
+            echo "No default editor set in \$EDITOR."
+        else
+            # Otherwise, send along path to executable of valid editor
+            >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
+            which vi
+        fi
+    else
+        echo "$EDITOR"
+    fi
+}
+
 broken_links () {
     # Find broken symbolic links in the current directory
     find . -type l -xtype l -exec /bin/ls -l {} \;
