@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Mon 14 Jan 2019
-#       REVISION:    v1.1.3
+#       MODIFIED:    Fri 18 Jan 2019
+#       REVISION:    v1.1.4
 #
 # ===============================================================================
 
@@ -129,6 +129,7 @@ setopt PUSHD_MINUS
 source ~/.shell_utils.sh
 source ~/.volume_utils.sh
 source ~/.p4_utils.sh
+source ~/.torque_utils.sh
 source ~/.welcome.sh
 
 # Keep this line last
