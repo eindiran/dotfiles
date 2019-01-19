@@ -35,8 +35,13 @@ ls() {
 }
 
 ll() {
-    # Alias for 'll'
+    # Alias for 'ls -l'
     /bin/ls --color -Flhtr "$@"
+}
+
+la() {
+    # Alias for 'ls -la'
+    /bin/ls --color -Flhtra "$@"
 }
 
 lh() {
@@ -60,6 +65,11 @@ tm () {
     else
         tree | less
     fi
+}
+
+jj() {
+    # Open jar files: a shortcut for `java -jar ...`
+    java -jar "$@"
 }
 
 ssh() {
@@ -385,35 +395,6 @@ hidden() {
 yotld() {
     # This function is a joke
     echo "$(($(date +%Y)+1)) is the year of the Linux desktop."
-}
-
-qtop() {
-    # Runs qstat repeatedly, giving a top-like interface to torque jobs
-    watch qstat
-}
-
-qkillall() {
-    # Kill all torque jobs associated with a particular user
-    case "$#" in
-        0)
-            # "qkillall" --> kill all jobs for current user
-            qselect -u "$(whoami)" -s EHQRTW | xargs --no-run-if-empty qdel -a
-            ;;
-        1)
-            # "qkillall <user>" --> kill all jobs for <user>
-            qselect -u "$1" -s EHQRTW | xargs qdel
-            ;;
-        2)
-            # "qkillall <user> <state(s)>" --> kill jobs in listed states for <user>
-            qselect -u "$1" -s "$2" | xargs qdel
-            ;;
-        *)
-            # If given a weird number of args, print usage
-            printf "Usage: qkillall <username> [<state(s)>]\n"
-            printf "Examples:\n\tqkillall steve EHR\n"
-            printf "\tqkillall rms\n"
-            ;;
-    esac
 }
 
 mongodb_start() {
