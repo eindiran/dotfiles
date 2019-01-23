@@ -605,3 +605,8 @@ jg() {
         sleep 299
     done
 }
+
+sumnf() {
+    # Sum the final column - for generating counts of matching LMTD lines
+    rg "$@" | awk '{sum += $NF} END {print sum}'
+}
