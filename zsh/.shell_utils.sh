@@ -25,8 +25,13 @@ beginswith() {
 }
 
 c() {
-    # Alias for quickly typing clear
+    # Alias for quickly typing `clear`
     clear
+}
+
+e() {
+    # Alias for quickly typing `exit`
+    exit
 }
 
 ls() {
