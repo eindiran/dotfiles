@@ -621,6 +621,20 @@ jg() {
     done
 }
 
+click() {
+    # Use xdotool to click the mouse
+    if [ $# -eq 1 ] ; then
+        case "$1" in
+            left|l|1)      xdotool click 1 ;;
+            middle|m|2)    xdotool click 2 ;;
+            right|r|3)     xdotool click 3 ;;
+            *)             echo "Unknown parameter to click()" ;;
+        esac
+    else
+        xdotool click 1
+    fi
+}
+
 sumnf() {
     # Sum the final column - for generating counts of matching LMTD lines
     rg "$@" | awk '{sum += $NF} END {print sum}'
