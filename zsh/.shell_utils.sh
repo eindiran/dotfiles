@@ -34,6 +34,16 @@ e() {
     exit
 }
 
+t() {
+    # Alias for quickly typing `tmux`
+    tmux "$@"
+}
+
+m() {
+    # Alias for quickly typing `make`
+    make "$@"
+}
+
 ls() {
     # Alias for 'ls'
     /bin/ls --color -AF "$@"
