@@ -625,3 +625,15 @@ sumnf() {
     # Sum the final column - for generating counts of matching LMTD lines
     rg "$@" | awk '{sum += $NF} END {print sum}'
 }
+
+update_node() {
+    # Update node to latest stable version
+    sudo -H npm cache clean -f
+    sudo -H npm install -g n
+    sudo -H n stable
+}
+
+update_npm() {
+    # Update npm
+    sudo -H npm install -g npm
+}
