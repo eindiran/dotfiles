@@ -1,0 +1,126 @@
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.6
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+
+###########################
+# Keybound mouse controls #
+###########################
+
+# Left-click with super + z
+"xdotool click 1"
+  Super + z
+
+# Middle click with super + x
+"xdotool click 2"
+  Super + x
+
+# Right click with super + c
+"xdotool click 3"
+  Super + c
+
+#########################
+# Open programs quickly #
+#########################
+
+# Start the default terminal emulator
+"x-terminal-emulator"
+  Super + t
+
+# Start terminator in particular
+"terminator"
+  Super + Control + t
+
+# Start default browser
+"x-www-browser"
+  Super + b
+
+# Start Firefox
+"firefox"
+  Super + Control + b
+
+# Start File manager
+# Only works with XFCE
+"exo-open --launch FileManager"
+  Super + f
+
+# Start Thunar
+"thunar"
+  Super + Control + f
+
+# Start Mail Reader
+# Only works with XFCE
+"exo-open --launch MailReader"
+  Super + m
+
+# Start Thunderbird
+"thunderbird"
+  Super + Control + m
+
+# Start Libreoffice
+"libreoffice"
+  Super + l
+
+# Start Libreoffice Calc
+"libreoffice --calc"
+  Super + 4
+
+# Start Libreoffice Writer
+"libreoffice --writer"
+  Super + 3
+
+# Start a basic GUI editor (Mousepad)
+"mousepad"
+  Super + e
+
+# Start App Finder
+# Only works with XFCE
+"xfce4-appfinder"
+  Mod1 + F3
+
+#####################
+# Other keybindings #
+#####################
+
+# Screencap
+# Only works with XFCE
+"xfce4-screenshooter -f"
+  PrintScreen
+
+# Lock Screen
+# Only works with XFCE
+"xflock4"
+  Control + Mod1 + l
+
+# Generic screen lock
+"xlock -mode random"
+  Control + Mod1 + Delete
+
+# Reduce volume with pulseaudio
+"amixer -D pulse sset Master 1%-"
+  Mod1 + -
+
+# Increase volume with pulseaudio
+"amixer -D pulse sset Master 1%+"
+  Mod1 + =
+
+##################################
+# End of xbindkeys configuration #
+##################################
