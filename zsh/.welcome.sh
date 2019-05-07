@@ -87,3 +87,27 @@ welcome() {
         agenda
     fi
 }
+
+mwelcome() {
+    (echo "${BLU_TC}---------------------------------------"
+    if [ "$(date +%H)" -le 10 ]; then
+        echo "-------${WHT_TC}  Good morning, $USER  ${BLU_TC}------"
+    else
+        echo "-------${WHT_TC}  Welcome back, $USER  ${BLU_TC}------"
+    fi
+    echo "---------------------------------------${CLR_TC}"
+    echo
+    TIME_INFO="$(date)"
+    printf "Current time: ${WHT_TC}%s${CLR_TC}\n" "$TIME_INFO"
+    printf "Weather in ${WHT_TC}%s${CLR_TC}:\n\n" "$USER_LOCATION"
+    weather -lv
+    TODO_FILE="/local/todo/$(date -I)-TODO.md"
+    if [ -f "$TODO_FILE" ] ; then
+        todo
+    else
+        mktodo > /dev/null
+        todo
+    fi
+    echo
+    agenda) | more
+}
