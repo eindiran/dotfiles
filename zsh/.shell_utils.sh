@@ -36,7 +36,7 @@ e() {
 
 t() {
     # Alias for quickly typing `tmux`
-    tmux "$@"
+    TERM=screen-256color tmux "$@"
 }
 
 m() {
@@ -46,25 +46,30 @@ m() {
 
 ls() {
     # Alias for 'ls'
-    /bin/ls --color -AF "$@"
+    command ls --color -AF "$@"
 }
 
 ll() {
-    # Alias for 'ls -l'
-    /bin/ls --color -Flhtr "$@"
+    # Alias for 'll'
+    command ls --color -Flhtr "$@"
 }
 
 la() {
     # Alias for 'ls -la'
-    /bin/ls --color -Flhtra "$@"
+    command ls --color -Flhtra "$@"
 }
 
 lh() {
     # Display all files in 'll' format
-    /bin/ls --color -AFlhtr "$@"
+    command ls --color -AFlhtr "$@"
 }
 
-lm () {
+l() {
+    # Alias for ll
+    command ls --color -Flhtr "$@"
+}
+
+lm() {
     # More advanced version of ls -l | more
     if [ $# -gt 0 ] ; then
         lh "$1" | less
@@ -73,7 +78,7 @@ lm () {
     fi
 }
 
-tm () {
+tm() {
     # More advanced version of tree | more
     if [ $# -gt 0 ] ; then
         tree "$1" | less
@@ -82,9 +87,27 @@ tm () {
     fi
 }
 
+j() {
+    # Run Java classes: alias for `java ...`
+    java "$@"
+}
+
+jc() {
+    # Compile Java files
+    javac "$@"
+}
+
 jj() {
-    # Open jar files: a shortcut for `java -jar ...`
+    # Open JAR files: an alias for `java -jar ...`
     java -jar "$@"
+}
+
+jjc() {
+    # Compile Java files into a JAR file
+    mkdir -p ./build
+    javac -d ./build *.java
+    cd ./build
+    jar cvf "$@" *
 }
 
 ssh() {
@@ -92,24 +115,29 @@ ssh() {
     command ssh -X -Y "$@"
 }
 
+grep() {
+    # Alias for 'grep'
+    command grep --color=auto "$@"
+}
+
 egrep() {
-    # Add support for egrep
-    grep -E "$@"
+    # Add support for 'egrep'
+    command grep --color=auto -E "$@"
 }
 
 fgrep() {
-    # Add support for fgrep
-    grep -F "$@"
+    # Add support for 'fgrep'
+    command grep --color=auto -F "$@"
 }
 
 igrep() {
-    # Add support for igrep
-    grep -i "$@"
+    # Add support for 'igrep'
+    command grep --color=auto -i "$@"
 }
 
 rgrep() {
     # Add support for rgrep
-    grep -r "$@"
+    command grep --color=auto -r "$@"
 }
 
 rgp() {
@@ -132,69 +160,7 @@ hass() {
     sudo -u homeassistant -H /srv/homeassistant/bin/hass
 }
 
-extract () {
-    # Extract the contents of a compressed file
-    # Most common archive types are currently supported
-    # Support for new types can be added using the "case" block below:
-    if [ -f "$1" ] ; then
-        # Check that a file actually exists at $1
-        echo "Trying to extract file '$1'..."
-        case "$1" in
-            *.tar)       tar xvf "$1"                  ;;  # tar
-            *.7z)        7z x "$1"                     ;;  # 7zip
-            *.7zip)      7z x "$1"                     ;;  # "
-            *.7z.+[0-9]) 7z x "$1"                     ;;  # 7zip: format '.7z1'
-            *.tar.bz2)   tar xvjf "$1"                 ;;  # tar + bzip
-            *.tbz2)      tar xvjf "$1"                 ;;  # "
-            *.tar.gz)    tar xvzf "$1"                 ;;  # tar + gzip
-            *.tgz)       tar xvzf "$1"                 ;;  # "
-            *.tar.xz)    tar xvJf "$1"                 ;;  # tar + lmza/lmza2
-            *.txz)       tar xvJf "$1"                 ;;  # "
-            *.tar.lz)    tar --lzip -xvf "$1"          ;;  # tar + lzip
-            *.tlz)       tar --lzip -xvf "$1"          ;;  # "
-            *.tar.7z)    7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
-            *.t7z)       7z x -so "$1" | tar xF - -C . ;;  # "
-            *.bz2)       bunzip2 "$1"                  ;;  # bzip
-            *.gz)        gunzip "$1"                   ;;  # gzip
-            *.lz)        lzip -d -k "$1"               ;;  # lzip
-            *.rar)       unrar x "$1"                  ;;  # rar
-            *.rar+[0-9]) unrar x "$1"                  ;;  # rar: format '.rar1'
-            *.xz)        xz -d "$1"                    ;;  # xz-utils
-            *.zip)       unzip "$1"                    ;;  # zip
-            *.Z)         uncompress "$1"               ;;  # compress
-            *.zlib)      zlib-flate -uncompress "$1"   ;;  # zlib
-            ###################################################################
-            ### Everything has failed to be matched; unknown file extension ###
-            ###################################################################
-            *)           echo "Encountered unknown type (${1##*.}) with file: $1" ;;
-        esac
-    else
-        echo "'$1', with filetype '${1##*.}', is not a valid file!"
-        echo "Check if the file exists with:  stat '$1'"
-    fi
-}
-
-targz() {
-    # Tar and gzip a file or set of files
-    tar "$@" | gzip
-}
-
-batch_ext_rename() {
-    # Batch rename files from one extension to another
-    for file in *.$1
-    do
-        mv "$file" "${file%.$1}.$2"
-    done
-}
-
-mcd () {
-    # Make a new directory, then cd into it
-    mkdir -p "$1"
-    cd "$1" || exit 1
-    pwd
-}
-
-countfiles () {
+countfiles() {
     # Count the non-hidden files in directory
     if [ $# -gt 0 ] ; then
         total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
@@ -205,19 +171,19 @@ countfiles () {
     fi
 }
 
-histsearch () {
+histsearch() {
     # Search through the history for a given word
     # fc -lim "$@" 1 # not as good
-    history 0 | grep "$1"
+    history 0 | command grep --color=auto "$1"
 }
 
-bhistory () {
+bhistory() {
     # Replace zsh's history command with one that behaves like
     # bash's history command
     history 0
 }
 
-nhistory () {
+nhistory() {
     # Get the last n history entries
     if [ $# -eq 0 ] ; then
         # If no arg passed, return last 100 entries
@@ -227,17 +193,17 @@ nhistory () {
     fi
 }
 
-set_title () {
+set_title() {
     # Use this function to set the terminal title
     printf "\e]2;%s\a" "$*";
 }
 
-which_shell () {
+which_shell() {
     # Find which shell is running
     which "$(ps -p "$$" | tail -n 1 | awk '{print $NF}')"
 }
 
-which_editor () {
+which_editor() {
     # Find out the default editor
     if [ -z "$EDITOR" ] ; then
         if [ -t 1 ] ; then
@@ -253,12 +219,12 @@ which_editor () {
     fi
 }
 
-broken_links () {
+broken_links() {
     # Find broken symbolic links in the current directory
     find . -type l -xtype l -exec /bin/ls -l {} \;
 }
 
-makefile_deps () {
+makefile_deps() {
     # Create a dot-graph of the dependencies in a Makefile
     if [ $# -gt 0 ] ; then
         TARGET_NAME="$1"
@@ -268,7 +234,7 @@ makefile_deps () {
     fi
 }
 
-max_win () {
+max_win() {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
     if [ $# -gt 0 ] ; then
@@ -280,7 +246,7 @@ max_win () {
     fi
 }
 
-close_win () {
+close_win() {
     # Close the specified window
     # Unlike max_win the default is NOT to close the current window
     WINDOW_NAME="$1"
@@ -288,7 +254,7 @@ close_win () {
     wmctrl -ic "$WINDOW_ID"
 }
 
-set_caps () {
+set_caps() {
     # Set the behavior of the caps-lock key
     case "$1" in
         'shift')    setxkbmap -option caps:'shift'  ;;
@@ -304,6 +270,30 @@ play_beep() {
     # Plays a beep noise through headphones
     # Use as you would 'beep'
     play $BEEP_NOISE > /dev/null 2>&1
+}
+
+posture() {
+    # Reminds you to maintain good posture
+    if [ $# -gt 0 ] ; then
+        MINUTES="$1"
+        ((SECONDS=MINUTES*60))
+        while true; do
+            {
+                sleep "$SECONDS"
+                play_beep
+                zenity --info --text="Mind your posture"
+            } > /dev/null 2>&1
+        done
+    else
+        while true; do
+            SECONDS=3600
+            {
+                sleep "$SECONDS"
+                play_beep
+                zenity --info --text="Mind your posture"
+            } > /dev/null 2>&1
+        done
+    fi
 }
 
 pomodoro() {
@@ -341,88 +331,6 @@ dow() {
     printf "%s\n" "${Days[$(date +%u)]}"
 }
 
-clean_perl() {
-    # Cleans untidy or obfuscated perl code
-    perl -MO=Deparse "$1" | perltidy -ce -i=4 -st
-}
-
-jpg_to_png() {
-    # Converts files in dir/subdirs from jpg to png
-    find . -name "*.jpg" -exec mogrify -format png {} \;
-}
-
-png_to_jpg() {
-    # Converts files in dir/subdirs from png to jpg
-    find . -name "*.png" -exec mogrify -format jpg {} \;
-}
-
-transparent_png_to_jpg() {
-    # Converts transparent background png files to jpg files
-    find . -name "*.png" -exec mogrify -format jpg -background black -flatten {} \;
-}
-
-svg_to_png() {
-    # Converts svg files to png
-    for file in $(find . -name "*.svg"); do
-        svgexport "${file}" "${file/svg/png}" 1024:1024
-    done
-}
-
-
-svg_to_jpg() {
-    # Converts svg files to jpg
-    for file in $(find . -name "*.svg"); do
-        svgexport "${file}" "${file/svg/jpg}" --format jpg
-    done
-}
-
-set_dir_permissions() {
-    # Sets ideal directory permissions
-    find . -type d -exec chmod 755 {} \;
-}
-
-hidden() {
-    # Finds hidden files recursively in current directory
-    # Handle no argument case
-    if [ $# -eq 0 ] ; then
-        ls -l -d .[!.]?*
-        return
-    fi
-    DIR_TO_SEARCH="$1"
-    shift
-    # Handle first argument
-    case "$DIR_TO_SEARCH" in
-        -h|--help)
-            echo "Usage: hidden <dir> [-d|-f|-r]"
-            return
-            ;;
-        *)
-            if [ ! -d "$DIR_TO_SEARCH" ] ; then
-                printf "%s is not a directory.\n" "$DIR_TO_SEARCH"
-                return
-            fi
-            ;;
-    esac
-    # Handle optional second argument
-    if [ $# -gt 0 ] ; then
-        ARGUMENT="$1"
-        case "$ARGUMENT" in
-            -d|--dirs)
-                find "$DIR_TO_SEARCH" -type d -iname ".*" -ls
-                ;;
-            -f|--files)
-                find "$DIR_TO_SEARCH" -type f -iname ".*" -ls
-                ;;
-            -r|--recursive)
-                find "$DIR_TO_SEARCH" -name ".*" -ls
-                ;;
-            *)
-                echo "Unknown option: hidden <dir> [-d|-f|-r]"
-                ;;
-        esac
-    fi
-}
-
 yotld() {
     # This function is a joke
     echo "$(($(date +%Y)+1)) is the year of the Linux desktop."
@@ -448,28 +356,9 @@ resize_tmux_pane() {
     ~/.tmux/scripts/resize-tmux-pane.sh "$@"
 }
 
-git() {
-    # Wrapper for the git command
-    case "$*" in
-        adog)
-            command git log --all --decorate --oneline --graph
-            ;;
-        amend*)
-            shift 1  # git amend $@
-            command git commit --amend "$@"
-            ;;
-        lp*)
-            shift 1  # git lp $@
-            command git log --patch --stat "$@"
-            ;;
-        rename*)
-            shift 1  # git rename $@
-            command git branch -m "$@"
-            ;;
-        *)
-            command git "$@"
-            ;;
-    esac
+rtp() {
+    # Alias for resize_tmux_pane()
+    ~/.tmux/scripts/resize-tmux-pane.sh "$@"
 }
 
 get_disk_usage_percentage() {
@@ -520,23 +409,23 @@ devices() {
         case "$*" in
             video|v*)
                 # Video card info
-                lspci -vnn | grep "VGA" -A 10
+                lspci -vnn | command grep --color=auto "VGA" -A 10
                 ;;
             audio|sound*)
                 # Sound card info
-                lspci -vnn | grep "Audio device" -A 7
+                lspci -vnn | command grep --color=auto "Audio device" -A 7
                 ;;
             dram)
                 # DRAM controller info
-                lspci -vnn | grep "DRAM" -A 5
+                lspci -vnn | command grep --color=auto "DRAM" -A 5
                 ;;
             usb)
                 # USB controller info
-                lspci -vnn | grep "USB" -A 5
+                lspci -vnn | command grep --color=auto "USB" -A 5
                 ;;
             sata|disk|raid)
                 # RAID bus controller info
-                lspci -vnn | grep "RAID" -A 11
+                lspci -vnn | command grep --color=auto "RAID" -A 11
                 ;;
             all|--all|-a)
                 # All devices
@@ -559,7 +448,7 @@ devices() {
 
 linker_path() {
     # Prints out the path used by ld
-    TMP=$(ldconfig -v 2>/dev/null | grep -v ^$'\t' | cut -d':' -f1)
+    TMP=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
     if [ -n "$LD_LIBRARY_PATH" ]; then
         TMP+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<< "$LD_LIBRARY_PATH")
     fi
@@ -569,6 +458,11 @@ linker_path() {
 md() {
     # Compile markdown to html w/ pandoc
     pandoc -f markdown -t html "$1" > "${1%.md}.html"
+}
+
+groff2man() {
+    # Compile [g]roff/troff into a man-page
+    groff -Tascii -man "$@"
 }
 
 prodigy() {
@@ -599,6 +493,11 @@ eth() {
 xrp() {
     # Get Ripple (XRP) price info
     curl http://rate.sx/xrp
+}
+
+xmr() {
+    # Get Monero (XMR) price info
+    curl http://rate.sx/xmr
 }
 
 moon() {
@@ -650,4 +549,12 @@ update_node() {
 update_npm() {
     # Update npm
     sudo -H npm install -g npm
+}
+
+find_macro() {
+    fd ".*\.csv" . | xargs -n 1 -P 0 rg "[%$]$1\b" - 2> /dev/null
+}
+
+find_android_external_storage() {
+    adb shell 'echo ${SECONDARY_STORAGE%%:*}'
 }
