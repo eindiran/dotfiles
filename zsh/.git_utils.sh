@@ -25,6 +25,21 @@ git() {
         amend)
             command git commit --amend
             ;;
+        # Checkout a new branch, with HEAD set to current HEAD
+        cb*)
+            shift 1
+            command git checkout -b "$@"
+            ;;
+        # Alias for `git commit -m ...`
+        cm*)
+            shift 1
+            command git commit -m "$@"
+            ;;
+        # Alias for `git commit -am ...`
+        cam*)
+            shift 1
+            command git commit -am "$@"
+            ;;
         # List all <items>
         list*)
             shift 1
@@ -84,6 +99,11 @@ git() {
             echo "git adog, git amend, git lp, git log-graph, git log-patch, git remotes"
             echo "git list {submodule(s), remote(s), rev(s), branch(es), rbranch(es), lbranch(es)}"
             echo "git rename, git wrapper-help"
+            echo
+            echo "Additionally, it supports the following aliases:"
+            echo "git cb:   git checkout -b"
+            echo "git cm:   git commit -m"
+            echo "git cam:  git commit -am"
             ;;
         # All standard commands
         *)
