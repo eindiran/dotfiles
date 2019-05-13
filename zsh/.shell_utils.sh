@@ -34,11 +34,6 @@ e() {
     exit
 }
 
-t() {
-    # Alias for quickly typing `tmux`
-    TERM=screen-256color tmux "$@"
-}
-
 m() {
     # Alias for quickly typing `make`
     make "$@"
@@ -198,11 +193,6 @@ nhistory() {
     fi
 }
 
-set_title() {
-    # Use this function to set the terminal title
-    printf "\e]2;%s\a" "$*";
-}
-
 which_shell() {
     # Find which shell is running
     which "$(ps -p "$$" | tail -n 1 | awk '{print $NF}')"
@@ -237,26 +227,6 @@ makefile_deps() {
     else
         make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
     fi
-}
-
-max_win() {
-    # Maximize the current window, or if an argument is given
-    # search for a window matching that and maximize it
-    if [ $# -gt 0 ] ; then
-        WINDOW_NAME="$1"
-        WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
-        wmctrl -ir "$WINDOW_ID" -b toggle,maximized_vert,maximized_horz
-    else
-        wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz
-    fi
-}
-
-close_win() {
-    # Close the specified window
-    # Unlike max_win the default is NOT to close the current window
-    WINDOW_NAME="$1"
-    WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
-    wmctrl -ic "$WINDOW_ID"
 }
 
 set_caps() {
@@ -354,16 +324,6 @@ mongodb_stop() {
 mongod_status() {
     # Report the status of mongod
     sudo service mongod status
-}
-
-resize_tmux_pane() {
-    # Calls the .tmux/scripts/resize-tmux-pane.sh script, passing along its params
-    ~/.tmux/scripts/resize-tmux-pane.sh "$@"
-}
-
-rtp() {
-    # Alias for resize_tmux_pane()
-    ~/.tmux/scripts/resize-tmux-pane.sh "$@"
 }
 
 get_disk_usage_percentage() {
