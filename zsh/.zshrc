@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Tue 07 May 2019
-#       REVISION:    v1.1.5
+#       MODIFIED:    Mon 13 May 2019
+#       REVISION:    v1.1.6
 #
 # ===============================================================================
 
@@ -168,6 +168,8 @@ source ~/.p4_utils.sh
 source ~/.torque_utils.sh
 source ~/.welcome.sh
 source ~/.git_utils.sh
+source ~/.tmux_window_utils.sh
+source ~/.misc_utils.sh
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
