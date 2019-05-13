@@ -140,6 +140,11 @@ rgrep() {
     command grep --color=auto -r "$@"
 }
 
+fpdfgrep() {
+    # Search pdf files in current directory using pdfgrep
+    find . -iname '*.pdf' -exec pdfgrep "$@" {} +
+}
+
 rgp() {
     # Page the output of rg through less
     rg -p "$@" | less -RFX
