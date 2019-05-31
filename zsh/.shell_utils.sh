@@ -328,3 +328,8 @@ fdnw() {
     # Find non-writable files in current directory
     find . -maxdepth 1 ! -writable
 }
+
+dedup() {
+    # Deduplicate a file while preserving the original ordering of lines
+    awk '!visited[$0] ++' "$@"
+}
