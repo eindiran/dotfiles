@@ -145,8 +145,13 @@ rgp() {
     rg -p "$@" | less -RFX
 }
 
+lcc() {
+    # Alias for Mono license compiler so that `lc` can be used for the `wc` alias below
+    command lc "$@"
+}
+
 lc() {
-    # Count lines; alias for `wc -l`
+    # Line count; alias for `wc -l`
     wc -l "$@"
 }
 
