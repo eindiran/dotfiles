@@ -145,6 +145,11 @@ rgp() {
     rg -p "$@" | less -RFX
 }
 
+lc() {
+    # Count lines; alias for `wc -l`
+    wc -l "$@"
+}
+
 countfiles() {
     # Count the non-hidden files in directory
     if [ $# -gt 0 ] ; then
