@@ -13,6 +13,7 @@
 
 # Set the p4 client name
 export P4CLIENT='eindiran'
+export P4USER='eindiran'
 
 # Aliases and utility functions
 p4ev() {
@@ -22,34 +23,24 @@ p4ev() {
     vim "$@"
 }
 
-p4a_cd() {
-    # Add all files in the current directory
-    find . -type f -print | command p4 -x add
-}
-
-p4e_cd() {
-    # Open all files in the current directory for edit
-    find . -type f -print | command p4 -x add
-}
-
-p4r_cd() {
-    # Revert all files in the current directory
-    find . -type f -print | command p4 -x revert
-}
-
 p4e() {
     # Find all files matching a pattern and open them for edit
-    fd "$@" | xargs command p4 edit
+    fd -t file "$@" | xargs p4 edit
 }
 
 p4a() {
     # Same as `p4e`, but for adding files
-    fd "$@" | xargs command p4 add
+    fd -t file "$@" | xargs p4 add
 }
 
 p4r() {
     # Same as `p4e`, but for reverting files
-    fd "$@" | xargs command p4 revert
+    fd -t file "$@" | xargs p4 revert
+}
+
+p4d() {
+    # Same as `p4e`, but for diffing files
+    fd -t file "$@" | xargs p4 diff
 }
 
 p4() {
@@ -59,6 +50,18 @@ p4() {
         blame*)
             shift 1
             command p4 annotate "$@"
+            ;;
+        shelves*)
+            shift 1
+            command p4 changes -u "$P4USER" -s shelved "$@"
+            ;;
+        submits*)
+            shift 1
+            command p4 changes -u "$P4USER" -s submitted "$@"
+            ;;
+        pending*)
+            shift 1
+            command p4 changes -u "$P4USER" -s pending "$@"
             ;;
         *)
             command p4 "$@"
