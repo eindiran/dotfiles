@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Mon 15 Oct 2018
-" VERSION: 1.0.8
+" LAST MODIFIED: Mon 03 Jun 2019
+" VERSION: 1.0.9
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -38,6 +38,7 @@ Plugin 'tmhedberg/SimpylFold' " Do folding
 Plugin 'nvie/vim-flake8'
 Plugin 'scrooloose/nerdtree' " File browsing
 Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
+Plugin 'leafgarland/typescript-vim'
 call vundle#end()
 Bundle 'Valloric/YouCompleteMe'
 "---------------------------------------------------------------------
@@ -131,7 +132,7 @@ set smartcase
 set clipboard=unnamedplus " See here: vim.wikia.com/wiki/VimTip21
 "---------------------------------------------------------------------
 set list
-set listchars=tab:▸·
+set listchars=tab:▸·,trail:·,nbsp:·
 " The above shows what whitespace is tabs
 "---------------------------------------------------------------------
 set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
@@ -166,6 +167,8 @@ nnoremap <silent> <F5> :%y+ <CR>
 au BufNewFile,BufRead *.groovy,*.gradle  setf groovy
 " *.yaml,*.yml --> YAML
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+" *.ts, *.tsx --> TypeScript
+au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
