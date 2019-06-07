@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Mon 03 Jun 2019
-" VERSION: 1.0.9
+" LAST MODIFIED: Fri 07 Jun 2019
+" VERSION: 1.1.0
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -39,6 +39,7 @@ Plugin 'nvie/vim-flake8'
 Plugin 'scrooloose/nerdtree' " File browsing
 Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
 Plugin 'leafgarland/typescript-vim'
+Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' } " shfmt -- shell script formatter
 call vundle#end()
 Bundle 'Valloric/YouCompleteMe'
 "---------------------------------------------------------------------
@@ -219,6 +220,14 @@ function! ToggleNumber()
         set relativenumber
     endif
 endfunction
+"---------------------------------------------------------------------
+" Format JSON using Python's json.tool
+"---------------------------------------------------------------------
+function! FormatJSON()
+    :%!python -c "import json, sys, collections; print json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4)"
+endfunction
+" Now add a mapping `=j` to this function
+nmap =j :%!python -m json.tool<CR>
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
