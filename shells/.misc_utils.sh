@@ -132,7 +132,7 @@ pomodoro() {
 
 # Android
 find_android_external_storage() {
-    adb shell 'echo ${SECONDARY_STORAGE%%:*}'
+    adb shell 'echo ${SECONDARY_STORAGE%%:*}'  # shellcheck disable=SC2016
 }
 
 # Cryptocurrency price info
