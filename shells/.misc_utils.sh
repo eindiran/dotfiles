@@ -29,6 +29,22 @@ hass() {
     sudo -u homeassistant -H /srv/homeassistant/bin/hass
 }
 
+# Postgres
+postgres_start() {
+    # Start the postgres -D daemon
+    sudo service postgresql start
+}
+
+postgres_stop() {
+    # Stop the postgres -D daemon
+    sudo service postgresql stop
+}
+
+postgres_status() {
+    # Report the status of the postgres -D daemon
+    sudo service postgresql status
+}
+
 # MongoDB
 mongodb_start() {
     # Start mongod
