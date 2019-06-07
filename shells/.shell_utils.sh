@@ -100,9 +100,9 @@ jj() {
 jjc() {
     # Compile Java files into a JAR file
     mkdir -p ./build
-    javac -d ./build *.java
-    cd ./build
-    jar cvf "$@" *
+    javac -d ./build ./*.java
+    cd ./build || exit
+    jar cvf "$@" ./*
 }
 
 ssh() {
@@ -342,4 +342,9 @@ fdnw() {
 dedup() {
     # Deduplicate a file while preserving the original ordering of lines
     awk '!visited[$0] ++' "$@"
+}
+
+jsonformat() {
+    # Format JSON via Python's json.tool
+    python3 -m json.tool
 }
