@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Mon 13 May 2019
-#       REVISION:    v1.1.6
+#       MODIFIED:    Fri 07 Jun 2019
+#       REVISION:    v1.1.7
 #
 # ===============================================================================
 
@@ -81,13 +81,17 @@ export TERM=screen-256color
 #--------------------------------------------------------------------
 ## Aliases
 alias up='source up'
-
 alias rm='rm -iv'
 alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
-
+# IRC
 alias irc='irssi -n eindiran'
+# Mutt
+alias email='mutt'
+alias gmail='mutt -F ~/.muttrc.gmail'
+alias prmail='mutt -F ~/.muttrc.protonmail'
+alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
@@ -161,15 +165,18 @@ setopt PUSHD_MINUS
 
 #--------------------------------------------------------------------
 # Source the files that host our extra functionality
+# If these don't exist, fail loudly:
 source ~/.shell_utils.sh
 source ~/.file_utils.sh
-source ~/.volume_utils.sh
-source ~/.p4_utils.sh
-source ~/.torque_utils.sh
-source ~/.welcome.sh
-source ~/.git_utils.sh
-source ~/.tmux_window_utils.sh
-source ~/.misc_utils.sh
+# These are allowed to not exist:
+[ -f ~/.volume_utils.sh ] && source ~/.volume_utils.sh
+[ -f ~/.env_variables ] && source ~/.env_variables  # Currently just used by `weather` and `welcome`
+[ -f ~/.welcome.sh ] && source ~/.welcome.sh
+[ -f ~/.git_utils.sh ] && source ~/.git_utils.sh
+[ -f ~/.p4_utils.sh ] && source ~/.p4_utils.sh
+[ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
+[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+[ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
