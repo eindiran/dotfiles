@@ -2,39 +2,45 @@
 #===============================================================================
 #
 #          FILE: .volume_utils.sh
-# 
+#
 #   DESCRIPTION: Adds a number of controls for the master volume.
-# 
+#
 #         NOTES: Source this file in the rc file of your preferred shell.
-#  REQUIREMENTS: Requires PulseAudio.
+#  REQUIREMENTS: Requires ALSA for amixer; libnotify for notify-send
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
 volup () {
-    # Increase system volume by 5%
-    # if no args given, otherwise do it n times
+    # If no args given: increase system volume by 5%
+    # Otherwise do it n times
     if [ $# -gt 0 ] ; then
-        if [ "$1" -eq 0 ] ; then
+        if [ "$1" -le 1 ] ; then
+            NEW_VOLUME=$(amixer -D pulse sset Master 5%+ | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
+            notify-send "Volume increased" "New volume: $NEW_VOLUME / 100"
             return
         fi
-        amixer -D pulse sset Master 5%+
+        amixer -D pulse sset Master 5%+ > /dev/null
         volup $(($1-1))
     else
-        amixer -D pulse sset Master 5%+
+        NEW_VOLUME=$(amixer -D pulse sset Master 5%+ | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
+        notify-send "Volume increased" "New volume: $NEW_VOLUME / 100"
     fi
 }
 
 voldown () {
-    # Decrease system volume by 5%
-    # if no args given, otherwise do it n times
+    # If no args given: decrease system volume by 5%
+    # Otherwise do it n times
     if [ $# -gt 0 ] ; then
-        if [ "$1" -eq 0 ] ; then
+        if [ "$1" -le 1 ] ; then
+            NEW_VOLUME=$(amixer -D pulse sset Master 5%- | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
+            notify-send "Volume decreased" "New volume: $NEW_VOLUME / 100"
             return
         fi
-        amixer -D pulse sset Master 5%-
+        amixer -D pulse sset Master 5%- > /dev/null
         voldown $(($1-1))
     else
-        amixer -D pulse sset Master 5%-
+        NEW_VOLUME=$(amixer -D pulse sset Master 5%- | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
+        notify-send "Volume decreased" "New volume: $NEW_VOLUME / 100"
     fi
 }
 
@@ -44,15 +50,27 @@ volset () {
         echo "volset takes a single integer argument in range 0 - 100"
         return
     fi
-    amixer -D pulse sset Master "$1"%
+    NEW_VOLUME=$(amixer -D pulse sset Master "$1"% | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
+    notify-send "Volume set" "New volume: $NEW_VOLUME / 100"
 }
 
 mute () {
     # Mute/unmute master volume
-    amixer -D pulse set Master 1+ toggle
+    MUTE_STATUS=$(amixer -D pulse set Master 1+ toggle | tail -n 1 | awk '{print $NF}')
+    if [ "$MUTE_STATUS" = "[off]" ] ; then
+        notify-send "Mute toggled" "Volume is now muted"
+    else
+        notify-send "Mute toggled" "Volume is now unmuted"
+    fi
 }
 
 unmute () {
-    # An alias for 'mute'
-    amixer -D pulse set Master 1+ toggle
+    # Similar to mute, but will only unmute
+    MUTE_STATUS=$(amixer -D pulse set Master 1+ toggle | tail -n 1 | awk '{print $NF}')
+    if [ "$MUTE_STATUS" = "[off]" ] ; then
+        amixer -D pulse set Master 1+ toggle > /dev/null
+        notify-send "Mute toggled" "Mute was already off"
+    else
+        notify-send "Mute toggled" "Volume is now unmuted"
+    fi
 }
