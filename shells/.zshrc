@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Fri 07 Jun 2019
-#       REVISION:    v1.1.7
+#       MODIFIED:    Tue 25 Jun 2019
+#       REVISION:    v1.1.8
 #
 # ===============================================================================
 
@@ -21,8 +21,11 @@ promptinit
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-# Set prompt to bigfade theme
-prompt bigfade
+# Set up prompt
+export NORMAL_PROMPT="[%F{white}%~%f]  λ "
+export NOCOLOR_PROMPT="[%~] λ "
+export MINIMAL_PROMPT="λ "
+PROMPT="$NORMAL_PROMPT"
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
@@ -37,8 +40,8 @@ setopt COMPLETE_ALIASES
 #--------------------------------------------------------------------
 ## History
 export HISTFILE=~/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
+export HISTSIZE=100000
+export SAVEHIST=100000
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
 ## for sharing history between zsh processes
