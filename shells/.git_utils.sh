@@ -2,17 +2,25 @@
 #===============================================================================
 #
 #          FILE: .git_utils.sh
-# 
+#
 #         USAGE: Source from a shell, then call the functions within.
-# 
+#
 #   DESCRIPTION: Add git utility functions to the shell. The main work is being done
 #                by the `git` function which wraps the standard `git` command to
 #                add additional functionality.
-# 
+#
 #         NOTES: Source this file in the rc file of your preferred shell.
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
+githash() {
+    if [ $# -gt 0 ]; then
+        shift 1
+        git rev-parse "$@"
+    else
+        git rev-parse --short=16 HEAD
+    fi
+}
 
 git() {
     # Wrapper for the git command
