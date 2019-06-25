@@ -45,6 +45,18 @@ postgres_status() {
     sudo service postgresql status
 }
 
+pg_ctl() {
+    if [ "$1" = "reload" ] ; then
+        sudo pg_ctlcluster 9.5 main reload
+    elif [ "$1" = "start" ] ; then
+        sudo pg_ctlcluster 9.5 main start
+    elif [ "$1" = "stop" ] ; then
+        sudo pg_ctlcluster 9.5 main stop
+    else
+        echo "Unknown command \"$1\". Cannot continue..."
+    fi
+}
+
 # MongoDB
 mongodb_start() {
     # Start mongod
