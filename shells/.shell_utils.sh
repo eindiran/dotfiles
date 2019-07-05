@@ -365,3 +365,8 @@ jsonformat() {
     # Format JSON via Python's json.tool
     python3 -m json.tool
 }
+
+histnl() {
+    # Print out history without line numbers
+    history 0 | sed 's/^ *[0-9]\+\*\? *//'
+}
