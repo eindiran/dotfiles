@@ -13,6 +13,7 @@
 volup () {
     # If no args given: increase system volume by 5%
     # Otherwise do it n times
+    local NEW_VOLUME
     if [ $# -gt 0 ] ; then
         if [ "$1" -le 1 ] ; then
             NEW_VOLUME=$(amixer -D pulse sset Master 5%+ | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
@@ -30,6 +31,7 @@ volup () {
 voldown () {
     # If no args given: decrease system volume by 5%
     # Otherwise do it n times
+    local NEW_VOLUME
     if [ $# -gt 0 ] ; then
         if [ "$1" -le 1 ] ; then
             NEW_VOLUME=$(amixer -D pulse sset Master 5%- | tail -n 1 | awk '{print $5}' | sed -e 's!\[\([0-9]\+\)%\]!\1!')
@@ -46,6 +48,7 @@ voldown () {
 
 volset () {
     # Set the master volume to $1
+    local NEW_VOLUME
     if [ $# -ne 1 ] ; then
         echo "volset takes a single integer argument in range 0 - 100"
         return
@@ -56,6 +59,7 @@ volset () {
 
 mute () {
     # Mute/unmute master volume
+    local MUTE_STATUS
     MUTE_STATUS=$(amixer -D pulse set Master 1+ toggle | tail -n 1 | awk '{print $NF}')
     if [ "$MUTE_STATUS" = "[off]" ] ; then
         notify-send "Mute toggled" "Volume is now muted"
@@ -66,6 +70,7 @@ mute () {
 
 unmute () {
     # Similar to mute, but will only unmute
+    local MUTE_STATUS
     MUTE_STATUS=$(amixer -D pulse set Master 1+ toggle | tail -n 1 | awk '{print $NF}')
     if [ "$MUTE_STATUS" = "[off]" ] ; then
         amixer -D pulse set Master 1+ toggle > /dev/null
