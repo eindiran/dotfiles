@@ -21,10 +21,10 @@ extract() {
         echo "Usage: extract foo.<filetype>"
         echo "Example: extract foo.tar.gz"
         echo
-        echo "extract() supports the following filetypes:"
-        printf "\t\t.tar\n\t\t.tar.bz2\n\t\t.tar.bz\n\t\t.tar.gz\n\t\t.tar.xz\n"
-        printf "\t\t.tar.Z\n\t\t.tar.lrz\n\t\t.lrz\n\t\t.rz\n\t\t.bz2\n\t\t.bz\n"
-        printf "\t\t.rar\n\t\t.gz\n\t\t.zip\n\t\t.Z\n\t\t.7z\n"
+        echo "extract() supports the following filetypes, including their alternate extensions:"
+        printf "\t\t.tar\n\t\t.tar.bz2\n\t\t.tar.bz\n\t\t.tar.gz\n\t\t.tar.lz\n\t\t.tar.xz\n"
+        printf "\t\t.tar.Z\n\t\t.tar.lrz\n\t\t.lrz\n\t\t.tar.7z\n\t\t.rz\n\t\t.bz2\n\t\t.bz\n\t\t.xz\n"
+        printf "\t\t.lz\n\t\t.rar\n\t\t.gz\n\t\t.zip\n\t\t.Z\n\t\t.7z\n\t\t.zlib\n"
         return
     elif [ -f "$1" ] ; then
         case "$1" in
