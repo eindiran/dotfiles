@@ -107,9 +107,10 @@ play_beep() {
 
 posture() {
     # Reminds you to maintain good posture
+    local MINUTES
     if [ $# -gt 0 ] ; then
         MINUTES="$1"
-        ((SECONDS=MINUTES*60))
+        ((SECONDS=MINUTES*60)) # The magical builtin SECONDS, not a normal var.
         while true; do
             {
                 sleep "$SECONDS"
@@ -132,6 +133,7 @@ posture() {
 pomodoro() {
     # Start a Pomodoro timer
     if [ $# -gt 0 ] ; then
+        local ARGUMENT
         ARGUMENT="$1"
         case "$ARGUMENT" in
             long|l|--long|-l)
