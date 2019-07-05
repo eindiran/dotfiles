@@ -145,6 +145,23 @@ rgp() {
     rg -p "$@" | less -RFX
 }
 
+ski() {
+    # Open interactive 'sk' using 'rg' to do the search
+    sk --ansi -i -c 'rg --color=always --line-number "{}"'
+}
+
+man () {
+    # An alias for 'man' that will search apropos if no manpage is initially found
+    MAN_PAGE="$(command man "$@" 2>&1)"
+    if beginswith "No manual entry for" "$MAN_PAGE"; then
+        command man "$@"
+        printf "\nSearching for similar pages via apropos...\n\n"
+        apropos "$@"
+    else
+        command man "$@"
+    fi
+}
+
 lcc() {
     # Alias for Mono license compiler so that `lc` can be used for the `wc` alias below
     command lc "$@"
