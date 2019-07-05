@@ -12,6 +12,7 @@ CLR_TC='\033[0m'    # No color; used to reset
 
 mktodo() {
     # Make a todo list
+    local NEW_TODO; local OLD_TODO
     NEW_TODO="/local/todo/$(date -I)-TODO.md"
     OLD_TODO="/local/todo/$(date -I -d "yesterday")-TODO.md"
     if [ -f "$NEW_TODO" ] ; then
@@ -28,6 +29,7 @@ mktodo() {
 
 todo() {
     # Prints out your todo list for the day
+    local TODO_FILE
     echo "${BLU_TC}---------------------------------------"
     echo "----- ${WHT_TC}Your todo list for the day: ${BLU_TC}-----"
     echo "---------------------------------------${CLR_TC}"
@@ -61,6 +63,7 @@ agenda() {
 
 welcome() {
     # Run this function on opening a new shell
+    local TIME_INFO; local TODO_FILE
     if [ -t 1 ]; then
         # Only proceed if STDOUT is a tty
         echo "${BLU_TC}---------------------------------------"
@@ -89,6 +92,7 @@ welcome() {
 }
 
 mwelcome() {
+    local TIME_INFO; local TODO_FILE
     (echo "${BLU_TC}---------------------------------------"
     if [ "$(date +%H)" -le 10 ]; then
         echo "-------${WHT_TC}  Good morning, $USER  ${BLU_TC}------"
