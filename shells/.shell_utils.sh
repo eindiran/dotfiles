@@ -152,6 +152,7 @@ ski() {
 
 man () {
     # An alias for 'man' that will search apropos if no manpage is initially found
+    local MAN_PAGE
     MAN_PAGE="$(command man "$@" 2>&1)"
     if beginswith "No manual entry for" "$MAN_PAGE"; then
         command man "$@"
@@ -181,6 +182,11 @@ countfiles() {
         total_count=$(find . -not -path '*/\.*' -print | wc -l)
         calc "$total_count"-1
     fi
+}
+
+histnl() {
+    # Print out history without line numbers
+    history 0 | sed 's/^ *[0-9]\+\*\? *//'
 }
 
 histsearch() {
@@ -233,6 +239,7 @@ broken_links() {
 
 makefile_deps() {
     # Create a dot-graph of the dependencies in a Makefile
+    local TARGET_NAME
     if [ $# -gt 0 ] ; then
         TARGET_NAME="$1"
         make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
@@ -329,11 +336,12 @@ devices() {
 
 linker_path() {
     # Prints out the path used by ld
-    TMP=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
+    local LNKR_PATH
+    LNKR_PATH=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
     if [ -n "$LD_LIBRARY_PATH" ]; then
-        TMP+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<< "$LD_LIBRARY_PATH")
+        LNKR_PATH+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<< "$LD_LIBRARY_PATH")
     fi
-    echo "$TMP" | sort -u
+    echo "$LNKR_PATH" | sort -u
 }
 
 md() {
@@ -364,9 +372,4 @@ dedup() {
 jsonformat() {
     # Format JSON via Python's json.tool
     python3 -m json.tool
-}
-
-histnl() {
-    # Print out history without line numbers
-    history 0 | sed 's/^ *[0-9]\+\*\? *//'
 }
