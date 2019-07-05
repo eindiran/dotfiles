@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Tue 25 Jun 2019
-#       REVISION:    v1.1.8
+#       MODIFIED:    Fri 05 Jul 2019
+#       REVISION:    v1.1.9
 #
 # ===============================================================================
 
@@ -98,6 +98,23 @@ alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
+## Typo-catching for my most common typos
+alias typo='alias'
+
+typo ckear='clear'     # ckear -> clear
+typo clera='clear'     # clera -> clear
+typo ear='true'        # c;ear -> clear
+typo histpry='history' # histpry -> history
+typo histroy='history' # histroy -> history
+typo bim='vim'         # bim -> vim
+typo cim='vim'         # cim -> vim
+typo im='vim'          # im -> vim
+typo vin='vim'         # vin -> vim
+typo l='ll'            # l -> ll
+typo kk='ll'           # kk -> ll
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
 ## Exports
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=/usr/local/lib:/usr/local/include
@@ -164,6 +181,9 @@ setopt PUSHD_MINUS
 #--------------------------------------------------------------------
 ## fzf for fuzzy file searching
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND="fd --color always . $HOME"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --color always -t d . $HOME"
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
