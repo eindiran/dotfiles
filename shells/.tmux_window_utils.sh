@@ -37,6 +37,7 @@ set_title() {
 max_win() {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
+    local WINDOW_NAME; local WINDOW_ID
     if [ $# -gt 0 ] ; then
         WINDOW_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
@@ -49,6 +50,7 @@ max_win() {
 close_win() {
     # Close the specified window
     # Unlike max_win the default is NOT to close the current window
+    local WINDOW_NAME; local WINDOW_ID
     WINDOW_NAME="$1"
     WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
     wmctrl -ic "$WINDOW_ID"
