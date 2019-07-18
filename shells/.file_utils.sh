@@ -21,7 +21,7 @@ extract() {
         echo "Usage: extract foo.<filetype>"
         echo "Example: extract foo.tar.gz"
         echo
-        echo "extract() supports the following filetypes, including their alternate extensions:"
+        echo "extract() supports the following filetypes:"
         printf "\t\t.tar\n\t\t.tar.bz2\n\t\t.tar.bz\n\t\t.tar.gz\n\t\t.tar.lz\n\t\t.tar.xz\n"
         printf "\t\t.tar.Z\n\t\t.tar.lrz\n\t\t.lrz\n\t\t.tar.7z\n\t\t.rz\n\t\t.bz2\n\t\t.bz\n\t\t.xz\n"
         printf "\t\t.lz\n\t\t.rar\n\t\t.gz\n\t\t.zip\n\t\t.Z\n\t\t.7z\n\t\t.zlib\n"
@@ -105,6 +105,11 @@ tarlrz() {
 tar7z() {
     # Tar and 7zip a file or set of files
     tar -c "$@" | 7z > "$1.tar.7z"
+}
+
+ljar() {
+    # List the contents of a JAR file
+    jar tvf "$@"
 }
 
 batch_ext_rename() {
@@ -191,14 +196,14 @@ transparent_png_to_jpg() {
 
 svg_to_png() {
     # Converts svg files to png
-    for file in $(find . -name "*.svg"); do
+    for file in *.svg; do
         svgexport "${file}" "${file/svg/png}" 1024:1024
     done
 }
 
 svg_to_jpg() {
     # Converts svg files to jpg
-    for file in $(find . -name "*.svg"); do
+    for file in *.svg; do
         svgexport "${file}" "${file/svg/jpg}" --format jpg
     done
 }
