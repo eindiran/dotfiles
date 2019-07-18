@@ -62,15 +62,23 @@ p4() {
             shift 1
             command p4 annotate "$@"
             ;;
-        shelves\ *)
+        shelves|shelves\ *)
             shift 1
             command p4 changes -u "$P4USER" -s shelved "$@"
             ;;
-        submits\ *)
+        commits\ all\ *)
+            shift 1
+            command p4 changes -s submitted "$@"
+            ;;
+        commits|commits\ *)
             shift 1
             command p4 changes -u "$P4USER" -s submitted "$@"
             ;;
-        pending\ *)
+        submits|submits\ *)
+            shift 1
+            command p4 changes -u "$P4USER" -s submitted "$@"
+            ;;
+        pending|pending\ *)
             shift 1
             command p4 changes -u "$P4USER" -s pending "$@"
             ;;
