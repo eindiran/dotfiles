@@ -33,23 +33,38 @@ git() {
         amend)
             command git commit --amend
             ;;
+        # Alias for `git commit ...`
+        c|c\ *)
+            shift 1
+            command git commit "$@"
+            ;;
+        # Alias for `git checkout ...`
+        co|co\ *)
+            shift 1
+            command git checkout "$@"
+            ;;
+        # Alias for `git clone ...`
+        cl\ *)
+            shift 1
+            command git clone "$@"
+            ;;
         # Checkout a new branch, with HEAD set to current HEAD
-        cb*)
+        cb\ *)
             shift 1
             command git checkout -b "$@"
             ;;
         # Alias for `git commit -m ...`
-        cm*)
+        cm\ *)
             shift 1
             command git commit -m "$@"
             ;;
         # Alias for `git commit -am ...`
-        cam*)
+        cam\ *)
             shift 1
             command git commit -am "$@"
             ;;
         # List all <items>
-        list*)
+        list\ *)
             shift 1
             case "$*" in
                 # Submodules
@@ -87,7 +102,7 @@ git() {
             esac
             ;;
         # Log patch
-        log-patch|lp*)
+        log-patch|log-patch\ *|lp|lp\ *)
             shift 1  # git lp
             command git log --patch --stat "$@"
             ;;
@@ -96,9 +111,15 @@ git() {
             command git remote -v
             ;;
         # Rename a branch
-        rename*)
+        rename\ *)
             shift 1  # git rename
             command git branch -m "$@"
+            ;;
+        # Generates a line chart of commits by hour
+        # From here: https://gist.github.com/bessarabov/674ea13c77fc8128f24b5e3f53b7f094
+        timegraph|timegraph\ *)
+            shift 1
+            command git log --format="%ad" "$@" --date="format:%H" | awk '{n=$1+0;if(H[n]++>max)max=H[n]}END{for(i=0;i<24;i++){printf"%02d -%5d ",i,H[i];for(n=0;n<H[i]/max*50;n++){printf "*"}print""}}'
             ;;
         # Help for wrapper function
         wrapper-help)
@@ -106,12 +127,15 @@ git() {
             echo "Use like the standard command. This adds the following new commands:"
             echo "git adog, git amend, git lp, git log-graph, git log-patch, git remotes"
             echo "git list {submodule(s), remote(s), rev(s), branch(es), rbranch(es), lbranch(es)}"
-            echo "git rename, git wrapper-help"
+            echo "git rename, git timegraph, git wrapper-help"
             echo
             echo "Additionally, it supports the following aliases:"
+            echo "git co:   git checkout"
             echo "git cb:   git checkout -b"
+            echo "git c:    git commit"
             echo "git cm:   git commit -m"
             echo "git cam:  git commit -am"
+            echo "git cl:   git clone"
             ;;
         # All standard commands
         *)
