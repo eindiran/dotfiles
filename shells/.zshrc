@@ -112,6 +112,7 @@ typo im='vim'          # im -> vim
 typo vin='vim'         # vin -> vim
 typo l='ll'            # l -> ll
 typo kk='ll'           # kk -> ll
+typo ks='ls'           # ks -> ls
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
@@ -179,11 +180,11 @@ setopt PUSHD_MINUS
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-## fzf for fuzzy file searching
+# fzf, for fuzzy seaching
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND="fd --color always . $HOME"
+export FZF_DEFAULT_COMMAND="fd . $HOME"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --color always -t d . $HOME"
+export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
