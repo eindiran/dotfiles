@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Fri 05 Jul 2019
-#       REVISION:    v1.1.9
+#       MODIFIED:    Tue 23 Jul 2019
+#       REVISION:    v1.2.0
 #
 # ===============================================================================
 
@@ -98,24 +98,6 @@ alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-## Typo-catching for my most common typos
-alias typo='alias'
-
-typo ckear='clear'     # ckear -> clear
-typo clera='clear'     # clera -> clear
-typo ear='true'        # c;ear -> clear
-typo histpry='history' # histpry -> history
-typo histroy='history' # histroy -> history
-typo bim='vim'         # bim -> vim
-typo cim='vim'         # cim -> vim
-typo im='vim'          # im -> vim
-typo vin='vim'         # vin -> vim
-typo l='ll'            # l -> ll
-typo kk='ll'           # kk -> ll
-typo ks='ls'           # ks -> ls
-#--------------------------------------------------------------------
-
-#--------------------------------------------------------------------
 ## Exports
 export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=/usr/local/lib:/usr/local/include
@@ -200,6 +182,7 @@ source ~/.file_utils.sh
 [ -f ~/.p4_utils.sh ] && source ~/.p4_utils.sh
 [ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+[ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
 #--------------------------------------------------------------------
 
