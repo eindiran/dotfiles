@@ -145,6 +145,22 @@ rgp() {
     rg -p "$@" | less -RFX
 }
 
+find_non_utf8_chars() {
+    # Find non-UTF-8 characters
+    # shellcheck disable=SC2063
+    grep -axv '.*' "$@"
+}
+
+find_non_ascii_chars() {
+    # Find non-ASCII characters
+    rg "[^\x00-\x7F]" "$@"
+}
+
+find_non_printable_chars() {
+    # Find non-printable characters
+    rg "[\x00-\x08\x0E-\x1F\x80-\xFF]" "$@"
+}
+
 ski() {
     # Open interactive 'sk' using 'rg' to do the search
     sk --ansi -i -c 'rg --color=always --line-number "{}"'
