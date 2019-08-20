@@ -57,6 +57,11 @@ pg_ctl() {
     fi
 }
 
+psql_schemas() {
+    # List all available schemas for a given database
+    psql -U postgres -t "$@" -c "SELECT nspname FROM pg_catalog.pg_namespace;"
+}
+
 # MongoDB
 mongodb_start() {
     # Start mongod
