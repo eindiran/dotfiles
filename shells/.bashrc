@@ -8,8 +8,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     04/31/2019
-#       MODIFIED:    Fri 31 May 2019
-#       REVISION:    v1.0.0
+#       MODIFIED:    Thu 03 Oct 2019
+#       REVISION:    v1.0.1
 #
 # ===============================================================================
 
@@ -45,6 +45,11 @@ alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
 alias irc='irssi -n eindiran'
+# Mutt
+alias email='mutt'
+alias gmail='mutt -F ~/.muttrc.gmail'
+alias prmail='mutt -F ~/.muttrc.protonmail' # Note that this will only work with the bridge enabled
+alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
@@ -89,6 +94,8 @@ source ~/.file_utils.sh
 source ~/.volume_utils.sh
 source ~/.welcome.sh
 source ~/.git_utils.sh
+source ~/.typo_utils.sh
+source ~/.tts_utils.sh
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
