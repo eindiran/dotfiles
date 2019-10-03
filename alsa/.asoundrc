@@ -1,0 +1,9 @@
+## ~/.asoundrc
+
+pcm.dsnooped {
+    type dsnoop
+    slave {
+        pcm "hw:0,0"
+        channels 2
+    }
+}
