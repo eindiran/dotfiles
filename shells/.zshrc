@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Tue 23 Jul 2019
-#       REVISION:    v1.2.0
+#       MODIFIED:    Thu 03 Oct 2019
+#       REVISION:    v1.2.1
 #
 # ===============================================================================
 
@@ -93,7 +93,7 @@ alias irc='irssi -n eindiran'
 # Mutt
 alias email='mutt'
 alias gmail='mutt -F ~/.muttrc.gmail'
-alias prmail='mutt -F ~/.muttrc.protonmail'
+alias prmail='mutt -F ~/.muttrc.protonmail'  # Note that this is only supported if you've enabled the bridge
 alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
@@ -182,6 +182,7 @@ source ~/.file_utils.sh
 [ -f ~/.p4_utils.sh ] && source ~/.p4_utils.sh
 [ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+[ -f ~/.tts_utils.sh ] && source ~/.tts_utils.sh
 [ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
 #--------------------------------------------------------------------
