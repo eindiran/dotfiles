@@ -1,3 +1,7 @@
+# .gitignore
+# This .gitignore is probably not the best for your specific project, since it ignores a lot of patterns
+# Check the top-level git directory for language specific .gitignore files.
+
 *.a
 *.app
 *.aux
@@ -48,7 +52,6 @@ hs_err_pid*
 *.idb
 *.ilk
 .installed.cfg
-*.jar
 .jekyll-cache/
 .jekyll-metadata
 *.ko
