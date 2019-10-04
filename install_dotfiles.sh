@@ -111,3 +111,19 @@ cp tmux/scripts/* ~/.tmux/scripts
 
 # Copy over .xbindkeysrc
 cp xbindkeys/.xbindkeysrc ~/.xbindkeysrc
+
+# Copy over ALSA config
+cp alsa/.asoundrc ~/.asoundrc
+
+# Copy over cabal config
+cd cabal/ && cp -a .cabal ~/ && cd ..
+
+# Copy over .ignore files
+cp ignore/.rgignore ~/.rgignore
+cp ignore/.fdignore ~/.fdignore
+cp ignore/.gitignore ~/.gitignore
+
+# Copy over global .gitconfig
+cp git/.gitconfig ~/.gitconfig
+
+echo "Installation of dotfiles complete!"
