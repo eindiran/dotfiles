@@ -1,0 +1,102 @@
+#  .fdignore
+#
+# Files matching these patterns will not be searched by default when using `fd`
+# To override these settings use the appropriate flag below:
+#    --no-ignore        : don't respect .ignore, .gitignore, .fdignore
+#    --no-ignore-vcs    : don't respect .gitignore files
+
+# Python byte-compiled/optimized/DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+
+# Object & Shared-object files
+*.so
+*.o
+*.ko
+*.obj
+*.elf
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# C libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Python distribution/packaging
+.Python
+develop-eggs/
+.eggs/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+site-packages/
+distutils/
+
+# Unit test / coverage reports
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Sphinx documentation
+docs/_build/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# mypy
+.mypy_cache/
+
+# Java
+*.class
+hs_err_pid*
+.gradle
+.gradle*cache
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Perl
+*.pm.tdy
+.precomp
+lib/.precomp
+
+# Nim
+nimcache/
+nimblecache/
+
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata

@@ -1,0 +1,113 @@
+#  .rgignore
+#
+# Files matching these patterns will not be searched by default when using `rg`
+# To override these settings, the appropriate flag below:
+#    --no-ignore        : don't respect .ignore, .gitignore, .rgignore
+#    --no-ignore-dot    : don't respect .ignore files
+#    --no-ignore-vcs    : don't respect .gitignore files
+#    --no-ignore-global : don't respect globally sourced ignore dotfiles
+#    --no-ignore-parent : don't respect ignore dotfiles from parent directories
+
+# Python byte-compiled/optimized/DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+
+# Object & Shared-object files
+*.so
+*.o
+*.ko
+*.obj
+*.elf
+
+# Executables
+*.exe
+*.app
+*.i*86
+*.x86_64
+
+# C libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Python distribution/packaging
+.Python
+develop-eggs/
+.eggs/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Django
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+Pipfile.lock
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# Java
+*.class
+hs_err_pid*
+.gradle
+.gradle*cache
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Perl
+*.pm.tdy
+.precomp
+lib/.precomp
+
+# Nim
+nimcache/
+nimblecache/
+
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Packaged files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
