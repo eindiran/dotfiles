@@ -1,0 +1,27 @@
+# .gitignore-nim
+# A .gitignore suitable for use with a Nim project
+
+# Cached files
+nimcache/
+nimblecache/
+
+# Docs
+htmldocs/
+
+# Object & Shared-object files
+*.so
+*.o
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# C libraries
+*.lib
+*.a
+*.la
+*.lo
