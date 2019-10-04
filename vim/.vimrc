@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 07 Jun 2019
-" VERSION: 1.1.0
+" LAST MODIFIED: Fri 04 Oct 2019
+" VERSION: 1.1.1
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -28,7 +28,6 @@ Plugin 'apalmer1377/factorus' " Easier refactoring
 Plugin 'flazz/vim-colorschemes' " Adds options for color-schemes
 Plugin 'wakatime/vim-wakatime' " Wakatime
 Plugin 'rust-lang/rust.vim' " Rust syntax highlighting
-Plugin 'rustushki/JavaImp.vim' " JavaDocs and import statement management
 Plugin 'godlygeek/tabular' " Dependency for MD syntax
 Plugin 'plasticboy/vim-markdown' " MD syntax
 Plugin 'sjurgemeyer/vimport' " Gradle/Groovy imports
@@ -41,16 +40,9 @@ Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
 Plugin 'leafgarland/typescript-vim'
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' } " shfmt -- shell script formatter
 call vundle#end()
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 "---------------------------------------------------------------------
 filetype plugin indent on
-"---------------------------------------------------------------------
-" Setup for JavaImp
-let g:JavaImpDataDir = "/home/eindiran/vim/JavaImp"
-" Temp dir for JavaImp to work in
-let g:JavaImpPaths = "/home/eindiran/Workspace"
-" Paths to top level Java project dirs
-" REVISIT: Add all paths required, esp. once this is on my work machine.
 "---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
@@ -88,10 +80,10 @@ nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
-set background=dark " options: <light, dark> 
+set background=dark " options: <light, dark>
 colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 "---------------------------------------------------------------------
-" Misc 
+" Misc
 "---------------------------------------------------------------------
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
@@ -110,7 +102,7 @@ let g:ycm_filetype_blacklist={
     \ 'org':1
     \}
 "---------------------------------------------------------------------
-" Spaces & Tabs 
+" Spaces & Tabs
 set tabstop=4           " 4 space per tab press
 set expandtab           " use spaces for tabs; why would you use tabs?
 set softtabstop=4       " 4 space per tab press
@@ -122,7 +114,7 @@ set shiftround
 set autoindent
 set copyindent
 "---------------------------------------------------------------------
-" UI Layout 
+" UI Layout
 "---------------------------------------------------------------------
 set ruler
 set wrap                " Do line wrapping
@@ -224,10 +216,20 @@ endfunction
 " Format JSON using Python's json.tool
 "---------------------------------------------------------------------
 function! FormatJSON()
-    :%!python -c "import json, sys, collections; print json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4)"
+    :%!python3 -c "import json, sys, collections; print(json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4))"
 endfunction
 " Now add a mapping `=j` to this function
 nmap =j :%!python -m json.tool<CR>
+"---------------------------------------------------------------------
+" Format XML using Python's minidom + some command-mode nonsense
+"---------------------------------------------------------------------
+function! FormatXML()
+    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
+endfunction
+" Now add a mapping `=x` to this function
+nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
+" Since this also works for HTML, add a mapping for `=h`
+nmap =h =x
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
@@ -237,10 +239,10 @@ let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_completion_on_dot = 0
 let g:pymode_folding = 0 " Do function folding, but not in Pymode
 let g:pymode_quickfix_maxheight = 4 " Max height of cwindow
-let g:pymode_motion = 1 
+let g:pymode_motion = 1
 let g:pymode_lint = 1 " Use linting = 1; don't = 0
 let g:pymode_python = 'python3'
-let g:pymode_options_max_line_length = 100 
+let g:pymode_options_max_line_length = 100
 let g:pymode_trim_whitespaces = 1 " remove trailing whitespace on save
 let g:pymode_options_colorcolumn = 1 " Line indicating max line len
 "---------------------------------------------------------------------
@@ -267,7 +269,7 @@ py3 << EOF
 import os
 import sys
 if 'VIRTUAL_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-  exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
 EOF
