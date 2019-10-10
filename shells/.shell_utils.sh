@@ -394,7 +394,7 @@ xmlformat() {
     # Format XML via Python's minidom library
     # Note that this function may not be appropriate for large XML files on machines
     # w/ limited resources, as the minidom library operates on the whole file.
-    python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), end='', flush=True)"
+    python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), flush=True)"
 }
 
 zeropad() {
