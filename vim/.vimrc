@@ -224,7 +224,7 @@ nmap =j :%!python -m json.tool<CR>
 " Format XML using Python's minidom + some command-mode nonsense
 "---------------------------------------------------------------------
 function! FormatXML()
-    :%!python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), end='', flush=True)
+    :%!python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), flush=True)
 endfunction
 " Now add a mapping `=x` to this function
 nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
