@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 04 Oct 2019
-" VERSION: 1.1.1
+" LAST MODIFIED: Thu 10 Oct 2019
+" VERSION: 1.1.2
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -224,7 +224,7 @@ nmap =j :%!python -m json.tool<CR>
 " Format XML using Python's minidom + some command-mode nonsense
 "---------------------------------------------------------------------
 function! FormatXML()
-    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
+    :%!python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), end='', flush=True)
 endfunction
 " Now add a mapping `=x` to this function
 nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
