@@ -389,3 +389,23 @@ jsonformat() {
     # Format JSON via Python's json.tool
     python3 -m json.tool
 }
+
+xmlformat() {
+    # Format XML via Python's minidom library
+    # Note that this function may not be appropriate for large XML files on machines
+    # w/ limited resources, as the minidom library operates on the whole file.
+    python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), end='', flush=True)"
+}
+
+zeropad() {
+    # Zero-pad a number in a string
+    # Useful for batch renaming files to make lexical
+    # sort order the same as numerical sort order
+    PADLEN=5
+    if [ $# -eq 2 ]; then
+        PADLEN="$2"
+    fi
+    NUM="$(echo "$1" | sed -n -e 's/.*_\([[:digit:]]\+\)\..*/\1/p')"
+    PADDED_NUM="$(printf "%0${PADLEN}d" "$NUM")"
+    echo "${1/$NUM/$PADDED_NUM}"
+}
