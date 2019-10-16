@@ -166,6 +166,11 @@ ski() {
     sk --ansi -i -c 'rg --color=always --line-number "{}"'
 }
 
+fullpath() {
+    # Print out the absolute path for a file
+    readlink -f "$1"
+}
+
 man () {
     # An alias for 'man' that will search apropos if no manpage is initially found
     local MAN_PAGE
