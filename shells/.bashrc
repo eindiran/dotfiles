@@ -8,8 +8,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     04/31/2019
-#       MODIFIED:    Thu 03 Oct 2019
-#       REVISION:    v1.0.1
+#       MODIFIED:    Tue 22 Oct 2019
+#       REVISION:    v1.0.2
 #
 # ===============================================================================
 
@@ -35,6 +35,14 @@ LS_COLORS='no=00:fi=00:di=34:ow=34;40:ln=35:pi=30;44:so=35;44:do=35;44:bd=33;44:
 export LS_COLORS
 export TERM=screen-256color
 setxkbmap -option caps:none # Turn off capslock
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+## Charset preferences
+export LESSCHARSET='utf-8'
+export LANGUAGE='en_US.UTF-8'
+export LC_COLLATE='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
