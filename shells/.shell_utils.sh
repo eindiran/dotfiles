@@ -82,6 +82,18 @@ tm() {
     fi
 }
 
+clearl() {
+    # Clear, then list the current directory
+    clear
+    ll "$@"
+}
+
+cleart() {
+    # Clear, the tree the current directory
+    clear
+    tree "$@"
+}
+
 j() {
     # Run Java classes: alias for `java ...`
     java "$@"
