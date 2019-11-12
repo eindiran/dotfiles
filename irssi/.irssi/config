@@ -160,16 +160,9 @@ chatnets = {
 };
 
 channels = (
-  { name = "#lobby"; chatnet = "EsperNet"; autojoin = "No"; },
-  { name = "#freenode"; chatnet = "Freenode"; autojoin = "No"; },
-  { name = "#irssi"; chatnet = "Freenode"; autojoin = "No"; },
-  { name = "#gamesurge"; chatnet = "GameSurge"; autojoin = "No"; },
-  { name = "#irssi"; chatnet = "IRCNet"; autojoin = "No"; },
-  { name = "#ircsource"; chatnet = "IRCSource"; autojoin = "No"; },
-  { name = "#netfuze"; chatnet = "NetFuze"; autojoin = "No"; },
-  { name = "#oftc"; chatnet = "OFTC"; autojoin = "No"; },
-  { name = "silc"; chatnet = "SILC"; autojoin = "No"; },
   { name = "#lobsters"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#lobsters-boil"; chatnet = "Freenode"; autojoin = "yes"; }
+  { name = "#wikipedia-en"; chatnet = "Freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -435,6 +428,7 @@ settings = {
   "fe-text" = { actlist_sort = "refnum"; };
   "fe-common/core" = { autolog = "yes"; };
 };
-ignores = ( { 
-  level = "CTCPS DCC JOINS PARTS QUITS";
-} );
+ignores = (
+  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#lobsters" ); }
+  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#lobsters-boil" ); }
+);
