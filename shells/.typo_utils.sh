@@ -96,3 +96,4 @@ typo eoch='echo'         # eoch -> echo
 typo hava='java'         # hava  -> java
 typo havac='javac'       # havac -> java
 typo mu='mutt'           # mu    -> mutt
+typo hyop='htop'         # hyop  -> htop
