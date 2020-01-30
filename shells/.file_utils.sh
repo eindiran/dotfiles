@@ -72,6 +72,42 @@ extract() {
     fi
 }
 
+chmodr() {
+    # Change the permissions of a file to allow it to be readable by everyone
+    chmod a+r $@
+}
+
+chmodw() {
+    # Change the permissions of a file to allow it to be writeable by everyone
+    chmod a+w $@
+}
+
+chmodx() {
+    # Change the permissions of a file to allow it to be executable by everyone
+    chmod a+x $@
+}
+
+chmoda() {
+    # Change the permissions of a file to allow it to be readable, writeable,
+    # and executable by everyone. Equivalent to `chmod 777 $@`
+    chmod 777 $@
+}
+
+chmodnr() {
+    # Change the permissions of a file to remove all read permissions
+    chmod a-r $@
+}
+
+chmodnw() {
+    # Change the permissions of a file to remove all write permissions
+    chmod a-w $@
+}
+
+chmodnx() {
+    # Change the permissions of a file to remove all execute permissions
+    chmod a-x $@
+}
+
 targz() {
     # Tar and gzip a file or set of files
     tar -zcvf "$1.tar.gz" "$1"
