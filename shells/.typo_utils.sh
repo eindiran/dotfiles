@@ -33,6 +33,7 @@ typo clar='clear'        # clar   -> clear
 typo cler='clear'        # cler   -> clear
 typo ear='true'          # c;ear  -> clear
 typo lear='true'         # c;lear -> clear
+typo cl='clear'          # cl;ear -> clear
 
 # history
 typo histpry='history'   # histpry  -> history
@@ -49,6 +50,12 @@ typo vun='vim'           # vun -> vim
 typo vom='vim'           # vom -> vim
 typo von='vim'           # von -> vim
 typo vin='vim'           # vin -> vim
+typo viim='vim'          # viim -> vim
+typo viiim='vim'         # viiim -> vim
+typo viiiim='vim'        # viiiim -> vim
+typo vii='vim'           # vii -> vim
+typo viii='vim'          # viii -> vim
+typo viiii='vim'         # viiii -> vim
 
 # ls / ll
 typo l='ll'              # l   -> ll
@@ -66,6 +73,7 @@ typo exitr='exit'        # exitr -> exit
 typo eixt='exit'         # eixt  -> exit
 typo exut='exit'         # exut  -> exit
 typo exot='exit'         # exot  -> exit
+typo exiot='exit'        # exiot -> exit
 typo exity='exit'        # exity -> exit
 typo exiy='exit'         # exiy  -> exit
 typo exiyt='exit'        # exiyt -> exit
@@ -78,6 +86,7 @@ typo hit='git'           # hit -> git
 # p4
 typo p45='p4'            # p45 -> p4
 typo p5='p4'             # p5  -> p4
+typo p3='p4'             # p3  -> p4
 
 # which
 typo wich='which'        # wich  -> which
@@ -91,6 +100,7 @@ typo refrehs='refresh'   # refrehs -> refresh
 
 # echo
 typo eoch='echo'         # eoch -> echo
+typo wcho='echo'         # wcho => echo
 
 # Other misc. commands
 typo hava='java'         # hava  -> java
