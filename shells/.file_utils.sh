@@ -28,39 +28,52 @@ extract() {
         return
     elif [ -f "$1" ] ; then
         case "$1" in
-            *.tar)       tar xvf "$1"                  ;;  # tar
-            *.tar.bz)    tar xvjf "$1"                 ;;  # tar + bzip(2)
-            *.tbz)       tar xvjf "$1"                 ;;  # tar + bzip(2)
-            *.tar.bz2)   tar xvjf "$1"                 ;;  # tar + bzip2
-            *.tbz2)      tar xvjf "$1"                 ;;  # tar + bzip2
-            *.tar.gz)    tar xvzf "$1"                 ;;  # tar + gzip
-            *.tgz)       tar xvzf "$1"                 ;;  # tar + gzip
-            *.tar.lz)    tar --lzip -xvf "$1"          ;;  # tar + lzip
-            *.tlz)       tar --lzip -xvf "$1"          ;;  # tar + lzip
-            *.tar.xz)    tar xvJf "$1"                 ;;  # tar + lmza/lmza2
-            *.txz)       tar xvJf "$1"                 ;;  # tar + lmza/lmza2
-            *.tar.Z)     zcat "$1" | tar xvf -         ;;  # tar + compress
-            *.tZ)        zcat "$1" | tar xvf -         ;;  # tar + compress
-            *.tar.lrz)   lrzuntar "$1"                 ;;  # tar + lrzip
-            *.tlrz)      lrzuntar "$1"                 ;;  # tar + lrzip
-            *.tar.7z)    7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
-            *.tar.7zip)  7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
-            *.t7z)       7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
-            *.lrz)       lrunzip "$1"                  ;;  # lrzip
-            *.rz)        runzip "$1"                   ;;  # rzip
-            *.bz)        bunzip2 "$1"                  ;;  # bzip
-            *.bz2)       bunzip2 "$1"                  ;;  # bzip
-            *.xz)        xz -d "$1"                    ;;  # xz-utils
-            *.gz)        gunzip "$1"                   ;;  # gzip
-            *.lz)        lzip -d -k "$1"               ;;  # lzip
-            *.7z)        7z x "$1"                     ;;  # 7zip
-            *.7zip)      7z x "$1"                     ;;  # 7zip
-            *.7z.+[0-9]) 7z x "$1"                     ;;  # 7zip: format '.7z1'
-            *.rar)       unrar x "$1"                  ;;  # rar
-            *.rar+[0-9]) unrar x "$1"                  ;;  # rar: format '.rar1'
-            *.zip)       unzip "$1"                    ;;  # zip
-            *.Z)         uncompress "$1"               ;;  # compress
-            *.zlib)      zlib-flate -uncompress "$1"   ;;  # zlib
+            *.tar)        tar xvf "$1"                  ;;  # tar
+            *.tar.bz)     tar xvjf "$1"                 ;;  # tar + bzip(2)
+            *.tbz)        tar xvjf "$1"                 ;;  # tar + bzip(2)
+            *.tar.bz2)    tar xvjf "$1"                 ;;  # tar + bzip2
+            *.tbz2)       tar xvjf "$1"                 ;;  # tar + bzip2
+            *.tar.bzip)   tar xvjf "$1"                 ;;  # tar + bzip2
+            *.tbzip)      tar xvjf "$1"                 ;;  # tar + bzip2
+            *.tar.gz)     tar xvzf "$1"                 ;;  # tar + gzip
+            *.tgz)        tar xvzf "$1"                 ;;  # tar + gzip
+            *.tar.gzip)   tar xvzf "$1"                 ;;  # tar + gzip
+            *.tgzip)      tar xvzf "$1"                 ;;  # tar + gzip
+            *.tar.lz)     tar --lzip -xvf "$1"          ;;  # tar + lzip
+            *.tlz)        tar --lzip -xvf "$1"          ;;  # tar + lzip
+            *.tar.lzip)   tar --lzip -xvf "$1"          ;;  # tar + lzip
+            *.tlzip)      tar --lzip -xvf "$1"          ;;  # tar + lzip
+            *.tar.xz)     tar xvJf "$1"                 ;;  # tar + lmza/lmza2
+            *.txz)        tar xvJf "$1"                 ;;  # tar + lmza/lmza2
+            *.tar.Z)      zcat "$1" | tar xvf -         ;;  # tar + compress
+            *.tZ)         zcat "$1" | tar xvf -         ;;  # tar + compress
+            *.tar.lrz)    lrzuntar "$1"                 ;;  # tar + lrzip
+            *.tlrz)       lrzuntar "$1"                 ;;  # tar + lrzip
+            *.tar.lrzip)  lrzuntar "$1"                 ;;  # tar + lrzip
+            *.tlrzip)     lrzuntar "$1"                 ;;  # tar + lrzip
+            *.tar.7z)     7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
+            *.tar.7zip)   7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
+            *.t7z)        7z x -so "$1" | tar xF - -C . ;;  # tar + 7zip
+            *.lrz)        lrunzip "$1"                  ;;  # lrzip
+            *.lrzip)      lrunzip "$1"                  ;;  # lrzip
+            *.rz)         runzip "$1"                   ;;  # rzip
+            *.rzip)       runzip "$1"                   ;;  # rzip
+            *.bz)         bunzip2 "$1"                  ;;  # bzip
+            *.bzip)       bunzip2 "$1"                  ;;  # bzip
+            *.bz2)        bunzip2 "$1"                  ;;  # bzip
+            *.xz)         xz -d "$1"                    ;;  # xz-utils
+            *.gz)         gunzip "$1"                   ;;  # gzip
+            *.gzip)       gunzip "$1"                   ;;  # gzip
+            *.lz)         lzip -d -k "$1"               ;;  # lzip
+            *.lzip)       lzip -d -k "$1"               ;;  # lzip
+            *.7z)         7z x "$1"                     ;;  # 7zip
+            *.7zip)       7z x "$1"                     ;;  # 7zip
+            *.7z.+[0-9])  7z x "$1"                     ;;  # 7zip: format '.7z1'
+            *.rar)        unrar x "$1"                  ;;  # rar
+            *.rar+[0-9])  unrar x "$1"                  ;;  # rar: format '.rar1'
+            *.zip)        unzip "$1"                    ;;  # zip
+            *.Z)          uncompress "$1"               ;;  # compress
+            *.zlib)       zlib-flate -uncompress "$1"   ;;  # zlib
             ###################################################################
             ### Everything has failed to be matched; unknown file extension ###
             ###################################################################
