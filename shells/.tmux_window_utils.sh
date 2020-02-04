@@ -35,6 +35,11 @@ set_title() {
     printf "\e]2;%s\a" "$*";
 }
 
+st() {
+    # Alias for set_title, which wraps the words in brackets
+    printf "\e]2;%s%s%s\a" "[" "$*" "]"
+}
+
 max_win() {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
