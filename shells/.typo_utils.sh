@@ -24,6 +24,7 @@ find_typos() {
 
 # clear
 typo ckear='clear'       # ckear  -> clear
+typo kear='clear'        # kear   -> clear
 typo cvlear='clear'      # cvkear -> clear
 typo clera='clear'       # clera  -> clear
 typo celar='clear'       # celar  -> clear
@@ -41,21 +42,21 @@ typo histpory='history'  # histpory -> history
 typo histroy='history'   # histroy  -> history
 
 # vim
-typo vi='vim'            # vi  -> vim
-typo bim='vim'           # bim -> vim
-typo cim='vim'           # cim -> vim
-typo im='vim'            # im  -> vim
-typo vum='vim'           # vum -> vim
-typo vun='vim'           # vun -> vim
-typo vom='vim'           # vom -> vim
-typo von='vim'           # von -> vim
-typo vin='vim'           # vin -> vim
-typo viim='vim'          # viim -> vim
-typo viiim='vim'         # viiim -> vim
+typo vi='vim'            # vi     -> vim
+typo bim='vim'           # bim    -> vim
+typo cim='vim'           # cim    -> vim
+typo im='vim'            # im     -> vim
+typo vum='vim'           # vum    -> vim
+typo vun='vim'           # vun    -> vim
+typo vom='vim'           # vom    -> vim
+typo von='vim'           # von    -> vim
+typo vin='vim'           # vin    -> vim
+typo viim='vim'          # viim   -> vim
+typo viiim='vim'         # viiim  -> vim
 typo viiiim='vim'        # viiiim -> vim
-typo vii='vim'           # vii -> vim
-typo viii='vim'          # viii -> vim
-typo viiii='vim'         # viiii -> vim
+typo vii='vim'           # vii    -> vim
+typo viii='vim'          # viii   -> vim
+typo viiii='vim'         # viiii  -> vim
 
 # ls / ll
 typo l='ll'              # l   -> ll
