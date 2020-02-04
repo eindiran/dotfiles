@@ -9,8 +9,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Tue 22 Oct 2019
-#       REVISION:    v1.2.2
+#       MODIFIED:    Wed 29 Jan 2020
+#       REVISION:    v1.2.7
 #
 # ===============================================================================
 
@@ -193,6 +193,14 @@ source ~/.file_utils.sh
 [ -f ~/.tts_utils.sh ] && source ~/.tts_utils.sh
 [ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# fzf 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND="fd . $HOME"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
