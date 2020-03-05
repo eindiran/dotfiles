@@ -256,3 +256,12 @@ svg_to_jpg() {
         svgexport "${file}" "${file/svg/jpg}" --format jpg
     done
 }
+
+fd_fsize() {
+    # Find files by size
+    if [ $# -eq 0 ]; then
+        find . -size +4G
+    else
+        find . -size "$@"
+    fi
+}
