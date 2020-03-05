@@ -15,6 +15,20 @@
 export P4CLIENT='eindiran'
 export P4USER='eindiran'
 
+find_p4_commands() {
+    # Find the list of p4 commands that are used on a regular basis in the shell
+    if [ -n "$ZSH_VERSION" ]; then
+        # zsh version
+        history 0 | cut -c 8- | rg --only-matching "^(p4 .*|p4[a-z]+)" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "p4.*$"
+    else
+        if [ ! -n "$BASH_VERSION" ]; then
+            echo "[WARNING] - This command may not work in your shell."
+        fi
+        # bash version
+        history | cut -c 8- | rg --only-matching "^(p4 .*|p4[a-z]+)" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "p4.*$"
+    fi
+}
+
 # Aliases and utility functions
 p4ev() {
     # p4 sync a file, open for edit, then open in vim
@@ -56,9 +70,10 @@ p4d() {
 
 p4() {
     # Wrapper for the p4 command
-    # Allows us to define p4 blame
+    # Allows us to define p4 blame, log, etc
     case "$*" in
         blame\ *)
+            # Alias annotate to git's "blame"
             shift 1
             command p4 annotate "$@"
             ;;
@@ -73,6 +88,11 @@ p4() {
         commits|commits\ *)
             shift 1
             command p4 changes -u "$P4USER" -s submitted "$@"
+            ;;
+        log\ *)
+            # Alias filelog to git's "log"
+            shift 1
+            command p4 filelog "$@"
             ;;
         submits|submits\ *)
             shift 1
