@@ -152,6 +152,20 @@ fpdfgrep() {
     find . -iname '*.pdf' -exec pdfgrep "$@" {} +
 }
 
+histgrep() {
+    # History grep: search your history
+    if [ -n "$ZSH_VERSION" ]; then
+        # zsh version
+        history 0 | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
+    else
+        if [ ! -n "$BASH_VERSION" ]; then
+            echo "[WARNING] - This command may not work in your shell."
+        fi
+        # bash version
+        history | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
+    fi
+}
+
 rgp() {
     # Page the output of rg through less
     rg -p "$@" | less -RFX
