@@ -9,10 +9,14 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Wed 29 Jan 2020
+#       MODIFIED:    Thu 05 Mar 2020
 #       REVISION:    v1.2.7
 #
 # ===============================================================================
+
+# Disable all checking of 'source foo' style lines
+# shellcheck disable=1090,1091
+true
 
 #--------------------------------------------------------------------
 autoload -Uz compinit promptinit
@@ -107,9 +111,8 @@ alias wkmail='mutt -F ~/.muttrc.work'
 
 #--------------------------------------------------------------------
 ## Exports
-export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
-export LD_RUN_PATH=/usr/local/lib:/usr/local/include
-export PERL5LIB=./lib:/home/sconrad/src/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl/install/lib/perl5:$P4HOME/atv/2005/data/perl
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/include
+export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib:/usr/local/include
 export NAME='eindiran'
 export GIT_AUTHOR_NAME='eindiran'
 export GIT_AUTHOR_EMAIL='eindiran@uchicago.edu'
