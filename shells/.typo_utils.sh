@@ -35,6 +35,13 @@ typo cler='clear'        # cler   -> clear
 typo ear='true'          # c;ear  -> clear
 typo lear='true'         # c;lear -> clear
 typo cl='clear'          # cl;ear -> clear
+typo cleear='clear'      # cleear -> clear
+typo clewar='clear'      # clewar -> clear
+typo cledar='clear'      # cledar -> clear
+typo clesar='clear'      # clesar -> clear
+typo clerar='clear'      # clerar -> clear
+typo cleazr='clear'      # cleazr -> clear
+typo clrar='clear'       # clrar  -> clear
 
 # history
 typo histpry='history'   # histpry  -> history
@@ -101,10 +108,23 @@ typo refrehs='refresh'   # refrehs -> refresh
 
 # echo
 typo eoch='echo'         # eoch -> echo
-typo wcho='echo'         # wcho => echo
+typo wcho='echo'         # wcho -> echo
+
+# pip/pip2/pip3
+typo pop='pip'           # pop   -> pip
+typo pup='pip'           # pup   -> pip
+typo pop2='pip2'         # pop2  -> pip2
+typo pup2='pip2'         # pup2  -> pip2
+typo pop3='pip3'         # pop3  -> pip3
+typo pup3='pip3'         # pup3  -> pip3
 
 # Other misc. commands
-typo hava='java'         # hava  -> java
-typo havac='javac'       # havac -> java
-typo mu='mutt'           # mu    -> mutt
-typo hyop='htop'         # hyop  -> htop
+typo puthon='python'     # puthon   -> python
+typo puthon2='python2'   # puthon2  -> python2
+typo puthon3='python3'   # puthon3  -> python3
+typo hava='java'         # hava     -> java
+typo havac='javac'       # havac    -> java
+typo mu='mutt'           # mu       -> mutt
+typo hyop='htop'         # hyop     -> htop
+typo ssg='ssh'           # ssg      -> ssh
+typo groovysj='groovysh' # groovysj -> groovysh
