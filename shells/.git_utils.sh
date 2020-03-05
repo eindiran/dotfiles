@@ -22,6 +22,20 @@ githash() {
     fi
 }
 
+find_git_commands() {
+    # Find the list of git commands that are used on a regular basis in the shell
+    if [ -n "$ZSH_VERSION" ]; then
+        # zsh version
+        history 0 | cut -c 8- | rg "^git" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "git .*$"
+    else
+        if [ ! -n "$BASH_VERSION" ]; then
+            echo "[WARNING] - This command may not work in your shell."
+        fi
+        # bash version
+        history | cut -c 8- | rg "^git" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "git .*$"
+    fi
+}
+
 git() {
     # Wrapper for the git command
     case "$*" in
