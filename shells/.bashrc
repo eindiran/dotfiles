@@ -8,10 +8,13 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     04/31/2019
-#       MODIFIED:    Tue 22 Oct 2019
-#       REVISION:    v1.0.2
+#       MODIFIED:    Thu 05 Mar 2020
+#       REVISION:    v1.1.0
 #
 # ===============================================================================
+
+# shellcheck disable=1091,1090
+true
 
 #--------------------------------------------------------------------
 ## Source global definitions from /etc/bashrc
@@ -62,8 +65,8 @@ alias wkmail='mutt -F ~/.muttrc.work'
 
 #--------------------------------------------------------------------
 ## Exports
-export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/include
-export LD_RUN_PATH=/usr/local/lib:/usr/local/include
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/include
+export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib:/usr/local/include
 export NAME='eindiran'
 export GIT_AUTHOR_NAME='eindiran'
 export GIT_AUTHOR_EMAIL='eindiran@uchicago.edu'
@@ -74,22 +77,6 @@ export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
 export GOPATH=$HOME/go
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin:/home/eindiran/.local/bin
-#--------------------------------------------------------------------
-
-#--------------------------------------------------------------------
-## Dirstack
-DIRSTACKFILE="$HOME/.cache/zsh/dirs"
-
-if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]] ; then
-  dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
-  [[ -d $dirstack[1] ]] && cd $dirstack[1]
-fi
-
-chpwd() {
-  print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
-}
-
-DIRSTACKSIZE=20
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
