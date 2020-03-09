@@ -12,6 +12,13 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
+# NoMachine
+nxtunnel() {
+    # Create an SSH tunnel for accessing a machine via nx
+    # Use like so: "nxtunnel foo@<ip address>"
+    ssh -L 4003:localhost:4000 "$@"
+}
+
 # Dropbox
 dropboxstart() {
     # Start the Dropbox daemon
