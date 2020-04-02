@@ -20,6 +20,10 @@ find_typos() {
     history 0 | awk -F' ' '{print $2}' | grep -v "=" | grep -v "/" | grep -v "(" | sort | uniq -c | less
 }
 
+add_typo() {
+    echo "typo $1='$2'" >> ~/.typo_utils.sh
+}
+
 ## Typo-catching for my most common typos
 
 # clear
@@ -118,13 +122,18 @@ typo pup2='pip2'         # pup2  -> pip2
 typo pop3='pip3'         # pop3  -> pip3
 typo pup3='pip3'         # pup3  -> pip3
 
+# rsync
+typo rsybc='rsync'       # rsybc    -> rsync
+typo rsyncc='rsync'      # rsyncc   -> rsync
+typo rysnc='rsync'       # rysnc    -> rsync
+
 # Other misc. commands
 typo puthon='python'     # puthon   -> python
 typo puthon2='python2'   # puthon2  -> python2
 typo puthon3='python3'   # puthon3  -> python3
 typo hava='java'         # hava     -> java
 typo havac='javac'       # havac    -> java
-typo mu='mutt'           # mu       -> mutt
 typo hyop='htop'         # hyop     -> htop
 typo ssg='ssh'           # ssg      -> ssh
 typo groovysj='groovysh' # groovysj -> groovysh
+typo oing='ping'         # oing     -> ping
