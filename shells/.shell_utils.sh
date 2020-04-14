@@ -24,6 +24,11 @@ beginswith() {
     esac;
 }
 
+trim() {
+    # Trim whitespace
+    sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
+}
+
 c() {
     # Alias for quickly typing `clear`
     clear
