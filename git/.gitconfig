@@ -2,19 +2,50 @@
 	name = Elliott Indiran
 	email = eindiran@uchicago.edu
 	username = eindiran
+[github]
+	user = eindiran
+	token = TOKEN
 [core]
 	editor = /usr/bin/vim
 	excludesfile = ~/.gitignore
-[web]
-	browser = /usr/bin/firefox
-[push]
-	default = simple
-[color]
-	ui = auto
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [diff]
 	tool = vimdiff
 [difftool]
 	prompt = false
-[github]
-	user = eindiran
-	token = TOKEN
+[web]
+	browser = /usr/bin/firefox
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[push]
+	default = simple
+[alias]
+	lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+	adog = !git log --all --decorate --oneline --graph
+	log-graph = !git log --all --decorate --oneline --graph
+	hist = !git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	log-patch = !git log --patch --stat
+	lp = !git log --patch --stat
+	amend = !git commit --amend
+	cl = !git clone
+	co = !git checkout
+	cb = !git checkout -b
+	c = !git commit
+	cm = !git commit -m
+	cam = !git commit -am
+	st = !git status
+	br = !git branch
+	remotes = !git remote -v
+	rename = !git branch -m
