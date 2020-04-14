@@ -1,16 +1,15 @@
 "---------------------------------------------------------------------
 " FILE: .vimrc
-" AUTHOR: Elliott Indiran <eindiran@uchicago.edu>
+" AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Thu 10 Oct 2019
-" VERSION: 1.1.2
+" LAST MODIFIED: Mon 13 Apr 2020
+" VERSION: 1.1.3
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
-" which allows it to use plugins through Vundle
+" which allows it to use plugins through Vundle.
 set encoding=utf-8
-" Work with UTF-8
 "---------------------------------------------------------------------
 filetype off
 "---------------------------------------------------------------------
@@ -46,7 +45,7 @@ filetype plugin indent on
 "---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
-let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 " `syntax enable` is prefered to `syntax on`
 if !exists("g:syntax_on")
     syntax enable
@@ -80,7 +79,7 @@ nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
-set background=dark " options: <light, dark>
+set background=dark   " options: <light, dark>
 colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 "---------------------------------------------------------------------
 " Misc
@@ -104,10 +103,11 @@ let g:ycm_filetype_blacklist={
 "---------------------------------------------------------------------
 " Spaces & Tabs
 set tabstop=4           " 4 space per tab press
-set expandtab           " use spaces for tabs; why would you use tabs?
+set expandtab           " Use spaces for tabs; why would you use tabs?
 set softtabstop=4       " 4 space per tab press
 set shiftwidth=4
 set shiftround
+set virtualedit=all     " Allow typing past the final char in a line.
 "---------------------------------------------------------------------
 " Indenting behavior
 "---------------------------------------------------------------------
@@ -117,10 +117,10 @@ set copyindent
 " UI Layout
 "---------------------------------------------------------------------
 set ruler
-set wrap                " Do line wrapping
-set number              " show line numbers
-set ignorecase          " ignore case when searching
-set hlsearch            " highlight all matches
+set wrap                  " Do line wrapping
+set number                " Show line numbers
+set ignorecase            " Ignore case when searching
+set hlsearch              " Highlight all matches
 set smartcase
 set clipboard=unnamedplus " See here: vim.wikia.com/wiki/VimTip21
 "---------------------------------------------------------------------
@@ -131,7 +131,7 @@ set listchars=tab:▸·,trail:·,nbsp:·
 set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
 " Ignore these (this is like a gitignore)
 "---------------------------------------------------------------------
-set visualbell  " don't beep
+set visualbell    " don't beep
 set noerrorbells  " don't beep
 "---------------------------------------------------------------------
 " Use Q for formatting the current paragraph (or selection)
@@ -170,7 +170,7 @@ autocmd! BufWritePre * :call s:timestamp()
 function! s:timestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
     " Case insensitively. Replaces everything after that w/ timestamp
-    " in format: "FRI 07 JUL 2017"
+    " in the format: "FRI 07 JUL 2017"
     let pat = '\(\(Last\|LAST\)\?\s*\([Cc]hanged\|CHANGED\|[Mm]odified\|MODIFIED\|[Uu]pdated\?\|UPDATED\?\)\s*:\s*\).*'
     let rep = '\1' . strftime("%a %d %b %Y")
     call s:subst(1, 20, pat, rep)
@@ -233,17 +233,17 @@ nmap =h =x
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
-let g:pymode_rope = 0 " Don't use Rope
-let g:pymode_rope_completion = 0 " Don't use autocomplete via Rope
+let g:pymode_rope = 0                " Don't use Rope
+let g:pymode_rope_completion = 0
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_completion_on_dot = 0
-let g:pymode_folding = 0 " Do function folding, but not in Pymode
-let g:pymode_quickfix_maxheight = 4 " Max height of cwindow
+let g:pymode_folding = 0             " Don't fold in pymode
+let g:pymode_quickfix_maxheight = 4  " Max height of cwindow
 let g:pymode_motion = 1
-let g:pymode_lint = 1 " Use linting = 1; don't = 0
+let g:pymode_lint = 1                " Use linting = 1; don't = 0
 let g:pymode_python = 'python3'
 let g:pymode_options_max_line_length = 100
-let g:pymode_trim_whitespaces = 1 " remove trailing whitespace on save
+let g:pymode_trim_whitespaces = 1    " Remove trailing whitespace on save
 let g:pymode_options_colorcolumn = 1 " Line indicating max line len
 "---------------------------------------------------------------------
 " SimpylFold
@@ -254,7 +254,7 @@ let g:SimpylFold_docstring_preview=1
 "---------------------------------------------------------------------
 set splitbelow
 set splitright
-" split navigations
+" Split navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -264,7 +264,7 @@ set foldmethod=indent
 set foldlevel=99
 " Unfold w/ spacebar
 nnoremap <space> za
-" python with virtualenv support
+" virtualenv support for python3
 py3 << EOF
 import os
 import sys
