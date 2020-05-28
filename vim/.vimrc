@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Mon 13 Apr 2020
-" VERSION: 1.1.3
+" LAST MODIFIED: Wed 27 Apr 2020
+" VERSION: 1.1.4
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -228,8 +228,22 @@ function! FormatXML()
 endfunction
 " Now add a mapping `=x` to this function
 nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
-" Since this also works for HTML, add a mapping for `=h`
-nmap =h =x
+" Note that this also works for HTML, but we want to keep =h for our
+" hex editing below.
+"---------------------------------------------------------------------
+" Format hex using `xxd`
+"---------------------------------------------------------------------
+function! FormatHex()
+    set ft=xxd
+    :%!xxd
+endfunction
+" Add a mapping to `=h`
+nmap =h :call FormatHex()<CR>
+" Once editing is complete, use =b to go back to binary
+function! FormatBinary()
+    :%!xxd -r
+endfunction
+nmap =b :call FormatBinary()<CR>
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
