@@ -412,13 +412,23 @@ groff2man() {
 }
 
 fdw() {
-    # find writable files in current directory
-    find . -maxdepth 1 -writable
+    # Find writable files in the current directory
+    find . -maxdepth 1 -type f -writable
 }
 
 fdnw() {
-    # Find non-writable files in current directory
-    find . -maxdepth 1 ! -writable
+    # Find non-writable files in the current directory
+    find . -maxdepth 1 -type f ! -writable
+}
+
+fde() {
+    # Find executable files in the current directory
+    find . -maxdepth 1 -type f -executable
+}
+
+fdne() {
+    # Find non-executable files in the current directory
+    find . -maxdepth 1 -type f ! -executable
 }
 
 dedup() {
