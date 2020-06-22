@@ -176,6 +176,11 @@ rgp() {
     rg -p "$@" | less -RFX
 }
 
+rga() {
+    # Don't filter out anythign with rg
+    rg -uuu "$@"
+}
+
 find_non_utf8_chars() {
     # Find non-UTF-8 characters
     # shellcheck disable=SC2063
