@@ -74,6 +74,7 @@ extract() {
             *.zip)        unzip "$1"                    ;;  # zip
             *.Z)          uncompress "$1"               ;;  # compress
             *.zlib)       zlib-flate -uncompress "$1"   ;;  # zlib
+            *.cpio)       cpio -idv "$1"                ;;  # cpio
             ###################################################################
             ### Everything has failed to be matched; unknown file extension ###
             ###################################################################
