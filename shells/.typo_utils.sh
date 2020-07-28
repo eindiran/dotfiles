@@ -3,7 +3,7 @@
 #
 #          FILE: .typo_utils.sh
 #
-#   DESCRIPTION: Adds an alias for 'alias' called 'typo'; adds a number of 
+#   DESCRIPTION: Adds an alias for 'alias' called 'typo'; adds a number of
 #                aliases for my most common typos in command names.
 #
 #         NOTES: Source this file in the rc file of your preferred shell.
@@ -12,7 +12,7 @@
 #===============================================================================
 
 # Add alias for 'alias'.
-# Only to be used for aliases that convey that the alias in question fixes a typo
+# Used for aliases which fix typos
 alias typo='alias'
 
 # Find possible typos
@@ -46,6 +46,11 @@ typo clesar='clear'      # clesar -> clear
 typo clerar='clear'      # clerar -> clear
 typo cleazr='clear'      # cleazr -> clear
 typo clrar='clear'       # clrar  -> clear
+typo clwear='clear'      # clwear -> clear
+typo lcear='clear'       # lcear  -> clear
+typo claer='clear'       # claer  -> clear
+typo clkear='clear'      # clkear -> clear
+typo clesr='clear'       # clesr  -> clear
 
 # history
 typo histpry='history'   # histpry  -> history
@@ -68,6 +73,8 @@ typo viiiim='vim'        # viiiim -> vim
 typo vii='vim'           # vii    -> vim
 typo viii='vim'          # viii   -> vim
 typo viiii='vim'         # viiii  -> vim
+typo voim='vim'          # voim   -> vim
+typo viom='vim'          # viom   -> vim
 
 # ls / ll
 typo l='ll'              # l   -> ll
@@ -114,6 +121,10 @@ typo refrehs='refresh'   # refrehs -> refresh
 typo eoch='echo'         # eoch -> echo
 typo wcho='echo'         # wcho -> echo
 
+# ssh
+typo ssg='ssh'           # ssg      -> ssh
+typo shs='ssh'           # shs      -> ssh
+
 # pip/pip2/pip3
 typo pop='pip'           # pop   -> pip
 typo pup='pip'           # pup   -> pip
@@ -126,6 +137,8 @@ typo pup3='pip3'         # pup3  -> pip3
 typo rsybc='rsync'       # rsybc    -> rsync
 typo rsyncc='rsync'      # rsyncc   -> rsync
 typo rysnc='rsync'       # rysnc    -> rsync
+typo rsuync='rsync'      # rsuync   -> rsync
+typo rsynx='rsync'       # rsynx    -> rsynx
 
 # Other misc. commands
 typo puthon='python'     # puthon   -> python
@@ -134,6 +147,5 @@ typo puthon3='python3'   # puthon3  -> python3
 typo hava='java'         # hava     -> java
 typo havac='javac'       # havac    -> java
 typo hyop='htop'         # hyop     -> htop
-typo ssg='ssh'           # ssg      -> ssh
 typo groovysj='groovysh' # groovysj -> groovysh
 typo oing='ping'         # oing     -> ping
