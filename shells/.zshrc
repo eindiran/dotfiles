@@ -9,7 +9,7 @@
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Mon 27 Jul 2020
-#       REVISION:    v1.2.8
+#       REVISION:    v1.2.9
 #
 # ===============================================================================
 
@@ -215,6 +215,7 @@ setopt PUSHD_MINUS
 [ -f ~/.eml_utils.sh ] && source ~/.eml_utils.sh
 [ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
 [ -f ~/.influx_feed_utils.sh ] && source ~/.influx_feed_utils.sh
+[ -f ~/.aliases.sh ] && source ~/.aliases.sh
 #--------------------------------------------------------------------
 
 
