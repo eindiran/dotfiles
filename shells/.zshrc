@@ -1,16 +1,15 @@
-#
 # ===============================================================================
 #
 #       FILE:        ~/.zshrc
-#       
+#
 #       DESCRIPTION: Define the behavior of zsh; you may source this file from an
 #                    interactive shell or simply open a new shell once changes
 #                    are made.
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Thu 05 Mar 2020
-#       REVISION:    v1.2.7
+#       MODIFIED:    Mon 27 Jul 2020
+#       REVISION:    v1.2.8
 #
 # ===============================================================================
 
@@ -24,6 +23,7 @@ compinit
 promptinit
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
 # Set up prompt
 export NORMAL_PROMPT="[%F{white}%~%f]  λ "
@@ -31,6 +31,7 @@ export NOCOLOR_PROMPT="[%~] λ "
 export MINIMAL_PROMPT="λ "
 PROMPT="$NORMAL_PROMPT"
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 # Allow tab completion in the middle of a word
@@ -40,6 +41,7 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
 setopt COMPLETE_ALIASES
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 ## History
@@ -53,6 +55,7 @@ setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
 ## Allow search of history
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
@@ -63,15 +66,18 @@ zle -N down-line-or-beginning-search
 [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
-## Never, ever beep. Ever. Ever ever.
+# Never, ever beep. Ever. Ever ever.
 setopt NO_BEEP
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
-## Automatically decide when to page a list of completions
+# Automatically decide when to page a list of completions
 LISTMAX=0
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 ## Set coloring prefs
@@ -85,6 +91,7 @@ export LS_COLORS
 export TERM=screen-256color
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
 ## Charset preferences
 export LESSCHARSET='utf-8'
@@ -92,6 +99,7 @@ export LANGUAGE='en_US.UTF-8'
 export LC_COLLATE='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 ## Aliases
@@ -109,29 +117,38 @@ alias prmail='mutt -F ~/.muttrc.protonmail'  # Note that this is only supported 
 alias wkmail='mutt -F ~/.muttrc.work'
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
 ## Exports
+### ld:
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib:/usr/local/include
+### git:
 export NAME='eindiran'
 export GIT_AUTHOR_NAME='eindiran'
 export GIT_AUTHOR_EMAIL='eindiran@uchicago.edu'
 export GIT_COMMITTER_NAME='eindiran'
 export GIT_COMMITTER_EMAIL='eindiran@uchicago.edu'
 export USERNAME='Elliott Indiran <eindiran@uchicago.edu>'
+### Editor setup:
 export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
-export GOPATH=$HOME/go
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/local/nim-0.17.2/bin:/home/eindiran/.nimble/bin:/usr/racket/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin
-export ATV=$P4HOME/atv/2005
+### Path:
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin:/home/eindiran/.local/bin
+### Shell:
 export SHELL=/bin/zsh
+### Dropbox:
 export DROPBOX=$HOME/Dropbox
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre
+### Java:
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+### Spark:
 export SPARK_HOME=/usr/local/share/spark/spark-2.3.0-bin-hadoop2.7/
 export PYSPARK_PYTHON=/usr/bin/python3
 export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+### Workspace directory:
+export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 # Enable help command
@@ -144,6 +161,7 @@ autoload -Uz run-help-openssl
 autoload -Uz run-help-p4
 autoload -Uz run-help-sudo
 #--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 ## Dirstack
@@ -161,52 +179,62 @@ chpwd() {
 DIRSTACKSIZE=20
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
 # Set various pushd/popd options
 setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
-
 ## Remove duplicate entries
 setopt PUSHD_IGNORE_DUPS
-
 ## This reverts the +/- operators.
 setopt PUSHD_MINUS
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
-# fzf, for fuzzy seaching
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND="fd . $HOME"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+# Sourcing other scripts:
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-# Source the files that host our extra functionality
-# If these don't exist, fail loudly:
-source ~/.shell_utils.sh
-source ~/.file_utils.sh
-# These are allowed to not exist:
+# Universal stuff:
+[ -f ~/.env_variables ] && source ~/.env_variables
+[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
+[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
 [ -f ~/.volume_utils.sh ] && source ~/.volume_utils.sh
-[ -f ~/.env_variables ] && source ~/.env_variables  # Currently just used by `weather` and `welcome`
 [ -f ~/.welcome.sh ] && source ~/.welcome.sh
 [ -f ~/.git_utils.sh ] && source ~/.git_utils.sh
-[ -f ~/.p4_utils.sh ] && source ~/.p4_utils.sh
-[ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
-[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
-[ -f ~/.tts_utils.sh ] && source ~/.tts_utils.sh
 [ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
+[ -f ~/.tts_utils.sh ] && source ~/.tts_utils.sh
+[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 [ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
-# fzf 
+# Work stuff:
+[ -f ~/.p4_utils.sh ] && source ~/.p4_utils.sh
+[ -f ~/.eml_utils.sh ] && source ~/.eml_utils.sh
+[ -f ~/.torque_utils.sh ] && source ~/.torque_utils.sh
+[ -f ~/.influx_feed_utils.sh ] && source ~/.influx_feed_utils.sh
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# fzf:
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND="fd . $HOME"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 #--------------------------------------------------------------------
 
+
 #--------------------------------------------------------------------
-# Keep this line last
-# This enables fish-like syntax highlighting for zsh
+# ZSH Autosuggestions:
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Syntax highlighting -- fish-like highlighting for zsh
+# Keep this line last:
 source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#--------------------------------------------------------------------
