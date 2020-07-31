@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Wed 27 Apr 2020
+" LAST MODIFIED: Fri 31 Jul 2020
 " VERSION: 1.1.4
 "---------------------------------------------------------------------
 set nocompatible
@@ -19,6 +19,8 @@ set rtp+=~/.vim/bundle/Vundle.vim
 "---------------------------------------------------------------------
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' " Vundle itself
+Plugin 'Valloric/YouCompleteMe' " Autocompletion
+Plugin 'tpope/vim-fugitive' " Git plugin
 Plugin 'w0rp/ale' " Multi lang linting manager
 Plugin 'WolfgangMehner/awk-support' " awk syntax and inline code running
 Plugin 'vim-scripts/bash-support.vim' " Run bash commands inline
@@ -31,15 +33,14 @@ Plugin 'godlygeek/tabular' " Dependency for MD syntax
 Plugin 'plasticboy/vim-markdown' " MD syntax
 Plugin 'sjurgemeyer/vimport' " Gradle/Groovy imports
 Plugin 'klen/python-mode' " python-mode
-Plugin 'baabelfish/nvim-nim' " Support for nim syntax
 Plugin 'tmhedberg/SimpylFold' " Do folding
 Plugin 'nvie/vim-flake8'
 Plugin 'scrooloose/nerdtree' " File browsing
 Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
 Plugin 'leafgarland/typescript-vim'
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' } " shfmt -- shell script formatter
+" Plugin 'baabelfish/nvim-nim' " Support for nim syntax
 call vundle#end()
-"Bundle 'Valloric/YouCompleteMe'
 "---------------------------------------------------------------------
 filetype plugin indent on
 "---------------------------------------------------------------------
