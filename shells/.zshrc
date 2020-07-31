@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Mon 27 Jul 2020
+#       MODIFIED:    Thu 30 Jul 2020
 #       REVISION:    v1.2.9
 #
 # ===============================================================================
@@ -235,7 +235,19 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 
 #--------------------------------------------------------------------
+# ZSH History search:
+source ~/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# ZSH additional completions:
+fpath=(~/.zsh/zsh-completions $fpath)
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
 # Syntax highlighting -- fish-like highlighting for zsh
 # Keep this line last:
-source /home/eindiran/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #--------------------------------------------------------------------
