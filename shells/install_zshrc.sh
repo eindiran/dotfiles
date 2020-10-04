@@ -41,6 +41,11 @@ done
 install -D -m 644 .zshrc \
                   ~/.zshrc
 
+# Install the ZSH plugins:
+mkdir -p ~/.zsh/
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+
 # Install all common/not work-related utility packages
 install -D -m 644 .shell_utils.sh \
                   ~/.shell_utils.sh

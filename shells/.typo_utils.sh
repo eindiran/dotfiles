@@ -149,3 +149,5 @@ typo havac='javac'       # havac    -> java
 typo hyop='htop'         # hyop     -> htop
 typo groovysj='groovysh' # groovysj -> groovysh
 typo oing='ping'         # oing     -> ping
+typo greo='grep'         # greo     -> grep
+typo jead='head'         # jead     -> head
