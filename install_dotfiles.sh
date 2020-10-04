@@ -26,7 +26,6 @@ command -v tmux >/dev/null 2>&1 || sudo apt-get install -y tmux
 command -v mutt >/dev/null 2>&1 || sudo apt-get install -y mutt
 command -v irssi >/dev/null 2>&1 || sudo apt-get install -y irssi
 command -v rustc >/dev/null 2>&1 || sudo apt-get install -y rustc rust-doc cargo cargo-doc rust-gdb
-# command -v cabal >/dev/null 2>&1 || { sudo apt-get install -y haskell-platform; sudo cabal update; sudo cabal install cabal-install --global; }
 
 
 # Install fzf
@@ -76,7 +75,6 @@ sudo apt-get install -y pylint3
 sudo apt-get install -y pydf
 sudo apt-get install -y sqlite
 sudo apt-get install -y sqlite3
-# sudo apt-get install -y postgresql-*
 sudo apt-get install -y mongodb
 sudo apt-get install -y ranger
 sudo apt-get install -y mplayer
@@ -87,6 +85,7 @@ echo "Cleaning Up..." &&
     sudo apt-get -y autoremove &&
     sudo apt-get -y clean
 
+# Install .zshrc using the install script:
 cd shells && ./install_zshrc.sh -w && cd ..
 
 # Copy over fzf dotfiles
@@ -95,42 +94,41 @@ cp fzf/.fzf.*sh ~/
 cp fzf/completion.* ~/.fzf/shell
 cp fzf/key-bindings.* ~/.fzf/shell
 
+# Copy over global .gitconfig
+cp git/.gitconfig ~/.gitconfig
+cp git/.gitignore ~/.gitignore
+
 # Copy over .htoprc
 mkdir -p ~/.config/htop
 cp htop/htoprc ~/.config/htop/htoprc
 
+# Handle all the misc files:
+# Copy over ALSA config
+cp misc/alsa/.asoundrc ~/.asoundrc
+# Copy over .ignore files for ripgrep and fd:
+cp misc/.rgignore ~/.rgignore
+cp misc/.fdignore ~/.fdignore
+# Copy over the URLs file for newsboat:
+mkdir -p ~/.newsboat
+cp misc/newsboat/urls ~/.newsboat
+# Copy over .xbindkeysrc
+cp misc/xbindkeys/.xbindkeysrc ~/.xbindkeysrc
+
 # Copy over irssi dotfiles
 mkdir -p ~/.irssi
-cp irssi/.irssi/config ~/.irssi/config
+cp irssi/config ~/.irssi/config
 
 # Copy over .muttrc
 mkdir -p ~/.mutt
 cp mutt/.mutt/* ~/.mutt/
 cp mutt/.muttrc ~/.mutt/muttrc
 
-# Copy over .vimrc
-cp vim/.vimrc ~/.vimrc
-
-# Copy over tmux dotfiles
+# Copy over tmux scripts and config file:
 mkdir -p ~/.tmux/scripts
 cp tmux/.tmux.conf ~/.tmux.conf
 cp tmux/scripts/* ~/.tmux/scripts
 
-# Copy over .xbindkeysrc
-cp xbindkeys/.xbindkeysrc ~/.xbindkeysrc
-
-# Copy over ALSA config
-cp alsa/.asoundrc ~/.asoundrc
-
-# Copy over cabal config
-cd cabal/ && cp -a .cabal ~/ && cd ..
-
-# Copy over .ignore files
-cp ignore/.rgignore ~/.rgignore
-cp ignore/.fdignore ~/.fdignore
-cp ignore/.gitignore ~/.gitignore
-
-# Copy over global .gitconfig
-cp git/.gitconfig ~/.gitconfig
+# Copy over .vimrc
+cp vim/.vimrc ~/.vimrc
 
 echo "Installation of dotfiles complete!"

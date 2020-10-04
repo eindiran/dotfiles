@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 31 Jul 2020
-" VERSION: 1.1.4
+" LAST MODIFIED: Sun 04 Oct 2020
+" VERSION: 1.1.5
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -39,7 +39,6 @@ Plugin 'scrooloose/nerdtree' " File browsing
 Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
 Plugin 'leafgarland/typescript-vim'
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' } " shfmt -- shell script formatter
-" Plugin 'baabelfish/nvim-nim' " Support for nim syntax
 call vundle#end()
 "---------------------------------------------------------------------
 filetype plugin indent on
@@ -286,5 +285,5 @@ import sys
 if 'VIRTUAL_ENV' in os.environ:
     project_base_dir = os.environ['VIRTUAL_ENV']
     activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this))
+    exec(compile(open(activate_this, 'rb').read(), activate_this, 'exec'), dict(__file__=activate_this))
 EOF
