@@ -1,5 +1,7 @@
 # dotfiles
-This repo contains my .rc files for bash, zsh, vim, tmux, etc. Mainly this repo exists to keep backup copies of my .zshrc, .vimrc and .tmux.conf
+This repo contains my .rc files for bash, zsh, vim, tmux, etc. Mainly this repo exists to keep backup copies of my `.zshrc`, `.vimrc`, `.tmux.conf` and `newsboat` URLs file.
+
+Check the `misc` directory for an assortment of random configuration/dotfiles.
 
 ## Installation
 On a Debian or Ubuntu machine, you can run the script `install_dotfiles.sh` to install the dotfiles and all necessary packages.
