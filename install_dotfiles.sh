@@ -38,6 +38,12 @@ command -v fd >/dev/null 2>&1 || cargo install fd-find
 command -v sk >/dev/null 2>&1 || cargo install skim
 command -v hx >/dev/null 2>&1 || cargo install hx
 command -v broot >/dev/null 2>&1 || cargo install broot
+command -v procs >/dev/null 2>&1 || cargo install procs
+command -v dust >/dev/null 2>&1 || cargo install du-dust
+command -v bat >/dev/null 2>&1 || cargo install bat
+command -v hyperfine >/dev/null 2>&1 || cargo install hyperfine
+command -v hexyll >/dev/null 2>&1 || cargo install hexyl
+command -v tokei >/dev/null 2>&1 || cargo install tokei
 
 sudo apt-get install -y terminator
 sudo apt-get install -y shellcheck
@@ -73,11 +79,12 @@ sudo apt-get install -y sqlite3
 # sudo apt-get install -y postgresql-*
 sudo apt-get install -y mongodb
 sudo apt-get install -y ranger
+sudo apt-get install -y mplayer
+sudo apt-get install -y newsboat
 
-echo "Cleaning Up via apt-get autoremove..." &&
+echo "Cleaning Up..." &&
     sudo apt-get -f install &&
     sudo apt-get -y autoremove &&
-    sudo apt-get -y autoclean &&
     sudo apt-get -y clean
 
 cd shells && ./install_zshrc.sh -w && cd ..
