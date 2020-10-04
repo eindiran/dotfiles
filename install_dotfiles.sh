@@ -130,5 +130,8 @@ cp tmux/scripts/* ~/.tmux/scripts
 
 # Copy over .vimrc
 cp vim/.vimrc ~/.vimrc
+./vim/install_plugins.sh
+## Overwrite the default comments.templates file from bash-support:
+cp vim/shell-template/comments.templates ~/.vim/bundle/bash-support.vim/bash-support/templates/comments.templates
 
 echo "Installation of dotfiles complete!"
