@@ -78,6 +78,8 @@ sudo apt-get install -y sqlite3
 sudo apt-get install -y mongodb
 sudo apt-get install -y ranger
 sudo apt-get install -y mplayer
+sudo apt-get install -y mpv
+sudo apt-get install -y vlc
 sudo apt-get install -y newsboat
 
 echo "Cleaning Up..." &&
