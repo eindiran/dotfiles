@@ -34,6 +34,7 @@ color info              default default reverse
 color listnormal_unread yellow  black
 color listfocus blue    default reverse bold
 color listfocus_unread  blue    default reverse bold
+color article           cyan    black
 text-width              90
 goto-next-feed          no
 
