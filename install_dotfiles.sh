@@ -108,11 +108,15 @@ cp misc/alsa/.asoundrc ~/.asoundrc
 # Copy over .ignore files for ripgrep and fd:
 cp misc/.rgignore ~/.rgignore
 cp misc/.fdignore ~/.fdignore
-# Copy over the URLs file for newsboat:
-mkdir -p ~/.newsboat
-cp misc/newsboat/urls ~/.newsboat
 # Copy over .xbindkeysrc
 cp misc/xbindkeys/.xbindkeysrc ~/.xbindkeysrc
+
+# Copy over the URLs file, config file, and bookmarking script
+# for the RSS reader newsboat:
+mkdir -p ~/.newsboat
+cp newsboat/urls ~/.newsboat
+cp newsboat/config ~/.newsboat
+cp newsboat/bookmark.sh ~/.newsboat
 
 # Copy over irssi dotfiles
 mkdir -p ~/.irssi
