@@ -1,0 +1,41 @@
+# .newsboat/config
+
+# Vim keybindings
+bind-key k up feedlist
+bind-key j down feedlist
+bind-key j next articlelist
+bind-key j down article
+bind-key J next-feed articlelist
+bind-key k prev articlelist
+bind-key k up article
+bind-key K prev-feed articlelist
+unbind-key C feedlist
+
+# User agent:
+user-agent "Wget/1.20.1"
+
+# Basic feed-related stuff:
+auto-reload yes
+reload-time 120
+download-retries 4
+download-timeout 10
+prepopulate-query-feeds yes
+
+# Display:
+color info default default reverse
+color listnormal_unread yellow default
+color listfocus blue default reverse bold
+color listfocus_unread blue default reverse bold
+text-width 90
+goto-next-feed no
+
+# Misc:
+confirm-exit no
+cleanup-on-quit no
+browser "open -g -a 'Firefox' %u"
+
+# Bookmark commands:
+## From: https://github.com/gpakosz/.newsboat
+bookmark-cmd ~/.newsboat/bookmark.sh
+bookmark-interactive no
+bookmark-autopilot yes
