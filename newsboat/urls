@@ -1,40 +1,41 @@
-http://arxiv.org/rss/cs.CL
-http://arxiv.org/rss/cs.SD
-http://arxiv.org/rss/cs.SI
-http://cartonerd.blogspot.com/feeds/posts/default
-http://csdl.computer.org/rss/intelligent.xml
-http://feeds2.feedburner.com/MachineLearningtheory
-http://feeds.feedburner.com/steveklabnik/words
-http://steve-yegge.blogspot.com/atom.xml
-http://sujitpal.blogspot.com/feeds/posts/default
-http://well-formed-data.net/rss
-http://www.aaronsw.com/2002/feeds/pgessays.rss
-https://acoup.blog/feed
-https://bernsteinbear.com/feed.xml
-https://blog.codinghorror.com/rss/
-https://blog.japaric.io/index.xml
-https://christine.website/blog.rss
-https://daniel.haxx.se/blog/feed
-https://danluu.com/atom.xml
-https://drewdevault.com/blog/index.xml
-https://ericlippert.com/feed
-https://honnibal.wordpress.com/feed/
-https://icyphox.sh/blog/feed.xml
-https://languagelog.ldc.upenn.edu/nll/?feed=atom
-https://lemire.me/blog/feed/
-https://lucumr.pocoo.org/feed.atom
-https://lwn.net/headlines/rss
-https://martinfowler.com/feed.atom
-https://news.ycombinator.com/rss
-https://notes.eatonphil.com/rss
-https://phaazon.net/blog/feed
-https://shkspr.mobi/blog/feed
-https://slatestarcodex.com/feed
-https://thelousylinguist.blogspot.com/feeds/posts/default
-https://tratt.net/laurie/news.rss
-https://www.brainonfire.net/blog/posts.atom
-https://www.gwern.net/feed
-https://www.joelonsoftware.com/feed/
-https://www.scottaaronson.com/blog/?feed=rss2
-https://www.theusrus.de/blog/feed/
-https://www.unadulterated-faff.com/feed.xml
+http://arxiv.org/rss/cs.CL "~arxiv CL"
+http://arxiv.org/rss/cs.SD "~arxiv SD"
+http://arxiv.org/rss/cs.SI "~arxiv SI"
+http://cartonerd.blogspot.com/feeds/posts/default "~Cartonerd"
+http://csdl.computer.org/rss/intelligent.xml "~IEEE Intelligent Systems"
+http://feeds2.feedburner.com/MachineLearningtheory "~Machine Learning Theory"
+http://feeds.feedburner.com/steveklabnik/words "~Steve Klabnik's Blog"
+http://steve-yegge.blogspot.com/atom.xml "~Steve Yegge's Blog Rants"
+http://sujitpal.blogspot.com/feeds/posts/default "~Salmon Run"
+http://well-formed-data.net/rss "~Well-formed Data"
+http://www.aaronsw.com/2002/feeds/pgessays.rss "~Paul Graham's Essays"
+https://acoup.blog/feed "~A Collection of Unmitigated Pedantry"
+https://bernsteinbear.com/feed.xml "~Max Bernstein's Blog"
+https://blog.codinghorror.com/rss/ "~Coding Horror"
+https://blog.japaric.io/index.xml "~Embedded in Rust"
+https://christine.website/blog.rss "~Christine Dodrill's Blog"
+https://daniel.haxx.se/blog/feed "~daniel.haxx.se"
+https://danluu.com/atom.xml "~Dan Luu's Blog"
+https://drewdevault.com/blog/index.xml "~Drew DeVault's Blog"
+https://ericlippert.com/feed "~Eric Lippert: Fabulous Adventures in Coding"
+https://honnibal.wordpress.com/feed/ "~Computational Linguistics"
+https://icyphox.sh/blog/feed.xml "~icyphox's blog"
+https://languagelog.ldc.upenn.edu/nll/?feed=atom "~Language Log"
+https://lemire.me/blog/feed/ "~Daniel Lemire's Blog"
+https://lucumr.pocoo.org/feed.atom "~Armin Ronacher's Blog"
+https://lwn.net/headlines/rss "~LWN"
+https://martinfowler.com/feed.atom "~Martin Fowler's Blog"
+https://news.ycombinator.com/rss "~Hacker News"
+https://notes.eatonphil.com/rss "~Phil Eaton's Blog"
+https://phaazon.net/blog/feed "~Dimitri Sabadie: phaazon.net"
+https://shkspr.mobi/blog/feed "~Terence Eden’s Blog"
+https://slatestarcodex.com/feed "~Slate Star Codex"
+https://thelousylinguist.blogspot.com/feeds/posts/default "~The Lousy Linguist"
+https://tratt.net/laurie/news.rss "~Laurence Tratt's Blog"
+https://www.brainonfire.net/blog/posts.atom "~Brain on Fire"
+https://www.gwern.net/feed "~Gwern"
+https://www.joelonsoftware.com/feed/ "~Joel on Software"
+https://www.romanzolotarev.com/rss.xml "~Roman Zolotarev's Blog: Mastering the Web"
+https://www.scottaaronson.com/blog/?feed=rss2 "~Shtetl-Optimized"
+https://www.theusrus.de/blog/feed/ "~Statistical Graphics"
+https://www.unadulterated-faff.com/feed.xml "~Unadulterated Faff"
