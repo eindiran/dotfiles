@@ -14,7 +14,7 @@
 #
 #  REQUIREMENTS: curl
 #
-#         NOTES: This is taken very heavily based on this script:
+#         NOTES: This is very heavily based on this script:
 #                https://github.com/gpakosz/.newsboat/blob/master/bookmark.sh
 #===============================================================================
 
