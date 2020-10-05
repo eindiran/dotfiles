@@ -32,7 +32,7 @@ color background        cyan    black
 color listnormal        cyan    black
 color info              default default reverse
 color listnormal_unread yellow  black
-color listfocus blue    default reverse bold
+color listfocus         blue    default reverse bold
 color listfocus_unread  blue    default reverse bold
 color article           cyan    black
 text-width              90
@@ -45,7 +45,7 @@ browser         "firefox"
 player          "mpv"
 download-path   "~/Downloads"
 
-# Bookmark commands:
+# Bookmark command:
 ## From: https://github.com/gpakosz/.newsboat
 bookmark-cmd          ~/.newsboat/bookmark.sh
 bookmark-interactive  no
