@@ -140,4 +140,13 @@ cp vim/.vimrc ~/.vimrc
 ## Overwrite the default comments.templates file from bash-support:
 cp vim/shell-template/comments.templates ~/.vim/bundle/bash-support.vim/bash-support/templates/comments.templates
 
+# Install black formatter with pip:
+pip3 install black
+# Install glances:
+pip3 install glances
+# Install spellchecking:
+pip3 install pygtkspellcheck pyenchant
+# Install mypy:
+pip3 install mypy
+
 echo "Installation of dotfiles complete!"
