@@ -42,7 +42,7 @@ Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 " Filetype specific plugins:
 "---------------------------------------------------------------------
 Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }  " awk syntax and inline code running
-Plugin 'elzr/vim-json' { 'for': 'json' }               " JSON formatting, highlighting and folding
+Plugin 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
 Plugin 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
 Plugin 'nvie/vim-flake8', { 'for': 'py' }              " Formatting for Python
 Plugin 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
