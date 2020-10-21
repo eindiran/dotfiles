@@ -3,13 +3,16 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Sun 04 Oct 2020
-" VERSION: 1.1.5
+" LAST MODIFIED: Wed 21 Oct 2020
+" VERSION: 1.2.1
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
 " which allows it to use plugins through Vundle.
 set encoding=utf-8
+" Work with UTF-8
+set autoread
+" Use `autoread`, for `vim-tmux-focus-events`
 "---------------------------------------------------------------------
 filetype off
 "---------------------------------------------------------------------
@@ -18,27 +21,33 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 "---------------------------------------------------------------------
 call vundle#begin()
-Plugin 'VundleVim/Vundle.vim' " Vundle itself
-Plugin 'Valloric/YouCompleteMe' " Autocompletion
-Plugin 'tpope/vim-fugitive' " Git plugin
-Plugin 'w0rp/ale' " Multi lang linting manager
-Plugin 'WolfgangMehner/awk-support' " awk syntax and inline code running
-Plugin 'vim-scripts/bash-support.vim' " Run bash commands inline
-Plugin 'nfvs/vim-perforce' " Integrations w/ p4
-Plugin 'apalmer1377/factorus' " Easier refactoring
-Plugin 'flazz/vim-colorschemes' " Adds options for color-schemes
-Plugin 'wakatime/vim-wakatime' " Wakatime
-Plugin 'rust-lang/rust.vim' " Rust syntax highlighting
-Plugin 'godlygeek/tabular' " Dependency for MD syntax
-Plugin 'plasticboy/vim-markdown' " MD syntax
-Plugin 'sjurgemeyer/vimport' " Gradle/Groovy imports
-Plugin 'klen/python-mode' " python-mode
-Plugin 'tmhedberg/SimpylFold' " Do folding
-Plugin 'nvie/vim-flake8'
-Plugin 'scrooloose/nerdtree' " File browsing
-Plugin 'jistr/vim-nerdtree-tabs' " Using tabs
-Plugin 'leafgarland/typescript-vim'
-Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' } " shfmt -- shell script formatter
+"---------------------------------------------------------------------
+" General plugins:
+"---------------------------------------------------------------------
+Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
+Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
+Plugin 'w0rp/ale'                             " Multi lang linting manager
+Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
+Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
+Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
+Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
+Plugin 'nfvs/vim-perforce'                    " Integration w/ p4
+Plugin 'tpope/vim-fugitive'                   " Integration w/ git
+Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
+Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
+Plugin 'tmhedberg/SimpylFold'                 " Do folding
+Plugin 'scrooloose/nerdtree'                  " File browsing
+Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
+"---------------------------------------------------------------------
+" Filetype specific plugins:
+"---------------------------------------------------------------------
+Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }  " awk syntax and inline code running
+Plugin 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
+Plugin 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
+Plugin 'nvie/vim-flake8', { 'for': 'py' }              " Formatting for Python
+Plugin 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
+Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }             " shfmt -- shell script formatter
+Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
 call vundle#end()
 "---------------------------------------------------------------------
 filetype plugin indent on
@@ -77,6 +86,10 @@ nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 "---------------------------------------------------------------------
 nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
+" Allow writes to files owned by root using `w!!`
+"---------------------------------------------------------------------
+cnoremap w!! w !sudo tee %
+"---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
 set background=dark   " options: <light, dark>
@@ -86,8 +99,10 @@ colorscheme solarized " options: <solarized, molokai, wombat, etc.>
 "---------------------------------------------------------------------
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
-let g:vimwiki_list = [{'path': '~/.wiki/'}]
-let g:ycm_filetype_whitelist = {'*': 1}
+let g:vimwiki_list=[{'path': '~/.wiki/'}]
+let g:ycm_clangd_binary_path="/usr/bin/clangd"
+let g:ycm_server_python_interpreter="/usr/bin/python2"
+let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
     \ 'notes':1,
     \ 'markdown':1,
@@ -102,12 +117,12 @@ let g:ycm_filetype_blacklist={
     \}
 "---------------------------------------------------------------------
 " Spaces & Tabs
-set tabstop=4           " 4 space per tab press
-set expandtab           " Use spaces for tabs; why would you use tabs?
-set softtabstop=4       " 4 space per tab press
-set shiftwidth=4
-set shiftround
-set virtualedit=all     " Allow typing past the final char in a line.
+set tabstop=4          " 4 space per tab press
+set expandtab          " Use spaces for tabs
+set softtabstop=4      " 4 space per tab press
+set shiftwidth=4       " "
+set shiftround         " "
+set virtualedit=all    " Allow typing past the final char in a line.
 "---------------------------------------------------------------------
 " Indenting behavior
 "---------------------------------------------------------------------
@@ -131,14 +146,14 @@ set listchars=tab:▸·,trail:·,nbsp:·
 set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
 " Ignore these (this is like a gitignore)
 "---------------------------------------------------------------------
-set visualbell    " don't beep
-set noerrorbells  " don't beep
+set visualbell    " Don't beep
+set noerrorbells  " Don't beep
 "---------------------------------------------------------------------
 " Use Q for formatting the current paragraph (or selection)
 vmap Q gq
 nmap Q gqap
 "---------------------------------------------------------------------
-" lets j,k behave more naturally on wrapped lines
+" Let j and k behave more naturally on wrapped lines
 onoremap <silent> j gj
 onoremap <silent> k gk
 "---------------------------------------------------------------------
@@ -149,7 +164,7 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 nmap ,cw :bcw
 "---------------------------------------------------------------------
-" maps <F5> key to copying the entire text file to the system clipboard
+" Maps <F5> key to copying the entire text file to the system clipboard
 nnoremap <silent> <F5> :%y+ <CR>
 "---------------------------------------------------------------------
 :let g:LargeFile=100
@@ -170,7 +185,7 @@ autocmd! BufWritePre * :call s:timestamp()
 function! s:timestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
     " Case insensitively. Replaces everything after that w/ timestamp
-    " in the format: "FRI 07 JUL 2017"
+    " in format: "FRI 07 JUL 2017"
     let pat = '\(\(Last\|LAST\)\?\s*\([Cc]hanged\|CHANGED\|[Mm]odified\|MODIFIED\|[Uu]pdated\?\|UPDATED\?\)\s*:\s*\).*'
     let rep = '\1' . strftime("%a %d %b %Y")
     call s:subst(1, 20, pat, rep)
@@ -219,12 +234,12 @@ function! FormatJSON()
     :%!python3 -c "import json, sys, collections; print(json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4))"
 endfunction
 " Now add a mapping `=j` to this function
-nmap =j :%!python -m json.tool<CR>
+nmap =j :call FormatJSON()<CR>
 "---------------------------------------------------------------------
 " Format XML using Python's minidom + some command-mode nonsense
 "---------------------------------------------------------------------
 function! FormatXML()
-    :%!python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), flush=True)
+    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
 endfunction
 " Now add a mapping `=x` to this function
 nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
@@ -247,18 +262,18 @@ nmap =b :call FormatBinary()<CR>
 "---------------------------------------------------------------------
 " pymode settings
 "---------------------------------------------------------------------
-let g:pymode_rope = 0                " Don't use Rope
-let g:pymode_rope_completion = 0
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_completion_on_dot = 0
-let g:pymode_folding = 0             " Don't fold in pymode
-let g:pymode_quickfix_maxheight = 4  " Max height of cwindow
-let g:pymode_motion = 1
-let g:pymode_lint = 1                " Use linting = 1; don't = 0
-let g:pymode_python = 'python3'
-let g:pymode_options_max_line_length = 100
-let g:pymode_trim_whitespaces = 1    " Remove trailing whitespace on save
-let g:pymode_options_colorcolumn = 1 " Line indicating max line len
+let g:pymode_rope=0                " Don't use Rope
+let g:pymode_rope_completion=0     " Don't use autocomplete via Rope
+let g:pymode_rope_lookup_project=0
+let g:pymode_rope_completion_on_dot=0
+let g:pymode_folding=0             " Don't do function folding
+let g:pymode_quickfix_maxheight=4  " Max height of cwindow
+let g:pymode_motion=1
+let g:pymode_lint=1                " Use linting = 1; don't = 0
+let g:pymode_python='python2'
+let g:pymode_options_max_line_length=100
+let g:pymode_trim_whitespaces=1    " Remove trailing whitespace on save
+let g:pymode_options_colorcolumn=1 " Line indicating max line len
 "---------------------------------------------------------------------
 " SimpylFold
 "---------------------------------------------------------------------
@@ -268,7 +283,7 @@ let g:SimpylFold_docstring_preview=1
 "---------------------------------------------------------------------
 set splitbelow
 set splitright
-" Split navigation
+" split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -278,12 +293,3 @@ set foldmethod=indent
 set foldlevel=99
 " Unfold w/ spacebar
 nnoremap <space> za
-" virtualenv support for python3
-py3 << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    exec(compile(open(activate_this, 'rb').read(), activate_this, 'exec'), dict(__file__=activate_this))
-EOF
