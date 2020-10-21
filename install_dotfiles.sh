@@ -133,6 +133,9 @@ cp mutt/.muttrc ~/.mutt/muttrc
 mkdir -p ~/.tmux/scripts
 cp tmux/.tmux.conf ~/.tmux.conf
 cp tmux/scripts/* ~/.tmux/scripts
+# Get tmux Plugin Manager (TPM)
+mkdir -p ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Copy over .vimrc
 cp vim/.vimrc ~/.vimrc
