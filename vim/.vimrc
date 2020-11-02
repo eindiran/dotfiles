@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Wed 21 Oct 2020
-" VERSION: 1.2.1
+" LAST MODIFIED: Wed 28 Oct 2020
+" VERSION: 1.2.2
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -27,6 +27,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
 Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
 Plugin 'w0rp/ale'                             " Multi lang linting manager
+Plugin 'vim-airline/vim-airline'              " Use the vim-airline status bar
+Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status bar
 Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
 Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
 Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
@@ -82,8 +84,23 @@ nmap ,po :!p4 opened <C-R>=expand("%")<CR>
 " `p4 diff`
 nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 "---------------------------------------------------------------------
-" Get Tagbar to be toggleable
+" Setup ALE:
 "---------------------------------------------------------------------
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_save = 1
+" Don't lint Java code, as the import functionality is garbage:
+let g:ale_linters = {
+    \ 'java': [],
+    \ }
+"---------------------------------------------------------------------
+" Setup airline status bar:
+"---------------------------------------------------------------------
+" Support using the status bar with ALE:
+let g:airline#extensions#ale#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme='base16_gruvbox_dark_hard'
+" Get Tagbar to be toggleable:
 nmap <F8> :TagbarToggle<CR>
 "---------------------------------------------------------------------
 " Allow writes to files owned by root using `w!!`
@@ -93,7 +110,8 @@ cnoremap w!! w !sudo tee %
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
 set background=dark   " options: <light, dark>
-colorscheme solarized " options: <solarized, molokai, wombat, etc.>
+colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
+" Can use wal to do dynamic color schemes with pywal
 "---------------------------------------------------------------------
 " Misc
 "---------------------------------------------------------------------
