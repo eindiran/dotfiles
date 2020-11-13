@@ -9,7 +9,7 @@
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Thu 12 Nov 2020
-#       REVISION:    v1.3.0
+#       REVISION:    v1.3.1
 #
 # ===============================================================================
 
@@ -41,6 +41,13 @@ setopt COMPLETE_IN_WORD
 
 # Allow tab complete to use aliases
 setopt COMPLETE_ALIASES
+
+# Support #,~,^ in filename globs
+setopt EXTENDED_GLOB
+
+# Auto fill ambigious matches immediately, and further
+# tabs cycle through the menu of completion options
+setopt MENU_COMPLETE
 
 # Arrow-key driven autocompletion
 zstyle ':completion:*' menu select
@@ -162,6 +169,13 @@ function _input_terminal_title() {
 
 # Now rebind ctrl + s to this function
 bindkey -s '^s' '_input_terminal_title\n'
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Bind additional keys:
+bindkey "^U"    backward-kill-line
+bindkey "^u"    backward-kill-line
 #--------------------------------------------------------------------
 
 
