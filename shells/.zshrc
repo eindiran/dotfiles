@@ -8,8 +8,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Thu 30 Jul 2020
-#       REVISION:    v1.2.9
+#       MODIFIED:    Thu 12 Nov 2020
+#       REVISION:    v1.3.0
 #
 # ===============================================================================
 
@@ -18,46 +18,57 @@
 true
 
 #--------------------------------------------------------------------
-autoload -Uz compinit promptinit
-compinit
+# Set up prompt:
+autoload -Uz promptinit
 promptinit
-#--------------------------------------------------------------------
 
-
-#--------------------------------------------------------------------
-# Set up prompt
+# Create prompt options
 export NORMAL_PROMPT="[%F{white}%~%f]  λ "
 export NOCOLOR_PROMPT="[%~] λ "
 export MINIMAL_PROMPT="λ "
+
+# Choose the desired prompt option
 PROMPT="$NORMAL_PROMPT"
 #--------------------------------------------------------------------
 
 
 #--------------------------------------------------------------------
+# Setup tab completion:
+autoload -Uz compinit
+
 # Allow tab completion in the middle of a word
 setopt COMPLETE_IN_WORD
+
+# Allow tab complete to use aliases
+setopt COMPLETE_ALIASES
+
 # Arrow-key driven autocompletion
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
-setopt COMPLETE_ALIASES
+zmodload zsh/complist
+compinit
+
+# Support hidden/dotfiles
+_comp_options+=(globdots)
 #--------------------------------------------------------------------
 
 
 #--------------------------------------------------------------------
-## History
+# Setup history:
 export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
 export SAVEHIST=100000
 setopt APPEND_HISTORY
 setopt EXTENDED_HISTORY
-## for sharing history between zsh processes
+
+# For sharing history between zsh processes:
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 #--------------------------------------------------------------------
 
 
 #--------------------------------------------------------------------
-## Allow search of history
+# Allow search of history
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -70,6 +81,87 @@ zle -N down-line-or-beginning-search
 #--------------------------------------------------------------------
 # Never, ever beep. Ever. Ever ever.
 setopt NO_BEEP
+
+# Automatically `cd` into typed out dirs:
+setopt AUTOCD
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Setup vi mode
+# Stolen from Luke Smith's zshrc:
+# https://github.com/LukeSmithxyz/voidrice/
+bindkey -v
+export KEYTIMEOUT=1
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^?'           backward-delete-char
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
+        echo -ne '\e[1 q'
+    elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] ||
+         [[ ${KEYMAP} = '' ]] || [[ $1 = 'beam' ]]; then
+        echo -ne '\e[5 q'
+    fi
+}
+
+# Initiate `vi insert` as keymap (can be removed if
+# `bindkey -V` has been set elsewhere)
+function zle-line-init() {
+    zle -K viins
+    echo -ne "\e[5 q"
+}
+
+zle -N zle-keymap-select
+zle -N zle-line-init
+
+# Use pipe-shaped cursor on startup:
+echo -ne '\e[5 q'
+preexec() { echo -ne '\e[5 q' ;}
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+bindkey '^[[P' delete-char
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Setup ctrl + f as a way to FZF + cd to a directory:
+function _cdfzf() {
+    local directory
+    directory="$(fzf)"
+    cd "${directory}" || printf "Directory '%s' doesn't exist!" "${directory}"
+}
+bindkey -s '^f' '_cdfzf\n'
+
+# Setup ctrl + z as a way to FZF + edit the file:
+function _fzf_vim() {
+    vim "$(fzf)"
+}
+bindkey -s '^z' '_fzf_vim\n'
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Setup ctrl + s as a way to quickly set the terminal name/title
+
+# Allow ctrl + s to be rebound
+stty stop undef
+
+# Set terminal title using read to fetch user input:
+function _input_terminal_title() {
+    local terminal_title
+    read terminal_title"?Enter new title for this terminal: "
+    printf '\033]2;%s%s%s\033\\' "[" "${terminal_title}" "]"
+}
+
+# Now rebind ctrl + s to this function
+bindkey -s '^s' '_input_terminal_title\n'
 #--------------------------------------------------------------------
 
 
@@ -80,9 +172,9 @@ LISTMAX=0
 
 
 #--------------------------------------------------------------------
-## Set coloring prefs
-## Used by the zsh-syntax-highlighting plugin, ls, and programs that use
-## the LS_COLORS environment variable
+# Set coloring prefs
+# Used by the zsh-syntax-highlighting plugin, ls, and programs that use
+# the LS_COLORS environment variable
 autoload -U colors
 colors
 export CLICOLOR=1
@@ -93,7 +185,7 @@ export TERM=screen-256color
 
 
 #--------------------------------------------------------------------
-## Charset preferences
+# Charset preferences
 export LESSCHARSET='utf-8'
 export LANGUAGE='en_US.UTF-8'
 export LC_COLLATE='en_US.UTF-8'
@@ -102,14 +194,16 @@ export LC_ALL='en_US.UTF-8'
 
 
 #--------------------------------------------------------------------
-## Aliases
+# Aliases
 alias up='source up'
 alias rm='rm -iv'
 alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
+
 # IRC
 alias irc='irssi -n eindiran'
+
 # Mutt
 alias email='mutt'
 alias gmail='mutt -F ~/.muttrc.gmail'
@@ -119,10 +213,12 @@ alias wkmail='mutt -F ~/.muttrc.work'
 
 
 #--------------------------------------------------------------------
-## Exports
+# Exports
+
 ### ld:
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/include
 export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib:/usr/local/include
+
 ### git:
 export NAME='eindiran'
 export GIT_AUTHOR_NAME='eindiran'
@@ -130,21 +226,32 @@ export GIT_AUTHOR_EMAIL='eindiran@uchicago.edu'
 export GIT_COMMITTER_NAME='eindiran'
 export GIT_COMMITTER_EMAIL='eindiran@uchicago.edu'
 export USERNAME='Elliott Indiran <eindiran@uchicago.edu>'
+
 ### Editor setup:
 export SUDO_EDITOR=/usr/bin/vim
 export EDITOR=/usr/bin/vim
+
 ### Path:
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin:/home/eindiran/.local/bin
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/eindiran/.cabal/bin:/home/eindiran/.cargo/bin:/home/eindiran/.local/bin:/home/eindiran/gems/bin:/usr/local/go/bin
+
 ### Shell:
 export SHELL=/bin/zsh
+
 ### Dropbox:
 export DROPBOX=$HOME/Dropbox
+
+### Go:
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/Workspace
+
 ### Java:
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 ### Spark:
 export SPARK_HOME=/usr/local/share/spark/spark-2.3.0-bin-hadoop2.7/
 export PYSPARK_PYTHON=/usr/bin/python3
 export PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+
 ### Workspace directory:
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 #--------------------------------------------------------------------
@@ -154,6 +261,7 @@ export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 # Enable help command
 autoload -Uz run-help
 alias help=run-help
+
 # Enable helper functions for run-help
 autoload -Uz run-help-git
 autoload -Uz run-help-ip
@@ -164,7 +272,7 @@ autoload -Uz run-help-sudo
 
 
 #--------------------------------------------------------------------
-## Dirstack
+# Dirstack
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
 
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
@@ -183,9 +291,11 @@ DIRSTACKSIZE=20
 #--------------------------------------------------------------------
 # Set various pushd/popd options
 setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
-## Remove duplicate entries
+
+# Remove duplicate entries
 setopt PUSHD_IGNORE_DUPS
-## This reverts the +/- operators.
+
+# This reverts the +/- operators.
 setopt PUSHD_MINUS
 #--------------------------------------------------------------------
 
