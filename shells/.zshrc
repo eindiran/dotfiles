@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Thu 12 Nov 2020
+#       MODIFIED:    Fri 13 Nov 2020
 #       REVISION:    v1.3.1
 #
 # ===============================================================================
@@ -45,10 +45,6 @@ setopt COMPLETE_ALIASES
 # Support #,~,^ in filename globs
 setopt EXTENDED_GLOB
 
-# Auto fill ambigious matches immediately, and further
-# tabs cycle through the menu of completion options
-setopt MENU_COMPLETE
-
 # Arrow-key driven autocompletion
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
@@ -75,65 +71,11 @@ setopt SHARE_HISTORY
 
 
 #--------------------------------------------------------------------
-# Allow search of history
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
-[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
-[[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
 # Never, ever beep. Ever. Ever ever.
 setopt NO_BEEP
 
 # Automatically `cd` into typed out dirs:
 setopt AUTOCD
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
-# Setup vi mode
-# Stolen from Luke Smith's zshrc:
-# https://github.com/LukeSmithxyz/voidrice/
-bindkey -v
-export KEYTIMEOUT=1
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?'           backward-delete-char
-
-# Change cursor shape for different vi modes.
-function zle-keymap-select {
-    if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
-        echo -ne '\e[1 q'
-    elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] ||
-         [[ ${KEYMAP} = '' ]] || [[ $1 = 'beam' ]]; then
-        echo -ne '\e[5 q'
-    fi
-}
-
-# Initiate `vi insert` as keymap (can be removed if
-# `bindkey -V` has been set elsewhere)
-function zle-line-init() {
-    zle -K viins
-    echo -ne "\e[5 q"
-}
-
-zle -N zle-keymap-select
-zle -N zle-line-init
-
-# Use pipe-shaped cursor on startup:
-echo -ne '\e[5 q'
-preexec() { echo -ne '\e[5 q' ;}
-
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
-bindkey '^[[P' delete-char
 #--------------------------------------------------------------------
 
 
@@ -174,8 +116,19 @@ bindkey -s '^s' '_input_terminal_title\n'
 
 #--------------------------------------------------------------------
 # Bind additional keys:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e'    edit-command-line
+bindkey '^[[P'  delete-char
 bindkey "^U"    backward-kill-line
 bindkey "^u"    backward-kill-line
+
+# Allow search of history
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
+[[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
 #--------------------------------------------------------------------
 
 
@@ -290,12 +243,12 @@ autoload -Uz run-help-sudo
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
 
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
-  dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
-  [[ -d $dirstack[1] ]] && cd $dirstack[1]
+    dirstack=(${(f)"$(< $DIRSTACKFILE)"})
+    [[ -d $dirstack[1] ]] && cd $dirstack[1]
 fi
 
-chpwd() {
-  print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
+function chpwd() {
+    print -l $PWD ${(u)dirstack} > $DIRSTACKFILE
 }
 
 DIRSTACKSIZE=20
