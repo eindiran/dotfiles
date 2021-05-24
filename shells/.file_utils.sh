@@ -12,23 +12,25 @@
 #===============================================================================
 
 extract() {
+    declare -a SUPPORTED_FORMATS=("tar" "tarbz" "tarbz2" "targz" "tarlz" "tarlzo" "tarlzma" "tarxz" "tarlrz" "tarZ" "tar7z" "lz" "lrz" "rz""bz" "bz2" "xz" "lzo" "lzma" "gz" "7z" "rar" "zip" "zst" "Z" "zlib" "cpio" "ar" "jar" "war")
     # Extract the contents of a compressed file
     # Most common archive types are currently supported
     # Support for new types can be added using the "case" block below:
-    if [ "$1" = "--help" ] ; then
-        echo "extract() -- Decompress all common archive formats with a single command."
-        echo
-        echo "Usage: extract foo.<filetype>"
-        echo "Example: extract foo.tar.gz"
-        echo
-        echo "extract() supports the following filetypes:"
-        printf "\t\t.tar\n\t\t.tar.bz2\n\t\t.tar.bz\n\t\t.tar.gz\n\t\t.tar.lz\n\t\t.tar.xz\n"
-        printf "\t\t.tar.Z\n\t\t.tar.lrz\n\t\t.lrz\n\t\t.tar.7z\n\t\t.rz\n\t\t.bz2\n\t\t.bz\n\t\t.xz\n"
-        printf "\t\t.lz\n\t\t.rar\n\t\t.gz\n\t\t.zip\n\t\t.Z\n\t\t.7z\n\t\t.zlib\n"
+    if [[ -z "$1" ]] || [ "$1" = "--help" ]; then
+        >&2 echo "extract() -- Decompress common archive formats with a single command."
+        >&2 echo
+        >&2 echo "Usage: extract foo.<filetype>"
+        >&2 echo "Example: extract foo.tar.gz"
+        >&2 echo
+        >&2 echo "extract() supports the following archive types:"
+        for formatname in "${SUPPORTED_FORMATS[@]}"; do
+            >&2 printf "\t* .%s\n" "${formatname}"
+        done
         return
-    elif [ -f "$1" ] ; then
+    elif [[ -f "$1" ]]; then
         case "$1" in
             *.tar)        tar xvf "$1"                  ;;  # tar
+            *.ustar)      tar xvf "$1"                  ;;  # tar
             *.tar.bz)     tar xvjf "$1"                 ;;  # tar + bzip(2)
             *.tbz)        tar xvjf "$1"                 ;;  # tar + bzip(2)
             *.tar.bz2)    tar xvjf "$1"                 ;;  # tar + bzip2
@@ -43,8 +45,14 @@ extract() {
             *.tlz)        tar --lzip -xvf "$1"          ;;  # tar + lzip
             *.tar.lzip)   tar --lzip -xvf "$1"          ;;  # tar + lzip
             *.tlzip)      tar --lzip -xvf "$1"          ;;  # tar + lzip
-            *.tar.xz)     tar xvJf "$1"                 ;;  # tar + lmza/lmza2
-            *.txz)        tar xvJf "$1"                 ;;  # tar + lmza/lmza2
+            *.tlzop)      tar --lzop -xvf "$1"          ;;  # tar + lzop
+            *.tar.lzop)   tar --lzop -xvf "$1"          ;;  # tar + lzop
+            *.tlzo)       tar --lzop -xvf "$1"          ;;  # tar + lzop
+            *.tar.lzo)    tar --lzop -xvf "$1"          ;;  # tar + lzop
+            *.tlzma)      tar --lzma -xvf "$1"          ;;  # tar + lzma (legacy)
+            *.tar.lzma)   tar --lzma -xvf "$1"          ;;  # tar + lzma (legacy)
+            *.tar.xz)     tar xvJf "$1"                 ;;  # tar + lmza2 (xz)
+            *.txz)        tar xvJf "$1"                 ;;  # tar + lmza2 (xz)
             *.tar.Z)      zcat "$1" | tar xvf -         ;;  # tar + compress
             *.tZ)         zcat "$1" | tar xvf -         ;;  # tar + compress
             *.tar.lrz)    lrzuntar "$1"                 ;;  # tar + lrzip
@@ -62,6 +70,9 @@ extract() {
             *.bzip)       bunzip2 "$1"                  ;;  # bzip
             *.bz2)        bunzip2 "$1"                  ;;  # bzip
             *.xz)         xz -d "$1"                    ;;  # xz-utils
+            *.lzma)       xz --format=lzma -d "$1"      ;;  # lzma (xz-utils)
+            *.lzop)       lzop -d "$1"                  ;;  # lzop
+            *.lzo)        lzop -d "$1"                  ;;  # lzop
             *.gz)         gunzip "$1"                   ;;  # gzip
             *.gzip)       gunzip "$1"                   ;;  # gzip
             *.lz)         lzip -d -k "$1"               ;;  # lzip
@@ -72,17 +83,27 @@ extract() {
             *.rar)        unrar x "$1"                  ;;  # rar
             *.rar+[0-9])  unrar x "$1"                  ;;  # rar: format '.rar1'
             *.zip)        unzip "$1"                    ;;  # zip
+            *.zipx)       unzip "$1"                    ;;  # zip
+            *.zstd)       unzstd "$1"                   ;;  # zstd (Zstandard)
+            *.zst)        unzstd "$1"                   ;;  # zstd (Zstandard)
             *.Z)          uncompress "$1"               ;;  # compress
             *.zlib)       zlib-flate -uncompress "$1"   ;;  # zlib
             *.cpio)       cpio -idv "$1"                ;;  # cpio
+            *.ar)         ar xv "$1"                    ;;  # ar
+            *.jar)        jar xf "$1"                   ;;  # jar
+            *.war)        jar xvf "$1"                  ;;  # war
             ###################################################################
             ### Everything has failed to be matched; unknown file extension ###
             ###################################################################
-            *)           echo "Encountered unknown type (${1##*.}) with file: $1" ;;
+            *)
+                >&2 echo "Encountered unknown type (${1##*.}) with file: $1"
+                return 1
+                ;;
         esac
     else
-        echo "'$1', with filetype '${1##*.}', is not a valid file!"
-        echo "Check if the file exists with:  stat '$1'"
+        >&2 echo "'$1', with filetype '${1##*.}', cannot be found."
+        >&2 echo "Check if the file exists with:  stat '$1'"
+        return 1
     fi
 }
 
