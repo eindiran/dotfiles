@@ -261,3 +261,8 @@ yotld() {
     # This function is a joke
     echo "$(($(date +%Y)+1)) is the year of the Linux desktop."
 }
+
+resolve_doi() {
+    # Resolve a DOI to get the final resulting URL
+    curl -Ls -o /dev/null -w %{url_effective} "$(echo "https://www.doi.org/${1}")" | awk -F'?' '{print $1}'
+}
