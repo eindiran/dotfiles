@@ -13,6 +13,25 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
+gwip() {
+    # Create a WIP commit with a standardized message, that allows collapsing
+    # into a squashed commit with gwip_squash
+    git commit -a -m "wip - fixup"
+}
+
+gwip_squash() {
+    # Squash all the commits created using gwip.
+    # NOTE: this will ignore gwip commits before the latest non-gwip commit.
+    # If you create a non-gwip commit, you'll need to amend the message or do
+    # the squash manually.
+    git rebase -i --autosquash "$(git log --pretty="%H %s" | grep -v "wip - fixup" | head -n 1 | awk '{print $1}')"
+}
+
+git_edited_files() {
+    # Get all the files touched by an author in this branch
+    git log --pretty="%H" --author="$1" | while read commit_hash; do git show --oneline --name-only $commit_hash | tail -n+2; done | sort | uniq
+}
+
 githash() {
     if [ $# -gt 0 ]; then
         shift 1
