@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #===============================================================================
 #
-#          FILE: install_dotfiles.sh
+#          FILE: install_dotfiles_macos.sh
 #
-#         USAGE: ./install_dotfiles.sh
+#         USAGE: ./install_dotfiles_macos.sh
 #
 #   DESCRIPTION: Installs all dotfiles from github.com/eindiran/dotfiles
 #
