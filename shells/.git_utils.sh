@@ -13,7 +13,7 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
-gwip() {
+gwipc() {
     # Create a WIP commit with a standardized message, that allows collapsing
     # into a squashed commit with gwip_squash
     git commit -a -m "wip - fixup"
