@@ -29,7 +29,7 @@ gwip_squash() {
 
 git_edited_files() {
     # Get all the files touched by an author in this branch
-    git log --pretty="%H" --author="$1" | while read commit_hash; do git show --oneline --name-only $commit_hash | tail -n+2; done | sort | uniq
+    git log --pretty="%H" --author="$1" | while read -r commit_hash; do git show --oneline --name-only "$commit_hash" | tail -n+2; done | sort | uniq
 }
 
 githash() {
@@ -47,7 +47,7 @@ find_git_commands() {
         # zsh version
         history 0 | cut -c 8- | rg "^git" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "git .*$"
     else
-        if [ ! -n "$BASH_VERSION" ]; then
+        if [ -z "$BASH_VERSION" ]; then
             echo "[WARNING] - This command may not work in your shell."
         fi
         # bash version
