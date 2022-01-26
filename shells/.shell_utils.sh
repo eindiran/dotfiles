@@ -2,15 +2,25 @@
 #===============================================================================
 #
 #          FILE: .shell_utils.sh
-# 
-#         USAGE: ./.shell_utils.sh 
-# 
+#
+#         USAGE: ./.shell_utils.sh
+#
 #   DESCRIPTION: Add utility functions to the shell. Replaces a lot of aliases
 #                and functions in my .bashrc and .zshrc files.
-# 
+#
 #         NOTES: Source this file in the rc file of your preferred shell.
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
+
+unalias_if_exists() {
+    # Use unalias iff the alias exists to avoid "no such hash table element" errors:
+    case "$(type "$1")" in
+        (*alias*)
+            unalias "$1"
+            ;;
+    esac
+
+}
 
 beginswith() {
     # Check that second argument begins with first argument
@@ -44,31 +54,40 @@ m() {
     make "$@"
 }
 
-ls() {
-    # Alias for 'ls'
-    command ls --color -AF "$@"
-}
+if [[ ! "$OSTYPE" == "darwin"* ]]; then
+    # Linux
+    unalias_if_exists ls
+    ls() {
+        # Alias for 'ls'
+        command ls --color -AF "$@"
+    }
 
-ll() {
-    # Alias for 'll'
-    command ls --color -Flhtr "$@"
-}
+    unalias_if_exists ll
+    ll() {
+        # Alias for 'll'
+        command ls --color -Flhtr "$@"
+    }
 
-la() {
-    # Alias for 'ls -la'
-    command ls --color -Flhtra "$@"
-}
+    unalias_if_exists la
+    la() {
+        # Alias for 'ls -la'
+        command ls --color -Flhtra "$@"
+    }
 
-lh() {
-    # Display all files in 'll' format
-    command ls --color -AFlhtr "$@"
-}
+    unalias_if_exists lh
+    lh() {
+        # Display all files in 'll' format
+        command ls --color -AFlhtr "$@"
+    }
 
-l() {
-    # Alias for ll
-    command ls --color -Flhtr "$@"
-}
+    unalias_if_exists l
+    l() {
+        # Alias for ll
+        command ls --color -Flhtr "$@"
+    }
+fi
 
+unalias_if_exists lm
 lm() {
     # More advanced version of ls -l | more
     if [ $# -gt 0 ] ; then
