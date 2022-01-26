@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Wed 28 Oct 2020
-" VERSION: 1.2.2
+" LAST MODIFIED: Tue 25 Jan 2022
+" VERSION: 1.2.3
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -118,8 +118,7 @@ colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list=[{'path': '~/.wiki/'}]
-let g:ycm_clangd_binary_path="/usr/bin/clangd"
-let g:ycm_server_python_interpreter="/usr/bin/python2"
+let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
     \ 'notes':1,
@@ -155,7 +154,14 @@ set number                " Show line numbers
 set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
 set smartcase
-set clipboard=unnamedplus " See here: vim.wikia.com/wiki/VimTip21
+if system('uname -s') == "Darwin\n"
+    " macOS - see here:
+    " https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
+    set clipboard=unnamed
+else
+    " Linux - see here: vim.wikia.com/wiki/VimTip21
+    set clipboard=unnamedplus
+endif
 "---------------------------------------------------------------------
 set list
 set listchars=tab:▸·,trail:·,nbsp:·
