@@ -85,6 +85,15 @@ if [[ ! "$OSTYPE" == "darwin"* ]]; then
         # Alias for ll
         command ls --color -Flhtr "$@"
     }
+else
+    # macOS
+    sudoedit() {
+        if [[ -n "$EDITOR" ]]; then
+            sudo "$EDITOR" "$@"
+        else
+            sudo vim "$@"
+        fi
+    }
 fi
 
 unalias_if_exists lm
