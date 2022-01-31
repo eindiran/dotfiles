@@ -21,7 +21,7 @@ find_typos() {
 }
 
 add_typo() {
-    echo "typo $1='$2'" >> ~/.typo_utils.sh
+    echo "typo $1='$2'      # $1 -> $2" >> ~/.typo_utils.sh
 }
 
 ## Typo-catching for my most common typos
@@ -51,6 +51,8 @@ typo lcear='clear'       # lcear  -> clear
 typo claer='clear'       # claer  -> clear
 typo clkear='clear'      # clkear -> clear
 typo clesr='clear'       # clesr  -> clear
+typo xlear='clear'       # xlear  -> clear
+typo vlear='clear'       # vlear  -> clear
 
 # history
 typo histpry='history'   # histpry  -> history
@@ -83,8 +85,10 @@ typo kk='ll'             # kk  -> ll
 typo ks='ls'             # ks  -> ls
 
 # tree
-typo tre='tree'          # tre  -> tree
-typo reww='tree'         # reww -> tree
+typo trre='tree'         # trre  -> tree
+typo trree='tree'        # trree -> tree
+typo tre='tree'          # tre   -> tree
+typo reww='tree'         # reww  -> tree
 
 # exit
 typo xit='exit'          # xit   -> exit
