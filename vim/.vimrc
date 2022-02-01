@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 25 Jan 2022
+" LAST MODIFIED: Tue 01 Feb 2022
 " VERSION: 1.2.3
 "---------------------------------------------------------------------
 set nocompatible
@@ -255,7 +255,7 @@ endfunction
 " Format JSON using Python's json.tool
 "---------------------------------------------------------------------
 function! FormatJSON()
-    :%!python3 -c "import json, sys, collections; print(json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4))"
+    :%!jq .
 endfunction
 " Now add a mapping `=j` to this function
 nmap =j :call FormatJSON()<CR>
