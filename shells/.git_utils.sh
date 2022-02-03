@@ -54,3 +54,7 @@ find_git_commands() {
         history | cut -c 8- | rg "^git" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "git .*$"
     fi
 }
+
+ticket2branchname() {
+    echo "$@" | python3 -c "import sys;print(sys.stdin.read().replace(' ', '-').lower(),end='')"
+}
