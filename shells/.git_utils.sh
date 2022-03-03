@@ -27,6 +27,11 @@ gwip_squash() {
     git rebase -i --autosquash "$(git log --pretty="%H %s" | grep -v "wip - fixup" | head -n 1 | awk '{print $1}')"
 }
 
+git_revert() {
+    # Implements p4 revert in git
+    git checkout HEAD -- "$@"
+}
+
 git_edited_files() {
     # Get all the files touched by an author in this branch
     git log --pretty="%H" --author="$1" | while read -r commit_hash; do git show --oneline --name-only "$commit_hash" | tail -n+2; done | sort | uniq
