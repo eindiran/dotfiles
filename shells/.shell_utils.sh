@@ -488,3 +488,8 @@ zeropad() {
     PADDED_NUM="$(printf "%0${PADLEN}d" "$NUM")"
     echo "${1/$NUM/$PADDED_NUM}"
 }
+
+find_swap_files() {
+    # Find any open swap files
+    fd -H "^\..*\.sw[op]$"
+}
