@@ -287,3 +287,12 @@ fd_fsize() {
         find . -size "$@"
     fi
 }
+
+remove_xattrs() {
+    # Remove all xattrs from a file:
+    if [ $# -ne 1 ] ; then
+        echo "ERROR: remove_xattrs takes a single filename as an argument"
+    else
+        xattr -l $1 | awk -F" " '{ print substr($1, "", length($1)-1) }' | xargs -I % sh -c "xattr -d % $1"
+    fi
+}
