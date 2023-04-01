@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Wed 26 Jan 2022
+#       MODIFIED:    Fri 31 Mar 2023
 #       REVISION:    v1.4.0
 #
 # ===============================================================================
@@ -71,23 +71,6 @@ setopt NO_BEEP
 
 # Automatically `cd` into typed out dirs:
 setopt AUTOCD
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
-# Setup ctrl + f as a way to FZF + cd to a directory:
-function _cdfzf() {
-    local directory
-    directory="$(fzf)"
-    cd "${directory}" || printf "Directory '%s' doesn't exist!" "${directory}"
-}
-bindkey -s '^f' '_cdfzf\n'
-
-# Setup ctrl + z as a way to FZF + edit the file:
-function _fzf_vim() {
-    vim "$(fzf)"
-}
-bindkey -s '^z' '_fzf_vim\n'
 #--------------------------------------------------------------------
 
 
@@ -163,6 +146,7 @@ export LC_ALL='en_US.UTF-8'
 
 #--------------------------------------------------------------------
 # Aliases
+alias vim='mvim -v'
 alias up='source up'
 alias rm='rm -iv'
 alias mv='mv -v'
@@ -180,6 +164,9 @@ alias irc='irssi -n eindiran'
 ### ld:
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 export LD_RUN_PATH=$LD_RUN_PATH
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include"
+export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
 
 ### git:
 export NAME='eindiran'
@@ -194,8 +181,7 @@ export SUDO_EDITOR=vim
 export EDITOR=vim
 
 ### Path:
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-
+export PATH="${HOME}/bin:/usr/local/bin:${PATH}"
 ### Workspace directory:
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 #--------------------------------------------------------------------
@@ -260,15 +246,62 @@ setopt PUSHD_MINUS
 [ -f ~/.tts_utils.sh ] && source ~/.tts_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 [ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
+[ -f ~/.docker_utils.sh ] && source ~/.docker_utils.sh
 #--------------------------------------------------------------------
 
 
 #--------------------------------------------------------------------
 # fzf:
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND="fd . $HOME"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+if [ -f ~/.fzf.zsh ]; then
+    # FZF Commands:
+    # Ctrl + f --> default command
+    # Ctrl + t --> default command + bat preview
+    # Ctrl + r -->
+    source ~/.fzf.zsh
+    # `fzf`
+    export FZF_DEFAULT_COMMAND="fd ."
+    # CTRL + T
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_CTRL_T_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+    # CTRL + R
+    # CTRL-/ to toggle small preview window to see the full command
+    # CTRL-Y to copy the command into clipboard using pbcopy
+    export FZF_CTRL_R_OPTS="
+    --preview 'echo {}' --preview-window up:3:hidden:wrap
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+    --color header:italic
+    --header 'Press CTRL-Y to copy command into clipboard'"
+    # ALT + C
+    export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+    export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+    # Setup CTRL + f as a way to FZF + cd to a directory:
+    # This needs to appear below: bindkey -s '^f' '_cdfzf\n'
+    function _cdfzf() {
+        local directory
+        directory="$(fzf)"
+        cd "${directory}" || printf "Directory '%s' doesn't exist!" "${directory}"
+    }
+    # Setup ctrl + z as a way to FZF + edit the file:
+    # This needs to appear below: bindkey -s '^z' '_fzf_vim\n'
+    function _fzf_vim() {
+        vim "$(fzf)"
+    }
+    # Setup CTRL + h as a way to fzf starting at home
+    # This needs to appear below: bindkey -s '^h' '_homefzf\n'
+    function _homefzf() {
+        _FZF_DCMD="${FZF_DEFAULT_COMMAND}"
+        FZF_DEFAULT_COMMAND="fd . $HOME"
+        local directory
+        directory="$(fzf)"
+        cd "${directory}" || printf "Directory '%s' doesn't exist!" "${directory}"
+        FZF_DEFAULT_COMMAND="${_FZF_DCMD}"
+        unset _FZF_DCMD
+    }
+fi
 #--------------------------------------------------------------------
 
 
@@ -294,8 +327,9 @@ HIST_STAMPS="yyyy-mm-dd"
 
 plugins=(
   zsh-autosuggestions
-  zsh-syntax-highlighting
   zsh-history-substring-search
+  zsh-syntax-highlighting
+  zsh-fzf-history-search
   git
   bundler
   dotenv
@@ -304,6 +338,10 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 #--------------------------------------------------------------------
-
+# Final steps to make sure the following are the last keybindings we enter:
+bindkey -s '^f' '_cdfzf\n'
+bindkey -s '^z' '_fzf_vim\n'
+bindkey -s '^h' '_homefzf\n'
+bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
