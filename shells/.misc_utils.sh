@@ -266,3 +266,7 @@ resolve_doi() {
     # Resolve a DOI to get the final resulting URL
     curl -Ls -o /dev/null -w %{url_effective} "$(echo "https://www.doi.org/${1}")" | awk -F'?' '{print $1}'
 }
+
+chkport() {
+    sudo lsof -i -P -n | rg ":${1} \(LISTEN\)\$"
+}
