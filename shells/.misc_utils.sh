@@ -268,8 +268,33 @@ resolve_doi() {
 }
 
 chkport() {
-    # Check for processes listening to specified port
-    sudo lsof -i -P -n | rg ":${1} \(LISTEN\)\$"
+    # Check for processes using a port
+    if [ "$1" = "-h" ]; then
+        echo "chkport:"
+        echo "	Check for processes using specified port"
+        echo "	If run without specifying a port, check for all ports"
+        echo "	Args:"
+        echo "		default: LISTEN + ESTABLISHED"
+        echo "		-l:      LISTEN"
+        echo "		-e:      ESTABLISHED"
+        echo "		-a:      ALL"
+        echo "		-h:      print help and exit"
+        echo "	Example:"
+        echo "		chkport -l 9000"
+        echo "		chkport -e"
+    elif [ "$1" = "-l" ]; then
+        # LISTEN only
+        sudo lsof -i -P -n | rg ":${2:-[[:digit:]]+} \(LISTEN\)\$"
+    elif [ "$1" = "-e" ]; then
+        # ESTABLISHED only
+        sudo lsof -i -P -n | rg ":${2:-[[:digit:]]+} \(ESTABLISHED\)\$"
+    elif [ "$1" = "-a" ]; then
+        # all types
+        sudo lsof -i -P -n | rg ":${2:-[[:digit:]]+} \([A-Z_0-9]+\)\$"
+    else
+        # default is LISTEN + ESTABLISHED
+        sudo lsof -i -P -n | rg ":${1:-[[:digit:]]+} \(((LISTEN)|(ESTABLISHED))\)\$"
+    fi
 }
 
 pwt() {
