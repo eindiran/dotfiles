@@ -268,5 +268,25 @@ resolve_doi() {
 }
 
 chkport() {
+    # Check for processes listening to specified port
     sudo lsof -i -P -n | rg ":${1} \(LISTEN\)\$"
+}
+
+pwt() {
+    # Print working directory and then run `tree`
+    pwd
+    tree "$@"
+}
+
+timer() {
+    # macOS timer
+    # ARG 1: Sleep time seconds
+    # ARG 2: Ring count
+    sleep $1
+    i=$2
+    until [ $i -eq 0 ]; do
+        tput bel
+        sleep 1
+        i=$((i-1))
+    done 
 }
