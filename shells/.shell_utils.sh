@@ -185,13 +185,13 @@ fpdfgrep() {
     find . -iname '*.pdf' -exec pdfgrep "$@" {} +
 }
 
-histgrep() {
+zhg() {
     # History grep: search your history
     if [ -n "$ZSH_VERSION" ]; then
         # zsh version
         history 0 | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
     else
-        if [ ! -n "$BASH_VERSION" ]; then
+        if [ -z "$BASH_VERSION" ]; then
             echo "[WARNING] - This command may not work in your shell."
         fi
         # bash version
@@ -242,7 +242,8 @@ man () {
     if beginswith "No manual entry for" "$MAN_PAGE"; then
         command man "$@"
         printf "\nSearching for similar pages via apropos...\n\n"
-        apropos "$@"
+        # Tee apropos to /dev/null to prevent it from using paging
+        apropos "$@" | tee /dev/null
     else
         command man "$@"
     fi
