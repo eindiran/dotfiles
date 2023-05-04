@@ -32,20 +32,26 @@
 [push]
 	default = simple
 [alias]
-	lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
-	adog = !git log --all --decorate --oneline --graph
-	log-graph = !git log --all --decorate --oneline --graph
+	a = add .
+	adog = log --all --decorate --oneline --graph
+	amend = commit --amend
+	br = branch
+	c = commit
+	cam = commit -am
+	ch = checkout
+	cl = clone
+	cm = commit -m
+	d = diff
+	hash = rev-parse --short=16 HEAD
 	hist = !git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-	log-patch = !git log --patch --stat
-	lp = !git log --patch --stat
-	amend = !git commit --amend
-	cl = !git clone
-	co = !git checkout
-	cb = !git checkout -b
-	c = !git commit
-	cm = !git commit -m
-	cam = !git commit -am
-	st = !git status
-	br = !git branch
-	remotes = !git remote -v
-	rename = !git branch -m
+	last = log -1 HEAD
+	lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+	log-graph = log --all --decorate --oneline --graph
+	log-patch = log --patch --stat
+	lp = log --patch --stat
+	nb = checkout -b
+	remotes = remote -v
+	rename = branch -m
+	revert = checkout HEAD --
+	st = status
+	unstage = reset HEAD --
