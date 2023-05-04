@@ -34,6 +34,7 @@
 [alias]
 	a = add .
 	adog = log --all --decorate --oneline --graph
+	aliases = !git config --list | rg ^alias\\. | cut -c 7-
 	amend = commit --amend
 	br = branch
 	c = commit
