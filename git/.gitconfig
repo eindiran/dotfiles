@@ -52,6 +52,5 @@
 	nb = checkout -b
 	remotes = remote -v
 	rename = branch -m
-	revert = checkout HEAD --
 	st = status
 	unstage = reset HEAD --
