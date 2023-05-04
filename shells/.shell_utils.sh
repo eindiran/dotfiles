@@ -199,6 +199,11 @@ zhg() {
     fi
 }
 
+history_commands() {
+    # Commands only history
+    history 0 | rg --color=never -o "^\s*[0-9]+\*?\s+[0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}\s+(.*)$" -r '$1'
+}
+
 rgp() {
     # Page the output of rg through less
     rg -p "$@" | less -RFX
