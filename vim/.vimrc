@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 01 Feb 2022
+" LAST MODIFIED: Tue 09 May 2023
 " VERSION: 1.2.3
 "---------------------------------------------------------------------
 set nocompatible
@@ -13,6 +13,7 @@ set encoding=utf-8
 " Work with UTF-8
 set autoread
 " Use `autoread`, for `vim-tmux-focus-events`
+set term=xterm-256color
 "---------------------------------------------------------------------
 filetype off
 "---------------------------------------------------------------------
@@ -26,6 +27,7 @@ call vundle#begin()
 "---------------------------------------------------------------------
 Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
 Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
+Plugin 'puremourning/vimspector'              " Debugger
 Plugin 'w0rp/ale'                             " Multi lang linting manager
 Plugin 'vim-airline/vim-airline'              " Use the vim-airline status bar
 Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status bar
@@ -43,13 +45,14 @@ Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }  " awk syntax and inline code running
-Plugin 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
-Plugin 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
-Plugin 'nvie/vim-flake8', { 'for': 'py' }              " Formatting for Python
-Plugin 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
-Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }             " shfmt -- shell script formatter
-Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
+Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }      " awk syntax and inline code running
+Plugin 'elzr/vim-json', { 'for': 'json' }                  " JSON formatting, highlighting and folding
+Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
+Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
+Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
+Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
+Plugin 'Epitrochoid/marko-vim-syntax', { 'for': 'marko' }  " Marko support
+"---------------------------------------------------------------------
 call vundle#end()
 "---------------------------------------------------------------------
 filetype plugin indent on
@@ -89,10 +92,12 @@ nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
-" Don't lint Java code, as the import functionality is garbage:
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {
-    \ 'java': [],
-    \ }
+\   'python': ['ruff'],
+\}
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
@@ -132,6 +137,7 @@ let g:ycm_filetype_blacklist={
     \ 'mail':1,
     \ 'org':1
     \}
+let g:ycm_server_python_interpreter='/usr/local/bin/python3.9'
 "---------------------------------------------------------------------
 " Spaces & Tabs
 set tabstop=4          " 4 space per tab press
@@ -197,8 +203,6 @@ nnoremap <silent> <F5> :%y+ <CR>
 "---------------------------------------------------------------------
 " *.groovy & *.gradle --> Groovy
 au BufNewFile,BufRead *.groovy,*.gradle  setf groovy
-" *.yaml,*.yml --> YAML
-au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 " *.ts, *.tsx --> TypeScript
 au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
@@ -283,21 +287,6 @@ function! FormatBinary()
     :%!xxd -r
 endfunction
 nmap =b :call FormatBinary()<CR>
-"---------------------------------------------------------------------
-" pymode settings
-"---------------------------------------------------------------------
-let g:pymode_rope=0                " Don't use Rope
-let g:pymode_rope_completion=0     " Don't use autocomplete via Rope
-let g:pymode_rope_lookup_project=0
-let g:pymode_rope_completion_on_dot=0
-let g:pymode_folding=0             " Don't do function folding
-let g:pymode_quickfix_maxheight=4  " Max height of cwindow
-let g:pymode_motion=1
-let g:pymode_lint=1                " Use linting = 1; don't = 0
-let g:pymode_python='python2'
-let g:pymode_options_max_line_length=100
-let g:pymode_trim_whitespaces=1    " Remove trailing whitespace on save
-let g:pymode_options_colorcolumn=1 " Line indicating max line len
 "---------------------------------------------------------------------
 " SimpylFold
 "---------------------------------------------------------------------
