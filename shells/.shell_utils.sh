@@ -34,6 +34,14 @@ beginswith() {
     esac;
 }
 
+join_by() {
+    # Taken from: https://stackoverflow.com/questions/1527049
+    local delim=${1-} elem=${2-}
+    if shift 2; then # 1 for join_by, 1 for delimiter
+        printf %s "$elem" "${@/#/$delim}"
+    fi
+}
+
 trim() {
     # Trim whitespace
     sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
