@@ -38,6 +38,7 @@
 	amend = commit --amend
 	br = branch
 	c = commit
+	caa = commit -a --amend -C HEAD
 	cam = commit -am
 	ch = checkout
 	cl = clone
@@ -51,6 +52,7 @@
 	log-patch = log --patch --stat
 	lp = log --patch --stat
 	nb = checkout -b
+	new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
 	remotes = remote -v
 	rename = branch -m
 	st = status
