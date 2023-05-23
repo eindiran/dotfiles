@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 09 May 2023
-" VERSION: 1.2.3
+" LAST MODIFIED: Tue 23 May 2023
+" VERSION: 1.2.4
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -291,6 +291,14 @@ nmap =b :call FormatBinary()<CR>
 " SimpylFold
 "---------------------------------------------------------------------
 let g:SimpylFold_docstring_preview=1
+"---------------------------------------------------------------------
+" Git
+"---------------------------------------------------------------------
+" Map search for git conflicts to `=c`
+nmap =c /\v\<{7}\|\={7}\|\>{7}<CR>
+nnoremap <leader>gd :Gvdiff<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
