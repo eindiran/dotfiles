@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 23 May 2023
-" VERSION: 1.2.4
+" LAST MODIFIED: Tue 27 Feb 2024
+" VERSION: 1.2.5
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -28,14 +28,13 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
 Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
 Plugin 'puremourning/vimspector'              " Debugger
-Plugin 'w0rp/ale'                             " Multi lang linting manager
+Plugin 'dense-analysis/ale'                   " Multi lang linting manager
 Plugin 'vim-airline/vim-airline'              " Use the vim-airline status bar
 Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status bar
 Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
 Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
 Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
 Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
-Plugin 'nfvs/vim-perforce'                    " Integration w/ p4
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
@@ -65,7 +64,7 @@ if !exists("g:syntax_on")
     syntax enable
 endif
 "---------------------------------------------------------------------
-" Perforce -- Some of these macros were gifted to me by Scott Conrad.
+" Perforce
 "---------------------------------------------------------------------
 " The p4 plugin is missing some key features which are replicated here.
 " Each macro begins "<comma><p>" and is usually ended by the first
@@ -95,8 +94,13 @@ let g:ale_lint_on_save = 1
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_linters = {
+let g:ale_fixers = {
 \   'python': ['ruff'],
+\}
+let g:ale_linters = {
+\   'python': ['ruff', 'pylint'],
+\   'rust': ['cargo', 'rustc'],
+\   'c': ['clangd', 'clangcheck', 'clangtidy'],
 \}
 "---------------------------------------------------------------------
 " Setup airline status bar:
@@ -123,7 +127,9 @@ colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list=[{'path': '~/.wiki/'}]
-let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+"---------------------------------------------------------------------
+" YouCompleteMe Configuration
+"---------------------------------------------------------------------
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
     \ 'notes':1,
@@ -137,9 +143,10 @@ let g:ycm_filetype_blacklist={
     \ 'mail':1,
     \ 'org':1
     \}
-let g:ycm_server_python_interpreter='/usr/local/bin/python3.9'
+let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3.11'
 "---------------------------------------------------------------------
 " Spaces & Tabs
+"---------------------------------------------------------------------
 set tabstop=4          " 4 space per tab press
 set expandtab          " Use spaces for tabs
 set softtabstop=4      " 4 space per tab press
@@ -208,9 +215,9 @@ au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
-autocmd! BufWritePre * :call s:timestamp()
+" autocmd! BufWritePre * :call s:timestamp()
 " Uses 'autocmd' to update timestamp when saving
-function! s:timestamp()
+function! UpdateTimestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
     " Case insensitively. Replaces everything after that w/ timestamp
     " in format: "FRI 07 JUL 2017"
@@ -219,6 +226,7 @@ function! s:timestamp()
     call s:subst(1, 20, pat, rep)
     " Hardcoded to first 20 lines
 endfunction
+nmap =t :call UpdateTimestamp()<CR>
 "---------------------------------------------------------------------
 " Substitute within a line
 " This function was taken from timestamp.vim
