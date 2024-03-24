@@ -1,20 +1,68 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
 [user]
 	name = Elliott Indiran
-	email = eindiran@uchicago.edu
-	username = eindiran
-[github]
-	user = eindiran
-	token = TOKEN
+	email = eindiran@users.noreply.github.com
 [core]
 	editor = /usr/bin/vim
 	excludesfile = ~/.gitignore
-	pager = diff-so-fancy | less --tabs=4 -RFX
+[alias]
+	a = add .
+	adog = log --all --decorate --oneline --graph
+	aliases = !git config --list | rg ^alias\\. | cut -c 7-
+	amend = commit --amend
+	br = branch
+	c = commit
+	caa = commit -a --amend -C HEAD
+	cam = commit -am
+	ch = checkout
+	cl = clone
+	cm = commit -m
+	d = diff
+	dft = difftool
+	dlog = "!f() { : git log ; GIT_EXTERNAL_DIFF=difft git log -p --ext-diff $@; }; f"
+	hash = rev-parse --short=16 HEAD
+	hist = !git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	last = log -1 HEAD
+	lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+	log-graph = log --all --decorate --oneline --graph
+	log-patch = log --patch --stat
+	lp = log --patch --stat
+	master = checkout master
+	devel = checkout devel
+	factory = checkout factory
+	mergechanges = "!f() { git merge $1 --no-ff --no-commit; git diff --cached; git merge --abort; }; f"
+	mergediff = "!f() { HASH=$1; shift 1; git d --cc $HASH $HASH^1 $HASH^2 $@; }; f"
+	nb = checkout -b
+	new = !zsh -c 'git log $1@{1}..$1@{0} "$@"'
+	recent = !git recentco
+	remotes = remote -v
+	rename = branch -m
+	st = status
+	unstage = reset HEAD --
+	history = lp
+[credential "https://source.foundries.io"]
+	username = fio-oauth2
+	helper = fio
+[credential]
+	helper = /usr/local/bin/git-credential-fio
+[push]
+	autoSetupRemote = true
+	default = simple
+[pull]
+	rebase = false
 [diff]
-	tool = vimdiff
+	external = difft
+	tool = difftastic
 [difftool]
 	prompt = false
-[web]
-	browser = /usr/bin/firefox
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+[pager]
+	difftool = true
 [color]
 	ui = true
 [color "diff-highlight"]
@@ -29,31 +77,3 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-[push]
-	default = simple
-[alias]
-	a = add .
-	adog = log --all --decorate --oneline --graph
-	aliases = !git config --list | rg ^alias\\. | cut -c 7-
-	amend = commit --amend
-	br = branch
-	c = commit
-	caa = commit -a --amend -C HEAD
-	cam = commit -am
-	ch = checkout
-	cl = clone
-	cm = commit -m
-	d = diff
-	hash = rev-parse --short=16 HEAD
-	hist = !git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-	last = log -1 HEAD
-	lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
-	log-graph = log --all --decorate --oneline --graph
-	log-patch = log --patch --stat
-	lp = log --patch --stat
-	nb = checkout -b
-	new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
-	remotes = remote -v
-	rename = branch -m
-	st = status
-	unstage = reset HEAD --
