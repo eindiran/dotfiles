@@ -34,7 +34,7 @@ Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status ba
 Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
 Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
 Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
-Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
+Plugin 'eindiran/bash-support.vim'            " Bash scripting integration
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
