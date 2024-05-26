@@ -3,6 +3,9 @@
 # Check the top-level git directory for language specific .gitignore files.
 # https://github.com/eindiran/dotfiles/tree/master/git
 
+*.swo
+*.swp
+.DS_Store
 *.a
 *.app
 *.aux
@@ -61,7 +64,6 @@ hs_err_pid*
 lib/
 lib64/
 *.lo
-*.log
 *.map
 Mkfile.old
 *.mo
@@ -85,7 +87,6 @@ pip-log.txt
 __pycache__/
 *.py[cod]
 .pydevproject
-*.rar
 .ropeproject
 .sass-cache/
 sdist/
@@ -94,10 +95,7 @@ _site/
 *.so.*
 .stack-work/
 *.su
-*.tar.gz
 .tmp_versions/
 .tox/
 var/
-*.war
 *.x86_64
-*.zip
