@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 21 Jan 2022
+" LAST MODIFIED: Sat 25 May 2024
 " VERSION: 1.2.3
 "---------------------------------------------------------------------
 set nocompatible
@@ -33,13 +33,10 @@ Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
 Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
 Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
 Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
-Plugin 'nfvs/vim-perforce'                    " Integration w/ p4
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
 Plugin 'tmhedberg/SimpylFold'                 " Do folding
-Plugin 'scrooloose/nerdtree'                  " File browsing
-Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
@@ -52,37 +49,13 @@ Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }             " shfmt -- shell script f
 Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
 call vundle#end()
 "---------------------------------------------------------------------
-filetype plugin indent on
-"---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
-let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
+filetype plugin indent on
 " `syntax enable` is prefered to `syntax on`
 if !exists("g:syntax_on")
     syntax enable
 endif
-"---------------------------------------------------------------------
-" Perforce -- Some of these macros were gifted to me by Scott Conrad.
-"---------------------------------------------------------------------
-" The p4 plugin is missing some key features which are replicated here.
-" Each macro begins "<comma><p>" and is usually ended by the first
-" letter of the command.
-" `p4 sync`
-nmap ,ps :!p4 sync <C-R>=expand("%")<CR>
-" `p4 add` (ie for adding new files)
-nmap ,pa :!p4 add <C-R>=expand("%")<CR><CR>
-" `p4 edit` (existing files)
-nmap ,pe :!p4 edit <C-R>=expand("%")<CR><CR>
-" `p4 info`
-nmap ,pi :!p4 info<CR>
-" `p4 revert`
-nmap ,pr :!p4 revert <C-R>=expand("%")<CR>
-" `p4 filelog`
-nmap ,pfl :!p4 filelog <C-R>=expand("%")<CR>
-" `p4 opened`
-nmap ,po :!p4 opened <C-R>=expand("%")<CR>
-" `p4 diff`
-nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
@@ -92,6 +65,10 @@ let g:ale_lint_on_save = 1
 " Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
     \ 'java': [],
+    \ "python": ["ruff"],
+    \ }
+let g:ale_fixers = {
+    \ "python": ["ruff"],
     \ }
 "---------------------------------------------------------------------
 " Setup airline status bar:
@@ -287,7 +264,7 @@ let g:pymode_folding=0             " Don't do function folding
 let g:pymode_quickfix_maxheight=4  " Max height of cwindow
 let g:pymode_motion=1
 let g:pymode_lint=1                " Use linting = 1; don't = 0
-let g:pymode_python='python2'
+let g:pymode_python='python3'
 let g:pymode_options_max_line_length=100
 let g:pymode_trim_whitespaces=1    " Remove trailing whitespace on save
 let g:pymode_options_colorcolumn=1 " Line indicating max line len
