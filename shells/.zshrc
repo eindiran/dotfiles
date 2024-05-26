@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Sat 20 Apr 2024
+#       MODIFIED:    Sun 26 May 2024
 #       REVISION:    v1.4.0
 #
 # ===============================================================================
@@ -180,16 +180,13 @@ export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/op
 
 
 #--------------------------------------------------------------------
-# Enable help command
+export HELPDIR="/usr/share/zsh/$(zsh --version | cut -d' ' -f2)/help"
+# Enable run-help command
 autoload -Uz run-help
-alias help=run-help
+(( ${+aliases[run-help]} )) && unalias run-help
 
 # Enable helper functions for run-help
-autoload -Uz run-help-git
-autoload -Uz run-help-ip
-autoload -Uz run-help-openssl
-autoload -Uz run-help-p4
-autoload -Uz run-help-sudo
+autoload -Uz run-help-git run-help-ip run-help-openssl run-help-sudo
 #--------------------------------------------------------------------
 
 
@@ -302,6 +299,7 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 CASE_SENSITIVE="true"
