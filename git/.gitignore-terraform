@@ -1,9 +1,0 @@
-# .gitignore-terraform
-# Add this to a project using Terraform scripts
-
-# Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
-*.tfstate
-*.tfstate.*
