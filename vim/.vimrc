@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 27 Feb 2024
-" VERSION: 1.2.5
+" LAST MODIFIED: Sun 26 May 2024
+" VERSION: 1.3.0
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -38,7 +38,7 @@ Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
-Plugin 'tmhedberg/SimpylFold'                 " Do folding
+Plugin 'tmhedberg/SimpylFold'                 " Python folding
 Plugin 'scrooloose/nerdtree'                  " File browsing
 Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 "---------------------------------------------------------------------
@@ -50,58 +50,36 @@ Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
 Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
 Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
-Plugin 'Epitrochoid/marko-vim-syntax', { 'for': 'marko' }  " Marko support
-"---------------------------------------------------------------------
 call vundle#end()
-"---------------------------------------------------------------------
-filetype plugin indent on
 "---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
-let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
+filetype plugin indent on
 " `syntax enable` is prefered to `syntax on`
 if !exists("g:syntax_on")
     syntax enable
 endif
-"---------------------------------------------------------------------
-" Perforce
-"---------------------------------------------------------------------
-" The p4 plugin is missing some key features which are replicated here.
-" Each macro begins "<comma><p>" and is usually ended by the first
-" letter of the command.
-" `p4 sync`
-nmap ,ps :!p4 sync <C-R>=expand("%")<CR>
-" `p4 add` (ie for adding new files)
-nmap ,pa :!p4 add <C-R>=expand("%")<CR><CR>
-" `p4 edit` (existing files)
-nmap ,pe :!p4 edit <C-R>=expand("%")<CR><CR>
-" `p4 info`
-nmap ,pi :!p4 info<CR>
-" `p4 revert`
-nmap ,pr :!p4 revert <C-R>=expand("%")<CR>
-" `p4 filelog`
-nmap ,pfl :!p4 filelog <C-R>=expand("%")<CR>
-" `p4 opened`
-nmap ,po :!p4 opened <C-R>=expand("%")<CR>
-" `p4 diff`
-nmap ,pd :!p4 diff <C-R>=expand("%")<CR>
+let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
-let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_fixers = {
-\   'python': ['ruff'],
-\}
+" Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
-\   'python': ['ruff', 'pylint'],
-\   'rust': ['cargo', 'rustc'],
-\   'c': ['clangd', 'clangcheck', 'clangtidy'],
-\}
+    \ 'java': [],
+    \ 'python': ['ruff', 'pylint', 'mypy'],
+    \ 'rust': ['cargo', 'rustc'],
+    \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
+    \ }
+let g:ale_fixers = {
+    \ 'python': ['ruff'],
+    \ }
+let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
@@ -130,6 +108,7 @@ let g:vimwiki_list=[{'path': '~/.wiki/'}]
 "---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
+let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
     \ 'notes':1,
@@ -143,10 +122,9 @@ let g:ycm_filetype_blacklist={
     \ 'mail':1,
     \ 'org':1
     \}
-let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3.11'
+let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
 "---------------------------------------------------------------------
 " Spaces & Tabs
-"---------------------------------------------------------------------
 set tabstop=4          " 4 space per tab press
 set expandtab          " Use spaces for tabs
 set softtabstop=4      " 4 space per tab press
@@ -167,14 +145,15 @@ set number                " Show line numbers
 set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
 set smartcase
-if system('uname -s') == "Darwin\n"
-    " macOS - see here:
-    " https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
-    set clipboard=unnamed
-else
-    " Linux - see here: vim.wikia.com/wiki/VimTip21
-    set clipboard=unnamedplus
-endif
+" if system('uname -s') == "Darwin\n"
+"     " macOS - see here:
+"     " https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
+"     set clipboard=unnamed
+" else
+"     " Linux - see here: vim.wikia.com/wiki/VimTip21
+"     set clipboard=unnamedplus
+" endif
+set clipboard^=unnamed,unnamedplus
 "---------------------------------------------------------------------
 set list
 set listchars=tab:▸·,trail:·,nbsp:·
@@ -210,12 +189,14 @@ nnoremap <silent> <F5> :%y+ <CR>
 "---------------------------------------------------------------------
 " *.groovy & *.gradle --> Groovy
 au BufNewFile,BufRead *.groovy,*.gradle  setf groovy
+" *.yaml,*.yml --> YAML
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 " *.ts, *.tsx --> TypeScript
 au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
-" autocmd! BufWritePre * :call s:timestamp()
+autocmd! BufWritePre * :call UpdateTimestamp()
 " Uses 'autocmd' to update timestamp when saving
 function! UpdateTimestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
@@ -264,7 +245,7 @@ function! ToggleNumber()
     endif
 endfunction
 "---------------------------------------------------------------------
-" Format JSON using Python's json.tool
+" Format JSON using jq
 "---------------------------------------------------------------------
 function! FormatJSON()
     :%!jq .
