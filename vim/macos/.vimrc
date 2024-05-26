@@ -50,7 +50,6 @@ Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
 Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
 Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
-Plugin 'Epitrochoid/marko-vim-syntax', { 'for': 'marko' }  " Marko support
 call vundle#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -274,21 +273,6 @@ function! FormatBinary()
     :%!xxd -r
 endfunction
 nmap =b :call FormatBinary()<CR>
-"---------------------------------------------------------------------
-" pymode settings
-"---------------------------------------------------------------------
-let g:pymode_rope=0                " Don't use Rope
-let g:pymode_rope_completion=0     " Don't use autocomplete via Rope
-let g:pymode_rope_lookup_project=0
-let g:pymode_rope_completion_on_dot=0
-let g:pymode_folding=0             " Don't do function folding
-let g:pymode_quickfix_maxheight=4  " Max height of cwindow
-let g:pymode_motion=1
-let g:pymode_lint=1                " Use linting = 1; don't = 0
-let g:pymode_python='python3'
-let g:pymode_options_max_line_length=100
-let g:pymode_trim_whitespaces=1    " Remove trailing whitespace on save
-let g:pymode_options_colorcolumn=1 " Line indicating max line len
 "---------------------------------------------------------------------
 " SimpylFold
 "---------------------------------------------------------------------
