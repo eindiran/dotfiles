@@ -17,10 +17,10 @@ set -Eeuo pipefail
 
 if [ "$#" -eq 0 ]; then
     # When no args are passed, use the user's standard .vimrc, usually $HOME/.vimrc
-    vim +PluginInstall +qall
+    vim +VundleInstall
 elif [ "$#" -eq 1 ]; then
     # If a path is specified, ues that .vimrc file instead
-    vim +PluginInstall +qall -u "$1"
+    vim +VundleInstall -u "$1"
 else
     # If more than 1 arg is passed, print out the usage:
     printf "Incorrect number of arguments passed!\nUsage:\t"
