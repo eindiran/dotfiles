@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Sat 25 May 2024
+" LAST MODIFIED: Sun 26 May 2024
 " VERSION: 1.2.3
 "---------------------------------------------------------------------
 set nocompatible
@@ -131,7 +131,7 @@ set number                " Show line numbers
 set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
 set smartcase
-set clipboard=unnamedplus " See here: vim.wikia.com/wiki/VimTip21
+set clipboard^=unnamed,unnamedplus " See here: vim.wikia.com/wiki/VimTip21
 "---------------------------------------------------------------------
 set list
 set listchars=tab:▸·,trail:·,nbsp:·
