@@ -322,3 +322,9 @@ set foldmethod=indent
 set foldlevel=99
 " Unfold w/ spacebar
 nnoremap <space> za
+" Python-style commenting
+vnoremap <silent> # :s/^/#/<cr>:noh<cr>
+vnoremap <silent> -# :s/^#//<cr>:noh<cr>
+" C-style commenting
+vnoremap <silent> / :s/^/\/\//<cr>:noh<cr>
+vnoremap <silent> -/ :s/^\/\///<cr>:noh<cr>
