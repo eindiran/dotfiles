@@ -244,6 +244,7 @@ function! ToggleNumber()
         set relativenumber
     endif
 endfunction
+nmap =n :call ToggleNumber()<CR>
 "---------------------------------------------------------------------
 " Format JSON using jq
 "---------------------------------------------------------------------
