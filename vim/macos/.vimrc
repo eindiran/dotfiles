@@ -13,6 +13,7 @@ set encoding=utf-8
 " Work with UTF-8
 set autoread
 " Use `autoread`, for `vim-tmux-focus-events`
+set term=xterm-256color
 "---------------------------------------------------------------------
 filetype off
 "---------------------------------------------------------------------
@@ -26,7 +27,8 @@ call vundle#begin()
 "---------------------------------------------------------------------
 Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
 Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
-Plugin 'w0rp/ale'                             " Multi lang linting manager
+Plugin 'puremourning/vimspector'              " Debugger
+Plugin 'dense-analysis/ale'                   " Multi lang linting manager
 Plugin 'vim-airline/vim-airline'              " Use the vim-airline status bar
 Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status bar
 Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
@@ -36,17 +38,19 @@ Plugin 'vim-scripts/bash-support.vim'         " Run bash commands inline
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
-Plugin 'tmhedberg/SimpylFold'                 " Do folding
+Plugin 'tmhedberg/SimpylFold'                 " Python folding
+Plugin 'scrooloose/nerdtree'                  " File browsing
+Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }  " awk syntax and inline code running
-Plugin 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
-Plugin 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
-Plugin 'nvie/vim-flake8', { 'for': 'py' }              " Formatting for Python
-Plugin 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
-Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }             " shfmt -- shell script formatter
-Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
+Plugin 'WolfgangMehner/awk-support', { 'for': 'awk' }      " awk syntax and inline code running
+Plugin 'elzr/vim-json', { 'for': 'json' }                  " JSON formatting, highlighting and folding
+Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
+Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
+Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
+Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
+Plugin 'Epitrochoid/marko-vim-syntax', { 'for': 'marko' }  " Marko support
 call vundle#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -56,6 +60,7 @@ filetype plugin indent on
 if !exists("g:syntax_on")
     syntax enable
 endif
+let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
@@ -65,11 +70,14 @@ let g:ale_lint_on_save = 1
 " Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
     \ 'java': [],
-    \ "python": ["ruff"],
+    \ 'python': ['ruff', 'pylint', 'mypy'],
+    \ 'rust': ['cargo', 'rustc'],
+    \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
     \ }
 let g:ale_fixers = {
-    \ "python": ["ruff"],
+    \ 'python': ['ruff'],
     \ }
+let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
@@ -95,6 +103,9 @@ colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
 let g:vimwiki_list=[{'path': '~/.wiki/'}]
+"---------------------------------------------------------------------
+" YouCompleteMe Configuration
+"---------------------------------------------------------------------
 let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
@@ -109,6 +120,7 @@ let g:ycm_filetype_blacklist={
     \ 'mail':1,
     \ 'org':1
     \}
+let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
 "---------------------------------------------------------------------
 " Spaces & Tabs
 set tabstop=4          " 4 space per tab press
@@ -131,7 +143,15 @@ set number                " Show line numbers
 set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
 set smartcase
-set clipboard^=unnamed,unnamedplus " See here: vim.wikia.com/wiki/VimTip21
+" if system('uname -s') == "Darwin\n"
+"     " macOS - see here:
+"     " https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
+"     set clipboard=unnamed
+" else
+"     " Linux - see here: vim.wikia.com/wiki/VimTip21
+"     set clipboard=unnamedplus
+" endif
+set clipboard^=unnamed,unnamedplus
 "---------------------------------------------------------------------
 set list
 set listchars=tab:▸·,trail:·,nbsp:·
@@ -174,9 +194,9 @@ au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
-autocmd! BufWritePre * :call s:timestamp()
+autocmd! BufWritePre * :call UpdateTimestamp()
 " Uses 'autocmd' to update timestamp when saving
-function! s:timestamp()
+function! UpdateTimestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
     " Case insensitively. Replaces everything after that w/ timestamp
     " in format: "FRI 07 JUL 2017"
@@ -185,6 +205,7 @@ function! s:timestamp()
     call s:subst(1, 20, pat, rep)
     " Hardcoded to first 20 lines
 endfunction
+nmap =t :call UpdateTimestamp()<CR>
 "---------------------------------------------------------------------
 " Substitute within a line
 " This function was taken from timestamp.vim
@@ -222,10 +243,10 @@ function! ToggleNumber()
     endif
 endfunction
 "---------------------------------------------------------------------
-" Format JSON using Python's json.tool
+" Format JSON using jq
 "---------------------------------------------------------------------
 function! FormatJSON()
-    :%!python3 -c "import json, sys, collections; print(json.dumps(json.load(sys.stdin, objectpairshook=collections.OrderedDict), indent=4))"
+    :%!jq .
 endfunction
 " Now add a mapping `=j` to this function
 nmap =j :call FormatJSON()<CR>
@@ -272,6 +293,14 @@ let g:pymode_options_colorcolumn=1 " Line indicating max line len
 " SimpylFold
 "---------------------------------------------------------------------
 let g:SimpylFold_docstring_preview=1
+"---------------------------------------------------------------------
+" Git
+"---------------------------------------------------------------------
+" Map search for git conflicts to `=c`
+nmap =c /\v\<{7}\|\={7}\|\>{7}<CR>
+nnoremap <leader>gd :Gvdiff<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
