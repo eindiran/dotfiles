@@ -507,3 +507,7 @@ find_swap_files() {
     # Find any open swap files
     fd -H "^\..*\.sw[op]$"
 }
+
+resign_discord() {
+    sudo codesign --remove-signature /Applications/Discord.app/Contents/Frameworks/Discord\ Helper* && sudo codesign --sign - /Applications/Discord.app/Contents/Frameworks/Discord\ Helper*
+}

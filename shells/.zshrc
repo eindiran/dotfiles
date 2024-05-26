@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Wed 16 Aug 2023
+#       MODIFIED:    Sat 20 Apr 2024
 #       REVISION:    v1.4.0
 #
 # ===============================================================================
@@ -175,7 +175,7 @@ export EDITOR=vim
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 
 ### Path:
-export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$PATH"
 #--------------------------------------------------------------------
 
 
