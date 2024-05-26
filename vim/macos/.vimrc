@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Sun 26 May 2024
-" VERSION: 1.2.3
+" VERSION: 1.3.0
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -63,9 +63,12 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
-let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 " Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
     \ 'java': [],
