@@ -50,6 +50,8 @@ Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
 Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
 Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
 Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
+Plugin 'mrk21/yaml-vim', { 'for': 'yaml' }                 " YAML support
+Plugin 'cespare/vim-toml', { 'for': 'toml' }               " TOML support
 call vundle#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -188,9 +190,10 @@ nnoremap <silent> <F5> :%y+ <CR>
 " Set Language File Extensions For Those Not Natively Supported
 "---------------------------------------------------------------------
 " *.groovy & *.gradle --> Groovy
-au BufNewFile,BufRead *.groovy,*.gradle  setf groovy
+au BufNewFile,BufRead *.groovy,*.gradle setf groovy
 " *.yaml,*.yml --> YAML
-au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+au BufNewFile,BufRead *.yaml,*.yml set filetype=yaml foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 " *.ts, *.tsx --> TypeScript
 au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
