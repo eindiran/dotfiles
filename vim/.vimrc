@@ -83,7 +83,7 @@ let g:ale_fixers = {
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 "---------------------------------------------------------------------
-" Setup airline status bar:
+" Setup airline status bar and NerdTree:
 "---------------------------------------------------------------------
 " Airline formatter:
 let g:airline#extensions#tabline#formatter = 'default'
@@ -95,8 +95,12 @@ let g:airline#extensions#ycm#enabled = 1
 let g:airline#extensions#nerdtree#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
-" Get Tagbar to be toggleable:
-nmap <F8> :TagbarToggle<CR>
+" Make the bar toggle w/ F10
+map <F10> :AirlineToggle<CR>
+" Open current working directory with F11
+map <F11> :NERDTreeCWD<CR>
+" Toggle NerdTree with F12
+map <F12> :NERDTreeToggle<CR>
 "---------------------------------------------------------------------
 " Allow writes to files owned by root using `w!!`
 "---------------------------------------------------------------------
@@ -257,6 +261,17 @@ function! ToggleNumber()
     endif
 endfunction
 nmap =n :call ToggleNumber()<CR>
+"---------------------------------------------------------------------
+" Show the currently mapped Fn keys
+"---------------------------------------------------------------------
+function! ShowMappedFKeys()
+    for i in range(1, 12)
+        if !empty(mapcheck('<F'.i.'>'))
+            execute 'map <F'.i.'>'
+            endif
+    endfor
+endfunction
+nmap <F8> :call ShowMappedFKeys()<CR>
 "---------------------------------------------------------------------
 " Format JSON using jq
 "---------------------------------------------------------------------
