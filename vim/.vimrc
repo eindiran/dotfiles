@@ -3,7 +3,7 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Sun 26 May 2024
+" LAST MODIFIED: Thu 30 May 2024
 " VERSION: 1.3.0
 "---------------------------------------------------------------------
 set nocompatible
@@ -110,7 +110,11 @@ let g:vimwiki_list=[{'path': '~/.wiki/'}]
 "---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
-let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+if system('uname -s') == "Darwin\n"
+    " On macOS, make sure we set up some fiddly bits for YCM
+    let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+    let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
+endif
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
     \ 'notes':1,
@@ -124,7 +128,6 @@ let g:ycm_filetype_blacklist={
     \ 'mail':1,
     \ 'org':1
     \}
-let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
 "---------------------------------------------------------------------
 " Spaces & Tabs
 set tabstop=4          " 4 space per tab press
