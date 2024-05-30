@@ -511,3 +511,8 @@ find_swap_files() {
 resign_discord() {
     sudo codesign --remove-signature /Applications/Discord.app/Contents/Frameworks/Discord\ Helper* && sudo codesign --sign - /Applications/Discord.app/Contents/Frameworks/Discord\ Helper*
 }
+
+dotfiles() {
+    # Go to my dotfiles directory, since they are symlinked from home:
+    cd "${WORKSPACE}/dotfiles/" || exit 1
+}
