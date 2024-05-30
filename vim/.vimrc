@@ -120,7 +120,7 @@ let g:vimwiki_list=[{'path': '~/.wiki/'}]
 "---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
-if system('uname -s') == "Darwin\n"
+if trim(system('uname -s')) == "Darwin"
     " On macOS, make sure we set up some fiddly bits for YCM
     let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
     let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
@@ -160,14 +160,9 @@ set number                " Show line numbers
 set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
 set smartcase
-" if system('uname -s') == "Darwin\n"
-"     " macOS - see here:
-"     " https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
-"     set clipboard=unnamed
-" else
-"     " Linux - see here: vim.wikia.com/wiki/VimTip21
-"     set clipboard=unnamedplus
-" endif
+" macOS - see here:
+" https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
+" Linux - see here: vim.wikia.com/wiki/VimTip21
 set clipboard^=unnamed,unnamedplus
 "---------------------------------------------------------------------
 set list
@@ -231,16 +226,15 @@ nmap =t :call UpdateTimestamp()<CR>
 function! s:subst(start, end, pat, rep)
     let lineno = a:start
     while lineno <= a:end
-    let curline = getline(lineno)
-    if match(curline, a:pat) != -1
-        let newline = substitute( curline, a:pat, a:rep, '' )
-        if( newline != curline )
-        " Only substitute if we made a change
-        "silent! undojoin
-        keepjumps call setline(lineno, newline)
+        let curline = getline(lineno)
+        if match(curline, a:pat) != -1
+            let newline = substitute(curline, a:pat, a:rep, '')
+            if (newline != curline)
+                " Only substitute if we made a change
+                keepjumps call setline(lineno, newline)
+            endif
         endif
-    endif
-    let lineno = lineno + 1
+        let lineno = lineno + 1
     endwhile
 endfunction
 "---------------------------------------------------------------------
@@ -253,7 +247,7 @@ endfunction
 " Toggle between relativenumber and norelativenumber
 "---------------------------------------------------------------------
 function! ToggleNumber()
-    if(&relativenumber == 1)
+    if (&relativenumber == 1)
         set norelativenumber
         set number
     else
@@ -268,7 +262,7 @@ function! ShowMappedFKeys()
     for i in range(1, 12)
         if !empty(mapcheck('<F'.i.'>'))
             execute 'map <F'.i.'>'
-            endif
+        endif
     endfor
 endfunction
 nmap <F8> :call ShowMappedFKeys()<CR>
