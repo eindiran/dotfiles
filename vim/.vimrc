@@ -85,8 +85,14 @@ let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
+" Airline formatter:
+let g:airline#extensions#tabline#formatter = 'default'
 " Support using the status bar with ALE:
 let g:airline#extensions#ale#enabled = 1
+" Support using the status bar with YCM:
+let g:airline#extensions#ycm#enabled = 1
+" Support using the status bar with NerdTree:
+let g:airline#extensions#nerdtree#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 " Get Tagbar to be toggleable:
