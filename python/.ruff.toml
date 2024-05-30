@@ -34,7 +34,8 @@ exclude = [
 
 [lint]
 # Enable pycodestyle (`E`, `W`), Pyflakes (`F`), flake8-bugbear (`B`),
-# and pydocstyle (`D`) codes by default.
+# pydocstyle (`D`), Ruff (`RUF`), pyupgrade (`UP`), flake8-async (`ASYNC`),
+# PyLint (`PL`), and Pandas-specific (`PD`) codes.
 # Don't enable C901 (McCabe complexity)
 select = [
     "I",
@@ -43,6 +44,10 @@ select = [
     "B",
     "W",
     "D",
+    "UP",
+    "ASYNC",
+    "RUF",
+    "PL",
 ]
 ignore = [
     "D105",  # undocumented-magic-method
