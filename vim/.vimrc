@@ -207,13 +207,13 @@ au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
-autocmd! BufWritePre * :call UpdateTimestamp()
-" Uses 'autocmd' to update timestamp when saving
+" autocmd! BufWritePre * :call UpdateTimestamp()
+" Uses 'autocmd' to update timestamp when saving - disabled
 function! UpdateTimestamp()
     " Matches "[Last] (Change[d]|Update[d]|Modified): "
     " Case insensitively. Replaces everything after that w/ timestamp
     " in format: "FRI 07 JUL 2017"
-    let pat = '\(\(Last\|LAST\)\?\s*\([Cc]hanged\|CHANGED\|[Mm]odified\|MODIFIED\|[Uu]pdated\?\|UPDATED\?\)\s*:\s*\).*'
+    let pat = '\(\(LAST\)\?\s*\(CHANGED\|MODIFIED\|UPDATED\?\)\s*:\s*\).*'
     let rep = '\1' . strftime("%a %d %b %Y")
     call s:subst(1, 20, pat, rep)
     " Hardcoded to first 20 lines
