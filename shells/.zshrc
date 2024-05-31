@@ -228,7 +228,6 @@ setopt PUSHD_MINUS
 [ -f ~/.env_variables ] && source ~/.env_variables
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
-[ -f ~/.git_utils.sh ] && source ~/.git_utils.sh
 [ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 #--------------------------------------------------------------------
