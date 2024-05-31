@@ -8,7 +8,7 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Sun 26 May 2024
+#       MODIFIED:    Thu 30 May 2024
 #       REVISION:    v1.4.0
 #
 # ===============================================================================
@@ -231,8 +231,6 @@ setopt PUSHD_MINUS
 [ -f ~/.git_utils.sh ] && source ~/.git_utils.sh
 [ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
-[ -f ~/.misc_utils.sh ] && source ~/.misc_utils.sh
-[ -f ~/.docker_utils.sh ] && source ~/.docker_utils.sh
 #--------------------------------------------------------------------
 
 

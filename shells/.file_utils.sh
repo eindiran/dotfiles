@@ -107,42 +107,6 @@ extract() {
     fi
 }
 
-chmodr() {
-    # Change the permissions of a file to allow it to be readable by everyone
-    chmod a+r $@
-}
-
-chmodw() {
-    # Change the permissions of a file to allow it to be writeable by everyone
-    chmod a+w $@
-}
-
-chmodx() {
-    # Change the permissions of a file to allow it to be executable by everyone
-    chmod a+x $@
-}
-
-chmoda() {
-    # Change the permissions of a file to allow it to be readable, writeable,
-    # and executable by everyone. Equivalent to `chmod 777 $@`
-    chmod 777 $@
-}
-
-chmodnr() {
-    # Change the permissions of a file to remove all read permissions
-    chmod a-r $@
-}
-
-chmodnw() {
-    # Change the permissions of a file to remove all write permissions
-    chmod a-w $@
-}
-
-chmodnx() {
-    # Change the permissions of a file to remove all execute permissions
-    chmod a-x $@
-}
-
 targz() {
     # Tar and gzip a file or set of files
     tar -zcvf "$1.tar.gz" "$1"
@@ -183,71 +147,11 @@ ljar() {
     jar tvf "$@"
 }
 
-batch_ext_rename() {
-    # Batch rename files from one extension to another
-    for file in *.$1
-    do
-        mv "$file" "${file%.$1}.$2"
-    done
-}
-
 mcd() {
     # Make a new directory, then cd into it
     mkdir -p "$1"
     cd "$1" || exit 1
     pwd
-}
-
-set_dir_permissions() {
-    # Sets ideal directory permissions
-    find . -type d -exec chmod 755 {} \;
-}
-
-hidden() {
-    # Finds hidden files recursively in current directory
-    # Handle no argument case
-    if [ $# -eq 0 ] ; then
-        ls -l -d .[!.]?*
-        return
-    fi
-    DIR_TO_SEARCH="$1"
-    shift
-    # Handle first argument
-    case "$DIR_TO_SEARCH" in
-        -h|--help)
-            echo "Usage: hidden <dir> [-d|-f|-r]"
-            return
-            ;;
-        *)
-            if [ ! -d "$DIR_TO_SEARCH" ] ; then
-                printf "%s is not a directory.\n" "$DIR_TO_SEARCH"
-                return
-            fi
-            ;;
-    esac
-    # Handle optional second argument
-    if [ $# -gt 0 ] ; then
-        ARGUMENT="$1"
-        case "$ARGUMENT" in
-            -d|--dirs)
-                find "$DIR_TO_SEARCH" -type d -iname ".*" -ls
-                ;;
-            -f|--files)
-                find "$DIR_TO_SEARCH" -type f -iname ".*" -ls
-                ;;
-            -r|--recursive)
-                find "$DIR_TO_SEARCH" -name ".*" -ls
-                ;;
-            *)
-                echo "Unknown option: hidden <dir> [-d|-f|-r]"
-                ;;
-        esac
-    fi
-}
-
-clean_perl() {
-    # Cleans untidy or obfuscated perl code
-    perl -MO=Deparse "$1" | perltidy -ce -i=4 -st
 }
 
 jpg_to_png() {
@@ -285,14 +189,5 @@ fd_fsize() {
         find . -size +4G
     else
         find . -size "$@"
-    fi
-}
-
-remove_xattrs() {
-    # Remove all xattrs from a file:
-    if [ $# -ne 1 ] ; then
-        echo "ERROR: remove_xattrs takes a single filename as an argument"
-    else
-        xattr -l $1 | awk -F" " '{ print substr($1, "", length($1)-1) }' | xargs -I % sh -c "xattr -d % $1"
     fi
 }
