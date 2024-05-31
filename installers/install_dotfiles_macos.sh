@@ -42,7 +42,9 @@ shift $((OPTIND-1))
 echo "Installing realpath via coreutils in brew"
 brew install coreutils
 
-dotfiles_dir="$(dirname "$(realpath "${0}")")"
+script_dir="$(dirname "$(realpath "${0}")")"
+cd "${script_dir}/../"
+dotfiles_dir="$(pwd)"
 current_user="$(whoami)"
 
 echo "Using dotfile path: ${dotfiles_dir}"

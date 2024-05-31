@@ -154,6 +154,7 @@ alias rm='rm -iv'
 alias mv='mv -v'
 alias cp='cp -v'
 alias strings='strings -a'
+alias err='fuck'  # Alias for thefuck
 #--------------------------------------------------------------------
 
 
@@ -228,7 +229,6 @@ setopt PUSHD_MINUS
 [ -f ~/.env_variables ] && source ~/.env_variables
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
-[ -f ~/.typo_utils.sh ] && source ~/.typo_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 #--------------------------------------------------------------------
 
@@ -302,6 +302,12 @@ zstyle ':omz:update' frequency 13
 DISABLE_AUTO_TITLE="true"
 HIST_STAMPS="yyyy-mm-dd"
 
+# Setup thefuck plugin
+export THEFUCK_HISTORY_LIMIT=9999
+export THEFUCK_ALTER_HISTORY=false
+export THEFUCK_REQUIRE_CONFIRMATION=true
+export THEFUCK_NUM_CLOSE_MATCHES=7
+
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
 # Uncomment the following line to enable command auto-correction.
@@ -316,6 +322,7 @@ plugins=(
   bundler
   dotenv
   macos
+  thefuck
 )
 
 source $ZSH/oh-my-zsh.sh

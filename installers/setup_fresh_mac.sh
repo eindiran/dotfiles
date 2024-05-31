@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+#===============================================================================
+#
+#          FILE: setup_fresh_mac.sh
+#
+#         USAGE: ./setup_fresh_mac.sh [-h]
+#
+#   DESCRIPTION: Setup a new macOS machine from scratch to fairly configured.
+#
+#       OPTIONS:
+#                  -h: Print the usage and exit
+#  REQUIREMENTS: ---
+#         NOTES: ---
+#        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
+#===============================================================================
+
+set -Eeuo pipefail
+
+usage() {
+    # Print the usage and exit
+    echo "setup_fresh_mac.sh"
+    echo "Usage: setup_fresh_mac.sh [-h]"
+    echo "    -h: print the usage and exit"
+    echo
+    exit "$1"
+}
+
+while getopts "h" option; do
+    case "${option}" in
+        h)
+            usage 0
+            ;;
+        *)
+            printf "Unknown option %s\n" "${option}"
+            usage 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+
+# Install brew:
+echo "Installing brew..."
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install brew packages:
+echo "Installing brew formulae..."
+
+brew install cairo cmake coreutils difftastic expect ffmpeg fzf \
+    fastfetch gdk-pixbuf gh ghostscript git-lfs gnu-sed gnupg go \
+    gobject-introspection htop imagemagick java jq librsvg \
+    lsd mactex macvim nodejs pandoc pkg-config poppler python \
+    python-setuptools rename shellcheck thefuck tmux tree watch \
+    wget youtube-dl
+
+# Install rustup and cargo:
+echo "Installing rustup..."
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if [ -f "${HOME}/.cargo/env" ]; then
+    source "${HOME}/.cargo/env"
+fi
+
+# Install cargo packages and binaries:
+echo "Installing cargo packages..."
+cargo install ripgrep bat broot fd-find procs hx \
+    hyperfine skim numbat-cli hexyl du-dust 
+
+# Setup git repos:
+echo "Setting up Workspace"
+mkdir -p "${HOME}/Workspace"
+cd "${HOME}/Workspace"
+echo "Cloning git repos"
+git clone https://github.com/eindiran/dotfiles.git
+git clone https://github.com/eindiran/git-tools.git
+gh auth login
+git clone https://github.com/eindiran/shell-scripts.git
+git clone https://github.com/eindiran/notes.git
+cd dotfiles
+
+# Install dotfiles:
+./installers/install_dotfiles_macos.sh
+mkdir -p ~/.cache/zsh/
+
+# Install omz
+echo "Installing ohmyzsh"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+omz update
+
+# Install themes and plugins for zsh:
+echo "Installing OMZ plugins and themes..."
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search"
+
+# Start setting up vim:
+echo "Installing Vim plugins"
+mkdir -p ~/.vim/bundle/
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+cd ~/Workspace/dotfiles/vim
+./install_plugins.sh
+cd ~/.vim/bundle/YouCompleteMe
+sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
+python3 install.py --all
+
+# Setup pip for Python
+echo "Installing pip"
+cd ~/Downloads && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+echo "Setting up top-level venv"
+python3 -m venv ~/.venv
+source ~/.venv/bin/activate
+echo "Installing common pip packages..."
+pip install mypy ruff pylint numpy pandas pycairo PyGObject pango meson ninja precommit pillow setuptools matplotlib scipy opencv torch
+echo "Setup completed!"
+fastfetch
