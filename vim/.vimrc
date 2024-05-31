@@ -74,7 +74,7 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 " Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
     \ 'java': [],
-    \ 'python': ['ruff', 'pylint', 'mypy'],
+    \ 'python': ['ruff', 'mypy'],
     \ 'rust': ['cargo', 'rustc'],
     \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
     \ }
