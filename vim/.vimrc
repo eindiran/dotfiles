@@ -123,7 +123,7 @@ let g:vimwiki_list=[{'path': '~/.wiki/'}]
 if trim(system('uname -s')) == "Darwin"
     " On macOS, make sure we set up some fiddly bits for YCM
     let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
-    let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
+    " let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
 endif
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
@@ -255,6 +255,13 @@ function! ToggleNumber()
     endif
 endfunction
 nmap =n :call ToggleNumber()<CR>
+"---------------------------------------------------------------------
+" Show all currently mapped keys
+"---------------------------------------------------------------------
+function! ShowAllMappedKeys()
+    :map
+endfunction
+nmap <F1> :call ShowAllMappedKeys()<CR>
 "---------------------------------------------------------------------
 " Show the currently mapped Fn keys
 "---------------------------------------------------------------------
