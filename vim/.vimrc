@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Mon 03 Jun 2024
-" VERSION: 1.3.1
+" VERSION: 1.4.0
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -208,7 +208,7 @@ au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 " Do Automatic Versioning
 "---------------------------------------------------------------------
 " autocmd! BufWritePre * :call UpdatePatchVersion()
-" Uses 'autocmd' to update minor version when saving - disabled
+" Uses 'autocmd' to update the patch version when saving - disabled
 function! UpdatePatchVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\.\)\(\d\+\)@\=submatch(1) . submatch(2) . submatch(3) . (submatch(4) + 1)@
     " Hardcoded to first 20 lines
@@ -218,12 +218,12 @@ function! UpdateMinorVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0@
     " Hardcoded to first 20 lines
 endfunction
-nmap =vmi :call UpdateMinorVersion()<CR>
+nmap =vv :call UpdateMinorVersion()<CR>
 function! UpdateMajorVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\)\(\d\+\)\(\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0 . submatch(6) . 0@
     " Hardcoded to first 20 lines
 endfunction
-nmap =vma :call UpdateMajorVersion()<CR>
+nmap =vm :call UpdateMajorVersion()<CR>
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
