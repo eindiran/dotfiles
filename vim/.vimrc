@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Thu 30 May 2024
-" VERSION: 1.3.0
+" LAST MODIFIED: Mon 03 Jun 2024
+" VERSION: 1.3.1
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -205,15 +205,35 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 " *.ts, *.tsx --> TypeScript
 au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 "---------------------------------------------------------------------
+" Do Automatic Versioning
+"---------------------------------------------------------------------
+" autocmd! BufWritePre * :call UpdatePatchVersion()
+" Uses 'autocmd' to update minor version when saving - disabled
+function! UpdatePatchVersion()
+    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\.\)\(\d\+\)@\=submatch(1) . submatch(2) . submatch(3) . (submatch(4) + 1)@
+    " Hardcoded to first 20 lines
+endfunction
+nmap =vp :call UpdatePatchVersion()<CR>
+function! UpdateMinorVersion()
+    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0@
+    " Hardcoded to first 20 lines
+endfunction
+nmap =vmi :call UpdateMinorVersion()<CR>
+function! UpdateMajorVersion()
+    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\)\(\d\+\)\(\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0 . submatch(6) . 0@
+    " Hardcoded to first 20 lines
+endfunction
+nmap =vma :call UpdateMajorVersion()<CR>
+"---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
 " autocmd! BufWritePre * :call UpdateTimestamp()
 " Uses 'autocmd' to update timestamp when saving - disabled
 function! UpdateTimestamp()
-    " Matches "[Last] (Change[d]|Update[d]|Modified): "
-    " Case insensitively. Replaces everything after that w/ timestamp
+    " Matches "[LAST] (CHANGE[D]|UPDATE[D]|MODIFIED): "
+    " Case sensitive. Replaces everything after that w/ timestamp
     " in format: "FRI 07 JUL 2017"
-    let pat = '\(\(LAST\)\?\s*\(CHANGED\|MODIFIED\|UPDATED\?\)\s*:\s*\).*'
+    let pat = '\(\(LAST\)\?\s*\(CHANGED\?\|MODIFIED\|UPDATED\?\)\s*:\s*\).*'
     let rep = '\1' . strftime("%a %d %b %Y")
     call s:subst(1, 20, pat, rep)
     " Hardcoded to first 20 lines
@@ -333,8 +353,8 @@ set foldlevel=99
 " Unfold w/ spacebar
 nnoremap <space> za
 " Python-style commenting
-vnoremap <silent> # :s/^/#/<cr>:noh<cr>
-vnoremap <silent> -# :s/^#//<cr>:noh<cr>
+vnoremap <silent> # :s/^/#/<CR>:noh<CR>
+vnoremap <silent> -# :s/^#//<CR>:noh<CR>
 " C-style commenting
-vnoremap <silent> / :s/^/\/\//<cr>:noh<cr>
-vnoremap <silent> -/ :s/^\/\///<cr>:noh<cr>
+vnoremap <silent> / :s/^/\/\//<CR>:noh<CR>
+vnoremap <silent> -/ :s/^\/\///<CR>:noh<CR>
