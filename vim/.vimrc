@@ -38,7 +38,6 @@ Plugin 'eindiran/bash-support.vim'            " Bash scripting integration
 Plugin 'tpope/vim-fugitive'                   " Integration w/ git
 Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
 Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
-Plugin 'tmhedberg/SimpylFold'                 " Python folding
 Plugin 'scrooloose/nerdtree'                  " File browsing
 Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
 "---------------------------------------------------------------------
@@ -52,6 +51,7 @@ Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell scri
 Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
 Plugin 'mrk21/yaml-vim', { 'for': 'yaml' }                 " YAML support
 Plugin 'cespare/vim-toml', { 'for': 'toml' }               " TOML support
+Plugin 'tmhedberg/SimpylFold', { 'for': 'py' }             " Python folding
 call vundle#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -358,10 +358,11 @@ noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
 " Other
 "---------------------------------------------------------------------
 " Enable folding
-set foldmethod=indent
-set foldlevel=99
+set foldmethod=syntax  " Fold by syntax rather than indent or manual
+set foldlevelstart=99  " All folds open on file open
 " Unfold w/ spacebar
-nnoremap <space> za
+nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<CR>
+vnoremap <space> zf
 " Undo last search highlighting by pressing enter again
 nnoremap <nowait><silent> <CR> :noh<CR><CR>
 " Delete messages buffer
