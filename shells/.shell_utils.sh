@@ -516,3 +516,7 @@ dotfiles() {
     # Go to my dotfiles directory, since they are symlinked from home:
     cd "${WORKSPACE}/dotfiles/" || exit 1
 }
+
+meld() {
+    /Applications/Meld.app/Contents/MacOS/Meld "$@"
+}
