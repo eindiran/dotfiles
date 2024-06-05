@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Mon 03 Jun 2024
-" VERSION: 1.4.0
+" LAST MODIFIED: Wed 05 Jun 2024
+" VERSION: 1.4.1
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -102,10 +102,6 @@ map <F11> :NERDTreeCWD<CR>
 " Toggle NerdTree with F12
 map <F12> :NERDTreeToggle<CR>
 "---------------------------------------------------------------------
-" Allow writes to files owned by root using `w!!`
-"---------------------------------------------------------------------
-cnoremap w!! w !sudo tee %
-"---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
 set background=dark   " options: <light, dark>
@@ -183,11 +179,13 @@ nmap Q gqap
 onoremap <silent> j gj
 onoremap <silent> k gk
 "---------------------------------------------------------------------
+set splitbelow
+set splitright
 " Easy window navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+map <C-H> <C-W>h
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+map <C-L> <C-W>l
 nmap ,cw :bcw
 "---------------------------------------------------------------------
 " Maps <F5> key to copying the entire text file to the system clipboard
@@ -213,17 +211,17 @@ function! UpdatePatchVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\.\)\(\d\+\)@\=submatch(1) . submatch(2) . submatch(3) . (submatch(4) + 1)@
     " Hardcoded to first 20 lines
 endfunction
-nmap =vp :call UpdatePatchVersion()<CR>
+nmap <silent> =vp :call UpdatePatchVersion()<CR>
 function! UpdateMinorVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0@
     " Hardcoded to first 20 lines
 endfunction
-nmap =vv :call UpdateMinorVersion()<CR>
+nmap <silent> =vv :call UpdateMinorVersion()<CR>
 function! UpdateMajorVersion()
     :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\)\(\d\+\)\(\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0 . submatch(6) . 0@
     " Hardcoded to first 20 lines
 endfunction
-nmap =vm :call UpdateMajorVersion()<CR>
+nmap <silent> =vm :call UpdateMajorVersion()<CR>
 "---------------------------------------------------------------------
 " Do Automatic Timestamping
 "---------------------------------------------------------------------
@@ -238,7 +236,7 @@ function! UpdateTimestamp()
     call s:subst(1, 20, pat, rep)
     " Hardcoded to first 20 lines
 endfunction
-nmap =t :call UpdateTimestamp()<CR>
+nmap <silent> =t :call UpdateTimestamp()<CR>
 "---------------------------------------------------------------------
 " Substitute within a line
 " This function was taken from timestamp.vim
@@ -274,7 +272,7 @@ function! ToggleNumber()
         set relativenumber
     endif
 endfunction
-nmap =n :call ToggleNumber()<CR>
+nmap <silent> =n :call ToggleNumber()<CR>
 "---------------------------------------------------------------------
 " Show all currently mapped keys
 "---------------------------------------------------------------------
@@ -300,7 +298,7 @@ function! FormatJSON()
     :%!jq .
 endfunction
 " Now add a mapping `=j` to this function
-nmap =j :call FormatJSON()<CR>
+nmap <silent> =j :call FormatJSON()<CR>
 "---------------------------------------------------------------------
 " Format XML using Python's minidom + some command-mode nonsense
 "---------------------------------------------------------------------
@@ -308,7 +306,7 @@ function! FormatXML()
     :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
 endfunction
 " Now add a mapping `=x` to this function
-nmap =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>
+nmap <silent> =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
 " Note that this also works for HTML, but we want to keep =h for our
 " hex editing below.
 "---------------------------------------------------------------------
@@ -319,12 +317,12 @@ function! FormatHex()
     :%!xxd
 endfunction
 " Add a mapping to `=h`
-nmap =h :call FormatHex()<CR>
+nmap <silent> =h :call FormatHex()<CR>
 " Once editing is complete, use =b to go back to binary
 function! FormatBinary()
     :%!xxd -r
 endfunction
-nmap =b :call FormatBinary()<CR>
+nmap <silent> =b :call FormatBinary()<CR>
 "---------------------------------------------------------------------
 " SimpylFold
 "---------------------------------------------------------------------
@@ -338,23 +336,30 @@ nnoremap <leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
 "---------------------------------------------------------------------
+" Commenting
+"---------------------------------------------------------------------
+" Add the following commenting commands in normal, visual,
+" operation-pending, and select modes:
+" Python-style commenting
+noremap <silent> # :s/^/#/<CR>:noh<CR>
+noremap <silent> -# :s/^#//<CR>:noh<CR>
+" Python block commenting
+noremap <silent> " :s/^/"""\r/<CR>:noh<CR>
+noremap <silent> -" :s/.*""".*//<CR>:noh<CR>
+" C-style commenting
+noremap <silent> / :s/^/\/\//<CR>:noh<CR>
+noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
+"---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
-set splitbelow
-set splitright
-" split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 " Enable folding
 set foldmethod=indent
 set foldlevel=99
 " Unfold w/ spacebar
 nnoremap <space> za
-" Python-style commenting
-vnoremap <silent> # :s/^/#/<CR>:noh<CR>
-vnoremap <silent> -# :s/^#//<CR>:noh<CR>
-" C-style commenting
-vnoremap <silent> / :s/^/\/\//<CR>:noh<CR>
-vnoremap <silent> -/ :s/^\/\///<CR>:noh<CR>
+" Undo last search highlighting by pressing enter again
+nnoremap <nowait><silent> <CR> :noh<CR><CR>
+" Delete messages buffer
+nnoremap <nowait><silent> <C-C> :messages clear<CR>
+" Allow writes to files owned by root using `w!!`
+cnoremap w!! w !sudo tee %
