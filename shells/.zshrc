@@ -316,6 +316,7 @@ plugins=(
   dotenv
   macos
   thefuck
+  zoxide
 )
 
 source $ZSH/oh-my-zsh.sh

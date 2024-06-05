@@ -51,7 +51,7 @@ brew install cairo cmake coreutils difftastic expect ffmpeg fzf \
     gobject-introspection htop imagemagick java jq librsvg \
     lsd mactex macvim nodejs pandoc pkg-config poppler python \
     python-setuptools rename shellcheck thefuck tmux tree watch \
-    wget youtube-dl
+    wget youtube-dl zoxide
 
 # Install rustup and cargo:
 echo "Installing rustup..."
