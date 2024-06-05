@@ -332,6 +332,11 @@ let g:SimpylFold_docstring_preview=1
 "---------------------------------------------------------------------
 " Map search for git conflicts to `=c`
 nmap =c /\v\<{7}\|\={7}\|\>{7}<CR>
+" Map function that deletes the conflict under the cursor to `=d`
+function! DeleteConflictSection()
+    :,/\v(\<{7}|\={7}|\>{7})/-d
+endfunction
+nmap <silent> =d :call DeleteConflictSection()<CR>
 nnoremap <leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
