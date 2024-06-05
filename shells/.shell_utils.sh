@@ -19,7 +19,6 @@ unalias_if_exists() {
             unalias "$1"
             ;;
     esac
-
 }
 
 beginswith() {
@@ -31,7 +30,7 @@ beginswith() {
         *)
             false
             ;;
-    esac;
+    esac
 }
 
 join_by() {
@@ -65,34 +64,18 @@ m() {
 if [[ ! "$OSTYPE" == "darwin"* ]]; then
     # Linux
     unalias_if_exists ls
-    ls() {
-        # Alias for 'ls'
-        command ls --color -AF "$@"
-    }
-
     unalias_if_exists ll
-    ll() {
-        # Alias for 'll'
-        command ls --color -Flhtr "$@"
-    }
-
+    alias ll="ls --color -Flhtr"
     unalias_if_exists la
-    la() {
-        # Alias for 'ls -la'
-        command ls --color -Flhtra "$@"
-    }
-
+    alias la="ls --color -Flhtra"
     unalias_if_exists lh
-    lh() {
-        # Display all files in 'll' format
-        command ls --color -AFlhtr "$@"
-    }
-
+    alias lh="ls --color -AFlhtr"
     unalias_if_exists l
-    l() {
-        # Alias for ll
-        command ls --color -Flhtr "$@"
-    }
+    alias l="ls --color -Flhtra"
+    # Finally alias ls
+    alias ls="ls --color -AF"
+    unalias_if_exists grep
+    alias grep="grep --color=auto"
 else
     # macOS
     sudoedit() {
@@ -104,32 +87,31 @@ else
     }
 fi
 
-unalias_if_exists lm
 lm() {
     # More advanced version of ls -l | more
     if [ $# -gt 0 ] ; then
-        lh "$1" | less
+        lh "$1" | bat
     else
-        lh | less
+        lh | bat
     fi
 }
 
 tm() {
     # More advanced version of tree | more
     if [ $# -gt 0 ] ; then
-        tree "$1" | less
+        tree "$1" | bat
     else
-        tree | less
+        tree | bat
     fi
 }
 
-clearl() {
+cl() {
     # Clear, then list the current directory
     clear
     ll "$@"
 }
 
-cleart() {
+ct() {
     # Clear, the tree the current directory
     clear
     tree "$@"
@@ -163,29 +145,14 @@ ssh() {
     command ssh -X -Y "$@"
 }
 
-grep() {
-    # Alias for 'grep'
-    command grep --color=auto "$@"
-}
-
-egrep() {
-    # Add support for 'egrep'
-    command grep --color=auto -E "$@"
-}
-
-fgrep() {
-    # Add support for 'fgrep'
-    command grep --color=auto -F "$@"
-}
-
 igrep() {
     # Add support for 'igrep'
-    command grep --color=auto -i "$@"
+    grep -i "$@"
 }
 
 rgrep() {
     # Add support for rgrep
-    command grep --color=auto -r "$@"
+    grep -r "$@"
 }
 
 fpdfgrep() {
@@ -443,7 +410,7 @@ linker_path() {
     echo "$LNKR_PATH" | sort -u
 }
 
-md() {
+pmd() {
     # Compile markdown to html w/ pandoc
     pandoc -f markdown -t html "$1" > "${1%.md}.html"
 }
@@ -476,11 +443,6 @@ fdne() {
 dedup() {
     # Deduplicate a file while preserving the original ordering of lines
     awk '!visited[$0] ++' "$@"
-}
-
-jsonformat() {
-    # Format JSON via Python's json.tool
-    python3 -m json.tool
 }
 
 xmlformat() {
