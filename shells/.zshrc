@@ -295,8 +295,9 @@ zstyle ':omz:update' frequency 13
 DISABLE_AUTO_TITLE="true"
 HIST_STAMPS="yyyy-mm-dd"
 
-# Setup zoxide plugin to override cd
-ZOXIDE_CMD_OVERRIDE="cd"
+# Setup zoxide plugin
+# Override 'cd' as default 'z' command:
+export ZOXIDE_CMD_OVERRIDE="cd"
 
 # Setup thefuck plugin
 export THEFUCK_HISTORY_LIMIT=9999
