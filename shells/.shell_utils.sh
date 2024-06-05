@@ -147,12 +147,12 @@ ssh() {
 
 igrep() {
     # Add support for 'igrep'
-    command grep --color=auto -i "$@"
+    grep -i "$@"
 }
 
 rgrep() {
     # Add support for rgrep
-    command grep --color=auto -r "$@"
+    grep -r "$@"
 }
 
 fpdfgrep() {
