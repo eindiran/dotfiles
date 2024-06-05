@@ -17,7 +17,7 @@
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Disable all checking of 'source foo' style lines
@@ -80,7 +80,9 @@ setopt AUTOCD
 # Setup ctrl + s as a way to quickly set the terminal name/title
 
 # Allow ctrl + s to be rebound
-stty stop undef
+if [[ ! "$OSTYPE" == "darwin"* ]]; then
+    stty stop undef
+fi
 
 # Set terminal title using read to fetch user input:
 function _input_terminal_title() {
@@ -148,7 +150,12 @@ export LC_ALL='en_US.UTF-8'
 
 #--------------------------------------------------------------------
 # Aliases
-alias vim='mvim -v'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias vim='mvim -v'
+    alias v='mvim -v'
+else
+    alias v='vim'
+fi
 alias up='source up'
 alias rm='rm -iv'
 alias mv='mv -v'
@@ -282,22 +289,17 @@ fi
 
 
 #--------------------------------------------------------------------
-# These lines come from the default OMZ .zshrc
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
-
+# OMZ Configuration:
 ZSH_THEME="powerlevel10k/powerlevel10k"
 CASE_SENSITIVE="true"
-zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode auto      # Update automatically without asking
 zstyle ':omz:update' frequency 13
 DISABLE_AUTO_TITLE="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 # Setup zoxide plugin
 # Override 'cd' as default 'z' command:
-export ZOXIDE_CMD_OVERRIDE="cd"
+ZOXIDE_CMD_OVERRIDE="cd"
 
 # Setup thefuck plugin
 export THEFUCK_HISTORY_LIMIT=9999
@@ -311,18 +313,21 @@ export THEFUCK_NUM_CLOSE_MATCHES=7
 # ENABLE_CORRECTION="true"
 
 plugins=(
-  zsh-autosuggestions
-  zsh-history-substring-search
-  zsh-syntax-highlighting
-  zsh-fzf-history-search
-  git
-  bundler
-  dotenv
-  macos
-  thefuck
-  zoxide
+    zsh-autosuggestions
+    zsh-history-substring-search
+    zsh-syntax-highlighting
+    zsh-fzf-history-search
+    git
+    bundler
+    dotenv
+    macos
+    thefuck
+    zoxide
 )
 
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
 #--------------------------------------------------------------------
 # Final steps to make sure the following are the last keybindings we enter:
