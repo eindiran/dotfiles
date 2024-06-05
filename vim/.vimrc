@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Wed 05 Jun 2024
-" VERSION: 1.4.1
+" VERSION: 1.4.2
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -341,13 +341,13 @@ nnoremap gdl :diffget //3<CR>
 " Add the following commenting commands in normal, visual,
 " operation-pending, and select modes:
 " Python-style commenting
-noremap <silent> # :s/^/#/<CR>:noh<CR>
+noremap <silent> =# :s/^/#/<CR>:noh<CR>
 noremap <silent> -# :s/^#//<CR>:noh<CR>
 " Python block commenting
-noremap <silent> " :s/^/"""\r/<CR>:noh<CR>
+noremap <silent> =" :s/^/"""\r/<CR>:noh<CR>
 noremap <silent> -" :s/.*""".*//<CR>:noh<CR>
 " C-style commenting
-noremap <silent> / :s/^/\/\//<CR>:noh<CR>
+noremap <silent> =/ :s/^/\/\//<CR>:noh<CR>
 noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
 "---------------------------------------------------------------------
 " Other
