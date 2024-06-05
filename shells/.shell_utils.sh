@@ -87,7 +87,6 @@ else
     }
 fi
 
-unalias_if_exists lm
 lm() {
     # More advanced version of ls -l | more
     if [ $# -gt 0 ] ; then
