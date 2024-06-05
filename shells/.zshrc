@@ -196,19 +196,16 @@ autoload -Uz run-help-git run-help-ip run-help-openssl run-help-sudo
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
 
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
-    dirstack=(${(f)"$(< $DIRSTACKFILE)"})
+    dirstack=( ${(uf)"$(< $DIRSTACKFILE)"} )
     [[ -d $dirstack[1] ]] && cd $dirstack[1]
 fi
 
 function chpwd() {
-    print -l $PWD ${(u)dirstack} > $DIRSTACKFILE
+    print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
 }
 
-DIRSTACKSIZE=20
-#--------------------------------------------------------------------
+DIRSTACKSIZE=15
 
-
-#--------------------------------------------------------------------
 # Set various pushd/popd options
 setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
 
@@ -222,10 +219,6 @@ setopt PUSHD_MINUS
 
 #--------------------------------------------------------------------
 # Sourcing other scripts:
-#--------------------------------------------------------------------
-
-#--------------------------------------------------------------------
-# Universal stuff:
 [ -f ~/.env_variables ] && source ~/.env_variables
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
