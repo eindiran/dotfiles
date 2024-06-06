@@ -52,7 +52,6 @@ Plug 'jistr/vim-nerdtree-tabs'                                 " Using tabs
 Plug 'eindiran/awk-support', { 'for': 'awk' }                  " awk syntax and inline code running
 Plug 'eindiran/c-support', { 'for': 'c' }                      " C syntax
 Plug 'eindiran/bash-support.vim', { 'for': 'sh' }              " Shell scripting integration
-Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }                       " shfmt -- shell script formatter
 Plug 'elzr/vim-json', { 'for': 'json' }                        " JSON formatting, highlighting and folding
 Plug 'plasticboy/vim-markdown', { 'for': 'md' }                " Markdown syntax
 Plug 'rust-lang/rust.vim', { 'for': 'rs' }                     " Rust syntax highlighting
@@ -76,6 +75,7 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
@@ -88,11 +88,12 @@ let g:ale_linters = {
     \ 'sh': ['shellcheck'],
     \ }
 let g:ale_fixers = {
-    \ 'python': ['ruff'],
+    \ 'python': ['ruff', 'ruff_format'],
+    \ 'c': ['clangformat', 'clangtidy'],
+    \ 'sh': ['shfmt'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
-let g:ale_fix_on_save = 1
 nmap <silent> =aj :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>
 "---------------------------------------------------------------------
@@ -203,6 +204,8 @@ nmap ,cw :bcw
 "---------------------------------------------------------------------
 " Maps <F5> key to copying the entire text file to the system clipboard
 nnoremap <silent> <F5> :%y+ <CR>
+" Remove all trailing whitespace by pressing F5
+nnoremap <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 "---------------------------------------------------------------------
 :let g:LargeFile=100
 "---------------------------------------------------------------------
