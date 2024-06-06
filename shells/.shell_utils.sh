@@ -12,15 +12,6 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
-unalias_if_exists() {
-    # Use unalias iff the alias exists to avoid "no such hash table element" errors:
-    case "$(type "$1")" in
-        (*alias*)
-            unalias "$1"
-            ;;
-    esac
-}
-
 beginswith() {
     # Check that second argument begins with first argument
     case "$2" in
@@ -60,21 +51,6 @@ m() {
     # Alias for quickly typing `make`
     make "$@"
 }
-
-# Aliases
-unalias_if_exists ls
-unalias_if_exists ll
-alias ll="ls --color -Flhtr"
-unalias_if_exists la
-alias la="ls --color -Flhtra"
-unalias_if_exists lh
-alias lh="ls --color -AFlhtr"
-unalias_if_exists l
-alias l="ls --color -Flhtra"
-# Finally alias ls
-alias ls="ls --color -AF"
-unalias_if_exists grep
-alias grep="grep --color=auto"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS

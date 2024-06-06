@@ -149,23 +149,6 @@ export LC_ALL='en_US.UTF-8'
 
 
 #--------------------------------------------------------------------
-# Aliases
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias vim='mvim -v'
-    alias v='mvim -v'
-else
-    alias v='vim'
-fi
-alias up='source up'
-alias rm='rm -iv'
-alias mv='mv -v'
-alias cp='cp -v'
-alias strings='strings -a'
-alias err='fuck'  # Alias for thefuck
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
 # Exports
 
 ### ld:
@@ -223,6 +206,15 @@ setopt PUSHD_IGNORE_DUPS
 
 # This reverts the +/- operators.
 setopt PUSHD_MINUS
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Sourcing my scripts:
+[ -f ~/.env_variables ] && source ~/.env_variables
+[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
+[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
+[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 #--------------------------------------------------------------------
 
 
@@ -324,11 +316,46 @@ export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
 
 #--------------------------------------------------------------------
-# Sourcing my scripts:
-[ -f ~/.env_variables ] && source ~/.env_variables
-[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
-[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
-[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+# Aliases
+# These should go below source omz, since omz tries to overwrite
+# several of these with aliases I don't really like.
+
+unalias_if_exists() {
+    # Use unalias iff the alias exists to avoid "no such hash table element" errors:
+    case "$(type "$1")" in
+        (*alias*)
+            unalias "$1"
+            ;;
+    esac
+}
+
+# Names requiring unalias:
+unalias_if_exists ls
+unalias_if_exists ll
+alias ll="ls --color -Flhtr"
+unalias_if_exists la
+alias la="ls --color -Flhtra"
+unalias_if_exists lh
+alias lh="ls --color -AFlhtr"
+unalias_if_exists l
+alias l="ls --color -Flhtra"
+# Finally alias ls
+alias ls="ls --color -AF"
+unalias_if_exists grep
+alias grep="grep --color=auto"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias vim='mvim -v'
+    alias v='mvim -v'
+else
+    alias v='vim'
+fi
+alias up='source up'
+alias rm='rm -iv'
+alias mv='mv -v'
+alias cp='cp -v'
+alias strings='strings -a'
+alias err='fuck'  # Alias for thefuck
 #--------------------------------------------------------------------
 
 
