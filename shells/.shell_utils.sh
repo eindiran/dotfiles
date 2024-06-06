@@ -65,7 +65,7 @@ fi
 
 lm() {
     # More advanced version of ls -l | more
-    if [ $# -gt 0 ] ; then
+    if [ $# -gt 0 ]; then
         lh "$1" | bat
     else
         lh | bat
@@ -74,7 +74,7 @@ lm() {
 
 tm() {
     # More advanced version of tree | more
-    if [ $# -gt 0 ] ; then
+    if [ $# -gt 0 ]; then
         tree "$1" | bat
     else
         tree | bat
@@ -191,7 +191,7 @@ fullpath() {
     readlink -f "$1"
 }
 
-man () {
+man()  {
     # An alias for 'man' that will search apropos if no manpage is initially found
     local MAN_PAGE
     MAN_PAGE="$(command man "$@" 2>&1)"
@@ -217,7 +217,7 @@ lc() {
 
 countfiles() {
     # Count the non-hidden files in directory
-    if [ $# -gt 0 ] ; then
+    if [ $# -gt 0 ]; then
         total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
         calc "$total_count"-1 # reduce by one to get count w/o '.'
     else
@@ -245,7 +245,7 @@ bhistory() {
 
 nhistory() {
     # Get the last n history entries
-    if [ $# -eq 0 ] ; then
+    if [ $# -eq 0 ]; then
         # If no arg passed, return last 100 entries
         history 0 | tail -n 100
     else
@@ -260,13 +260,13 @@ which_shell() {
 
 which_editor() {
     # Find out the default editor
-    if [ -z "$EDITOR" ] ; then
-        if [ -t 1 ] ; then
+    if [ -z "$EDITOR" ]; then
+        if [ -t 1 ]; then
             # If output is to a terminal just print info
             echo "No default editor set in \$EDITOR."
         else
             # Otherwise, send along path to executable of valid editor
-            >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
+                >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
             which vi
         fi
     else
@@ -282,7 +282,7 @@ broken_links() {
 makefile_deps() {
     # Create a dot-graph of the dependencies in a Makefile
     local TARGET_NAME
-    if [ $# -gt 0 ] ; then
+    if [ $# -gt 0 ]; then
         TARGET_NAME="$1"
         make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
     else
@@ -335,13 +335,13 @@ local_ip() {
 devices() {
     # Display info about a particular device
     # Wraps the `lspci` command
-    if [ $# -gt 0 ] ; then
+    if [ $# -gt 0 ]; then
         case "$*" in
-            video|v*)
+            video | v*)
                 # Video card info
                 lspci -vnn | command grep --color=auto "VGA" -A 10
                 ;;
-            audio|sound*)
+            audio | sound*)
                 # Sound card info
                 lspci -vnn | command grep --color=auto "Audio device" -A 7
                 ;;
@@ -353,15 +353,15 @@ devices() {
                 # USB controller info
                 lspci -vnn | command grep --color=auto "USB" -A 5
                 ;;
-            sata|disk|raid)
+            sata | disk | raid)
                 # RAID bus controller info
                 lspci -vnn | command grep --color=auto "RAID" -A 11
                 ;;
-            all|--all|-a)
+            all | --all | -a)
                 # All devices
                 lspci -vnn
                 ;;
-            help|--help|-h)
+            help | --help | -h)
                 echo "Usage: devices <arg>"
                 echo "where <arg> in [all, help, sata, disk, raid, usb, dram, audio, video]"
                 ;;
@@ -381,14 +381,14 @@ linker_path() {
     local LNKR_PATH
     LNKR_PATH=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
     if [ -n "$LD_LIBRARY_PATH" ]; then
-        LNKR_PATH+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<< "$LD_LIBRARY_PATH")
+        LNKR_PATH+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<<"$LD_LIBRARY_PATH")
     fi
     echo "$LNKR_PATH" | sort -u
 }
 
 pmd() {
     # Compile markdown to html w/ pandoc
-    pandoc -f markdown -t html "$1" > "${1%.md}.html"
+    pandoc -f markdown -t html "$1" >"${1%.md}.html"
 }
 
 groff2man() {

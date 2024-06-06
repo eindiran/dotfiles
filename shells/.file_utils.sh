@@ -2,11 +2,11 @@
 #===============================================================================
 #
 #          FILE: .file_utils.sh
-# 
+#
 #         USAGE: Source this file in your shell's rc file.
-# 
+#
 #   DESCRIPTION: Add utility functions that handle files to the shell.
-# 
+#
 #         NOTES: Source this file in the rc file of your preferred shell.
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
@@ -17,14 +17,14 @@ extract() {
     # Most common archive types are currently supported
     # Support for new types can be added using the "case" block below:
     if [[ -z "$1" ]] || [ "$1" = "--help" ]; then
-        >&2 echo "extract() -- Decompress common archive formats with a single command."
-        >&2 echo
-        >&2 echo "Usage: extract foo.<filetype>"
-        >&2 echo "Example: extract foo.tar.gz"
-        >&2 echo
-        >&2 echo "extract() supports the following archive types:"
+            >&2 echo "extract() -- Decompress common archive formats with a single command."
+            >&2 echo
+            >&2 echo "Usage: extract foo.<filetype>"
+            >&2 echo "Example: extract foo.tar.gz"
+            >&2 echo
+            >&2 echo "extract() supports the following archive types:"
         for formatname in "${SUPPORTED_FORMATS[@]}"; do
-            >&2 printf "\t* .%s\n" "${formatname}"
+                >&2 printf "\t* .%s\n" "${formatname}"
         done
         return
     elif [[ -f "$1" ]]; then
@@ -96,13 +96,13 @@ extract() {
             ### Everything has failed to be matched; unknown file extension ###
             ###################################################################
             *)
-                >&2 echo "Encountered unknown type (${1##*.}) with file: $1"
+                    >&2 echo "Encountered unknown type (${1##*.}) with file: $1"
                 return 1
                 ;;
         esac
     else
-        >&2 echo "'$1', with filetype '${1##*.}', cannot be found."
-        >&2 echo "Check if the file exists with:  stat '$1'"
+            >&2 echo "'$1', with filetype '${1##*.}', cannot be found."
+            >&2 echo "Check if the file exists with:  stat '$1'"
         return 1
     fi
 }
@@ -119,27 +119,27 @@ tarbz() {
 
 tarz() {
     # Tar and compress (.Z) a file or set of files
-    tar -c "$@" | compress > "$1.tar.Z"
+    tar -c "$@" | compress >"$1.tar.Z"
 }
 
 tarxz() {
     # Tar and xz a file or set of files
-    tar -c "$@" | xz > "$1.tar.xz"
+    tar -c "$@" | xz >"$1.tar.xz"
 }
 
 tarlz() {
     # Tar and lz a file or set of files
-    tar -c "$@" | lzip -9 > "$1.tar.lz"
+    tar -c "$@" | lzip -9 >"$1.tar.lz"
 }
 
 tarlrz() {
     # Tar and lrzip a file or set of files
-    tar -c "$@" | lrzip > "$1.tar.lrz"
+    tar -c "$@" | lrzip >"$1.tar.lrz"
 }
 
 tar7z() {
     # Tar and 7zip a file or set of files
-    tar -c "$@" | 7z > "$1.tar.7z"
+    tar -c "$@" | 7z >"$1.tar.7z"
 }
 
 ljar() {
