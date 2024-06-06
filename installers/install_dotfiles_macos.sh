@@ -92,5 +92,6 @@ done
 echo "Installing miscellaneous configs:"
 ln -ns "${dotfiles_dir}/misc/.fdignore" "${HOME}/.fdignore"
 ln -ns "${dotfiles_dir}/misc/.rgignore" "${HOME}/.rgignore"
+ln -ns "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
 ln -ns "${dotfiles_dir}/python/.pylintrc" "${HOME}/.pylintrc"
 ln -ns "${dotfiles_dir}/python/.ruff.toml" "${HOME}/.ruff.toml"
