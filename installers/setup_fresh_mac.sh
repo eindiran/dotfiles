@@ -58,13 +58,14 @@ sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtu
 echo "Installing rustup..."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 if [ -f "${HOME}/.cargo/env" ]; then
+    # shellcheck source=/dev/null
     source "${HOME}/.cargo/env"
 fi
 
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."
 cargo install ripgrep bat broot fd-find procs hx \
-    hyperfine skim numbat-cli hexyl du-dust 
+    hyperfine skim numbat-cli hexyl du-dust
 
 # Setup git repos:
 echo "Setting up Workspace"
@@ -108,6 +109,7 @@ cd ~/Downloads && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py
 echo "Setting up top-level venv"
 python3 -m venv ~/.venv
+# shellcheck source=/dev/null
 source ~/.venv/bin/activate
 echo "Installing common pip packages..."
 pip install mypy ruff pylint numpy pandas pycairo PyGObject pango meson ninja precommit pillow setuptools matplotlib scipy opencv torch

@@ -93,6 +93,8 @@ let g:ale_fixers = {
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 let g:ale_fix_on_save = 1
+nmap <silent> =aj :ALENext<CR>
+nmap <silent> =ak :ALEPrevious<CR>
 "---------------------------------------------------------------------
 " Setup airline status bar and NerdTree:
 "---------------------------------------------------------------------
