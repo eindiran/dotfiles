@@ -2,9 +2,9 @@
 #===============================================================================
 #
 #          FILE: .tmux_window_utils.sh
-# 
-#         USAGE: ./.tmux_window_utils.sh 
-# 
+#
+#         USAGE: ./.tmux_window_utils.sh
+#
 #   DESCRIPTION: Add utility functions and aliases for tmux and controlling
 #                windows to the shell.
 #
@@ -32,7 +32,7 @@ rtp() {
 # Other window-control functions
 set_title() {
     # Use this function to set the terminal title
-    printf "\e]2;%s\a" "$*";
+    printf "\e]2;%s\a" "$*"
 }
 
 st() {
@@ -43,8 +43,9 @@ st() {
 max_win() {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
-    local WINDOW_NAME; local WINDOW_ID
-    if [ $# -gt 0 ] ; then
+    local WINDOW_NAME
+                       local WINDOW_ID
+    if [ $# -gt 0 ]; then
         WINDOW_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
         wmctrl -ir "$WINDOW_ID" -b toggle,maximized_vert,maximized_horz
@@ -56,7 +57,8 @@ max_win() {
 close_win() {
     # Close the specified window
     # Unlike max_win the default is NOT to close the current window
-    local WINDOW_NAME; local WINDOW_ID
+    local WINDOW_NAME
+                       local WINDOW_ID
     WINDOW_NAME="$1"
     WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
     wmctrl -ic "$WINDOW_ID"
@@ -75,12 +77,12 @@ sw() {
 
 rename_win() {
     # Rename a window
-    if [ $# -eq 2 ] ; then
+    if [ $# -eq 2 ]; then
         OLD_WINDOW_NAME="$1"
         NEW_WINDOW_NAME="$2"
         WINDOW_ID=$(wmctrl -l | rg "$OLD_WINDOW_NAME" | awk '{print $1}')
         wmctrl -ir "$WINDOW_ID" -T "$NEW_WINDOW_NAME"
-    elif [ $# -eq 1 ] ; then
+    elif [ $# -eq 1 ]; then
         NEW_WINDOW_NAME="$1"
         wmctrl -r :SELECT: -T "$NEW_WINDOW_NAME"
     else
@@ -92,25 +94,25 @@ rename_win() {
 sticky_win() {
     # Make a window sticky
     # If its already sticky, toggle its stickiness
-    if [ $# -eq 1 ] ; then
+    if [ $# -eq 1 ]; then
         TARGET_WIN_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$TARGET_WIN_NAME" | awk '{print $1}')
         wmctrl -ir "$WINDOW_ID" -b toggle,sticky
     else
         wmctrl -r :SELECT: -b toggle,sticky
-     fi
+    fi
 }
 
 shade_win() {
     # Make a window shaded
     # If its already shaded, toggle its shadedness
-    if [ $# -eq 1 ] ; then
+    if [ $# -eq 1 ]; then
         TARGET_WIN_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$TARGET_WIN_NAME" | awk '{print $1}')
         wmctrl -ir "$WINDOW_ID" -b toggle,shaded
     else
         wmctrl -r :SELECT: -b toggle,shaded
-     fi
+    fi
 }
 
 ldesk() {

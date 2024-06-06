@@ -1,0 +1,16 @@
+# top-most EditorConfig file
+root = true
+
+[*.sh]
+# like -i=4
+indent_style = space
+indent_size = 4
+
+shell_variant      = bash   # like -ln=posix
+switch_case_indent = true   # like -ci
+keep_padding       = true   # like -kp
+function_next_line = false  # like -fn
+
+# Ignore the entire "third_party" directory.
+[third_party/**]
+ignore = true

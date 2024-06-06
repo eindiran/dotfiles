@@ -36,8 +36,7 @@ while getopts "h" option; do
             ;;
     esac
 done
-shift $((OPTIND-1))
-
+shift $((OPTIND - 1))
 
 # Install brew:
 echo "Installing brew..."
@@ -51,19 +50,21 @@ brew install cairo cmake coreutils difftastic expect ffmpeg fzf \
     gobject-introspection htop imagemagick java jq librsvg \
     lsd mactex macvim nodejs pandoc pkg-config poppler python \
     python-setuptools rename shellcheck thefuck tmux tree watch \
-    wget youtube-dl zoxide
+    wget youtube-dl zoxide shfmt
+sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
 echo "Installing rustup..."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 if [ -f "${HOME}/.cargo/env" ]; then
+    # shellcheck source=/dev/null
     source "${HOME}/.cargo/env"
 fi
 
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."
 cargo install ripgrep bat broot fd-find procs hx \
-    hyperfine skim numbat-cli hexyl du-dust 
+    hyperfine skim numbat-cli hexyl du-dust
 
 # Setup git repos:
 echo "Setting up Workspace"
@@ -95,12 +96,10 @@ git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=
 
 # Start setting up vim:
 echo "Installing Vim plugins"
-mkdir -p ~/.vim/bundle/
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 cd ~/Workspace/dotfiles/vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./install_plugins.sh
-cd ~/.vim/bundle/YouCompleteMe
-sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
+cd ~/.vim/plugged/YouCompleteMe
 python3 install.py --all
 
 # Setup pip for Python
@@ -109,6 +108,7 @@ cd ~/Downloads && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py
 echo "Setting up top-level venv"
 python3 -m venv ~/.venv
+# shellcheck source=/dev/null
 source ~/.venv/bin/activate
 echo "Installing common pip packages..."
 pip install mypy ruff pylint numpy pandas pycairo PyGObject pango meson ninja precommit pillow setuptools matplotlib scipy opencv torch

@@ -8,8 +8,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Thu 30 May 2024
-#       REVISION:    v1.4.0
+#       MODIFIED:    Thu 06 Jun 2024
+#       REVISION:    v1.4.1
 #
 # ===============================================================================
 
@@ -149,23 +149,6 @@ export LC_ALL='en_US.UTF-8'
 
 
 #--------------------------------------------------------------------
-# Aliases
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias vim='mvim -v'
-    alias v='mvim -v'
-else
-    alias v='vim'
-fi
-alias up='source up'
-alias rm='rm -iv'
-alias mv='mv -v'
-alias cp='cp -v'
-alias strings='strings -a'
-alias err='fuck'  # Alias for thefuck
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
 # Exports
 
 ### ld:
@@ -174,6 +157,8 @@ export LD_RUN_PATH=$LD_RUN_PATH
 export LDFLAGS="-L/usr/local/opt/ruby/lib"
 export CPPFLAGS="-I/usr/local/opt/ruby/include"
 export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+export GOPATH="${HOME}/.go"
+export GOBIN="${HOME}/.go/bin"
 
 ### Editor setup:
 export SUDO_EDITOR=vim
@@ -183,7 +168,7 @@ export EDITOR=vim
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 
 ### Path:
-export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$PATH"
 #--------------------------------------------------------------------
 
 
@@ -225,7 +210,7 @@ setopt PUSHD_MINUS
 
 
 #--------------------------------------------------------------------
-# Sourcing other scripts:
+# Sourcing my scripts:
 [ -f ~/.env_variables ] && source ~/.env_variables
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
@@ -329,6 +314,51 @@ plugins=(
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
+
+#--------------------------------------------------------------------
+# Aliases
+# These should go below source omz, since omz tries to overwrite
+# several of these with aliases I don't really like.
+
+unalias_if_exists() {
+    # Use unalias iff the alias exists to avoid "no such hash table element" errors:
+    case "$(type "$1")" in
+        (*alias*)
+            unalias "$1"
+            ;;
+    esac
+}
+
+# Names requiring unalias:
+unalias_if_exists ls
+unalias_if_exists ll
+alias ll="ls --color -Flhtr"
+unalias_if_exists la
+alias la="ls --color -Flhtra"
+unalias_if_exists lh
+alias lh="ls --color -AFlhtr"
+unalias_if_exists l
+alias l="ls --color -Flhtra"
+# Finally alias ls
+alias ls="ls --color -AF"
+unalias_if_exists grep
+alias grep="grep --color=auto"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias vim='mvim -v'
+    alias v='mvim -v'
+else
+    alias v='vim'
+fi
+alias up='source up'
+alias rm='rm -iv'
+alias mv='mv -v'
+alias cp='cp -v'
+alias strings='strings -a'
+alias err='fuck'  # Alias for thefuck
+#--------------------------------------------------------------------
+
+
 #--------------------------------------------------------------------
 # Final steps to make sure the following are the last keybindings we enter:
 bindkey -s '^f' '_cdfzf\n'

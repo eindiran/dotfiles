@@ -36,7 +36,7 @@ while getopts "h" option; do
             ;;
     esac
 done
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 # Make sure we have realpath installed
 echo "Installing realpath via coreutils in brew"
@@ -52,20 +52,20 @@ echo "Using home path: ${HOME}"
 echo "Using user: ${current_user}"
 
 echo "Installing shell dotfiles:"
-for f in "${dotfiles_dir}"/shells/.*rc ; do
+for f in "${dotfiles_dir}"/shells/.*rc; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
 done
 
 echo "Installing shell functions and extensions:"
-for f in "${dotfiles_dir}"/shells/.*sh ; do
+for f in "${dotfiles_dir}"/shells/.*sh; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
 done
 if [ -d "${dotfiles_dir}/shells/hidden/" ]; then
-    for f in "${dotfiles_dir}"/shells/hidden/.*sh ; do
+    for f in "${dotfiles_dir}"/shells/hidden/.*sh; do
         tf="$(realpath "${f}")"
         ff=$(basename "${f}")
         ln -ns "${tf}" "${HOME}/${ff}"
@@ -83,7 +83,7 @@ ln -ns "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"
 ln -ns "${dotfiles_dir}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
 
 echo "Installing Git configs:"
-for f in "${dotfiles_dir}"/git/.git* ; do
+for f in "${dotfiles_dir}"/git/.git*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
@@ -92,5 +92,6 @@ done
 echo "Installing miscellaneous configs:"
 ln -ns "${dotfiles_dir}/misc/.fdignore" "${HOME}/.fdignore"
 ln -ns "${dotfiles_dir}/misc/.rgignore" "${HOME}/.rgignore"
+ln -ns "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
 ln -ns "${dotfiles_dir}/python/.pylintrc" "${HOME}/.pylintrc"
 ln -ns "${dotfiles_dir}/python/.ruff.toml" "${HOME}/.ruff.toml"
