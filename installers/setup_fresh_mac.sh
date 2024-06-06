@@ -51,7 +51,8 @@ brew install cairo cmake coreutils difftastic expect ffmpeg fzf \
     gobject-introspection htop imagemagick java jq librsvg \
     lsd mactex macvim nodejs pandoc pkg-config poppler python \
     python-setuptools rename shellcheck thefuck tmux tree watch \
-    wget youtube-dl zoxide
+    wget youtube-dl zoxide shfmt
+sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
 echo "Installing rustup..."
@@ -95,12 +96,10 @@ git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=
 
 # Start setting up vim:
 echo "Installing Vim plugins"
-mkdir -p ~/.vim/bundle/
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 cd ~/Workspace/dotfiles/vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./install_plugins.sh
-cd ~/.vim/bundle/YouCompleteMe
-sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
+cd ~/.vim/plugged/YouCompleteMe
 python3 install.py --all
 
 # Setup pip for Python

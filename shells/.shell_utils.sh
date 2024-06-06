@@ -61,22 +61,22 @@ m() {
     make "$@"
 }
 
-if [[ ! "$OSTYPE" == "darwin"* ]]; then
-    # Linux
-    unalias_if_exists ls
-    unalias_if_exists ll
-    alias ll="ls --color -Flhtr"
-    unalias_if_exists la
-    alias la="ls --color -Flhtra"
-    unalias_if_exists lh
-    alias lh="ls --color -AFlhtr"
-    unalias_if_exists l
-    alias l="ls --color -Flhtra"
-    # Finally alias ls
-    alias ls="ls --color -AF"
-    unalias_if_exists grep
-    alias grep="grep --color=auto"
-else
+# Aliases
+unalias_if_exists ls
+unalias_if_exists ll
+alias ll="ls --color -Flhtr"
+unalias_if_exists la
+alias la="ls --color -Flhtra"
+unalias_if_exists lh
+alias lh="ls --color -AFlhtr"
+unalias_if_exists l
+alias l="ls --color -Flhtra"
+# Finally alias ls
+alias ls="ls --color -AF"
+unalias_if_exists grep
+alias grep="grep --color=auto"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
     sudoedit() {
         if [[ -n "$EDITOR" ]]; then

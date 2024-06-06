@@ -8,7 +8,7 @@
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
-" which allows it to use plugins through Vundle.
+" which allows it to use plugins and a variety of other goodies.
 set encoding=utf-8
 " Work with UTF-8
 set autoread
@@ -17,43 +17,50 @@ set term=xterm-256color
 "---------------------------------------------------------------------
 filetype off
 "---------------------------------------------------------------------
-" Preparing to launch Vim Package manager (Vundle)
-" Setting the Runtime Path
-set rtp+=~/.vim/bundle/Vundle.vim
+" vim-plug
 "---------------------------------------------------------------------
-call vundle#begin()
+" First setup vim-plug if required:
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source ~/.vimrc
+  \| endif
+" Now call vim-plug begin:
+call plug#begin()
 "---------------------------------------------------------------------
 " General plugins:
 "---------------------------------------------------------------------
-Plugin 'VundleVim/Vundle.vim'                 " Vundle itself
-Plugin 'Valloric/YouCompleteMe'               " Code Completion plugin
-Plugin 'puremourning/vimspector'              " Debugger
-Plugin 'dense-analysis/ale'                   " Multi lang linting manager
-Plugin 'vim-airline/vim-airline'              " Use the vim-airline status bar
-Plugin 'vim-airline/vim-airline-themes'       " Setup the theme of the status bar
-Plugin 'tmux-plugins/vim-tmux'                " For vim-tmux integration
-Plugin 'tmux-plugins/vim-tmux-focus-events'   " For vim-tmux integration
-Plugin 'roxma/vim-tmux-clipboard'             " For vim-tmux integration, for the clipboard
-Plugin 'eindiran/bash-support.vim'            " Bash scripting integration
-Plugin 'tpope/vim-fugitive'                   " Integration w/ git
-Plugin 'flazz/vim-colorschemes'               " Adds options for color-schemes
-Plugin 'godlygeek/tabular'                    " Dependency for MD syntax
-Plugin 'scrooloose/nerdtree'                  " File browsing
-Plugin 'jistr/vim-nerdtree-tabs'              " Using tabs
+Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }  " Code Completion plugin
+Plug 'puremourning/vimspector'                                 " Debugger
+Plug 'dense-analysis/ale'                                      " Multi lang linting manager
+Plug 'vim-airline/vim-airline'                                 " Use the vim-airline status bar
+Plug 'vim-airline/vim-airline-themes'                          " Setup the theme of the status bar
+Plug 'tmux-plugins/vim-tmux'                                   " For vim-tmux integration
+Plug 'tmux-plugins/vim-tmux-focus-events'                      " For vim-tmux integration
+Plug 'roxma/vim-tmux-clipboard'                                " For vim-tmux integration, for the clipboard
+Plug 'tpope/vim-fugitive'                                      " Integration w/ git
+Plug 'flazz/vim-colorschemes'                                  " Adds options for color-schemes
+Plug 'godlygeek/tabular'                                       " Dependency for MD syntax
+Plug 'scrooloose/nerdtree'                                     " File browsing
+Plug 'jistr/vim-nerdtree-tabs'                                 " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plugin 'eindiran/awk-support', { 'for': 'awk' }            " awk syntax and inline code running
-Plugin 'eindiran/c-support', { 'for': 'c' }                " C syntax
-Plugin 'elzr/vim-json', { 'for': 'json' }                  " JSON formatting, highlighting and folding
-Plugin 'plasticboy/vim-markdown', { 'for': 'md' }          " Markdown syntax
-Plugin 'rust-lang/rust.vim', { 'for': 'rs' }               " Rust syntax highlighting
-Plugin 'z0mbix/vim-shfmt', { 'for': 'sh' }                 " shfmt -- shell script formatter
-Plugin 'leafgarland/typescript-vim', { 'for': 'tsx' }      " TypeScript support
-Plugin 'mrk21/yaml-vim', { 'for': 'yaml' }                 " YAML support
-Plugin 'cespare/vim-toml', { 'for': 'toml' }               " TOML support
-Plugin 'tmhedberg/SimpylFold', { 'for': 'py' }             " Python folding
-call vundle#end()
+Plug 'eindiran/awk-support', { 'for': 'awk' }                  " awk syntax and inline code running
+Plug 'eindiran/c-support', { 'for': 'c' }                      " C syntax
+Plug 'eindiran/bash-support.vim', { 'for': 'sh' }              " Shell scripting integration
+Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }                       " shfmt -- shell script formatter
+Plug 'elzr/vim-json', { 'for': 'json' }                        " JSON formatting, highlighting and folding
+Plug 'plasticboy/vim-markdown', { 'for': 'md' }                " Markdown syntax
+Plug 'rust-lang/rust.vim', { 'for': 'rs' }                     " Rust syntax highlighting
+Plug 'leafgarland/typescript-vim', { 'for': 'tsx' }            " TypeScript support
+Plug 'mrk21/yaml-vim', { 'for': 'yaml' }                       " YAML support
+Plug 'cespare/vim-toml', { 'for': 'toml' }                     " TOML support
+Plug 'tmhedberg/SimpylFold', { 'for': 'py' }                   " Python folding
+call plug#end()
 "---------------------------------------------------------------------
 " Syntax
 "---------------------------------------------------------------------
@@ -78,11 +85,14 @@ let g:ale_linters = {
     \ 'python': ['ruff', 'mypy'],
     \ 'rust': ['cargo', 'rustc'],
     \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
+    \ 'sh': ['shellcheck'],
     \ }
 let g:ale_fixers = {
     \ 'python': ['ruff'],
+    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
+let g:ale_fix_on_save = 1
 "---------------------------------------------------------------------
 " Setup airline status bar and NerdTree:
 "---------------------------------------------------------------------

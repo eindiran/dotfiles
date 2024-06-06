@@ -174,6 +174,8 @@ export LD_RUN_PATH=$LD_RUN_PATH
 export LDFLAGS="-L/usr/local/opt/ruby/lib"
 export CPPFLAGS="-I/usr/local/opt/ruby/include"
 export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+export GOPATH="${HOME}/.go"
+export GOBIN="${HOME}/.go/bin"
 
 ### Editor setup:
 export SUDO_EDITOR=vim
@@ -183,7 +185,7 @@ export EDITOR=vim
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 
 ### Path:
-export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$PATH"
 #--------------------------------------------------------------------
 
 
@@ -221,15 +223,6 @@ setopt PUSHD_IGNORE_DUPS
 
 # This reverts the +/- operators.
 setopt PUSHD_MINUS
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
-# Sourcing other scripts:
-[ -f ~/.env_variables ] && source ~/.env_variables
-[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
-[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
-[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 #--------------------------------------------------------------------
 
 
@@ -329,6 +322,16 @@ plugins=(
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
+
+#--------------------------------------------------------------------
+# Sourcing my scripts:
+[ -f ~/.env_variables ] && source ~/.env_variables
+[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
+[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
+[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+#--------------------------------------------------------------------
+
+
 #--------------------------------------------------------------------
 # Final steps to make sure the following are the last keybindings we enter:
 bindkey -s '^f' '_cdfzf\n'

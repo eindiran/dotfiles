@@ -5,8 +5,8 @@
 #
 #         USAGE: ./install_plugins.sh [/path/to/.vimrc]
 #
-#   DESCRIPTION: Use the PluginInstall command from Vundle to install all Vundle
-#                plugins listed in the current .vimrc
+#   DESCRIPTION: Use the PlugInstall command from vim-plug to install all
+#                vim-plug plugins listed in the current .vimrc
 #
 #       OPTIONS: May optionally specify the .vimrc file to use.
 #  REQUIREMENTS: vim
@@ -17,10 +17,10 @@ set -Eeuo pipefail
 
 if [ "$#" -eq 0 ]; then
     # When no args are passed, use the user's standard .vimrc, usually $HOME/.vimrc
-    vim +VundleInstall
+    vim +PlugInstall
 elif [ "$#" -eq 1 ]; then
     # If a path is specified, ues that .vimrc file instead
-    vim +VundleInstall -u "$1"
+    vim +PlugInstall -u "$1"
 else
     # If more than 1 arg is passed, print out the usage:
     printf "Incorrect number of arguments passed!\nUsage:\t"
