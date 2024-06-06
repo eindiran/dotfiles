@@ -51,21 +51,14 @@ echo "Using dotfile path: ${dotfiles_dir}"
 echo "Using home path: ${HOME}"
 echo "Using user: ${current_user}"
 
-echo "Installing shell dotfiles:"
-for f in "${dotfiles_dir}"/shells/.*rc; do
-    tf="$(realpath "${f}")"
-    ff=$(basename "${f}")
-    ln -ns "${tf}" "${HOME}/${ff}"
-done
-
-echo "Installing shell functions and extensions:"
-for f in "${dotfiles_dir}"/shells/.*sh; do
+echo "Installing shell dotfiles, functions, and extensions:"
+for f in "${dotfiles_dir}"/shells/.*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
 done
 if [ -d "${dotfiles_dir}/shells/hidden/" ]; then
-    for f in "${dotfiles_dir}"/shells/hidden/.*sh; do
+    for f in "${dotfiles_dir}"/shells/hidden/.*; do
         tf="$(realpath "${f}")"
         ff=$(basename "${f}")
         ln -ns "${tf}" "${HOME}/${ff}"
