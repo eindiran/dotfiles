@@ -52,13 +52,13 @@ echo "Using home path: ${HOME}"
 echo "Using user: ${current_user}"
 
 echo "Installing shell dotfiles, functions, and extensions:"
-for f in "${dotfiles_dir}"/shells/.*; do
+for f in "${dotfiles_dir}"/zsh/.*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
 done
-if [ -d "${dotfiles_dir}/shells/hidden/" ]; then
-    for f in "${dotfiles_dir}"/shells/hidden/.*; do
+if [ -d "${dotfiles_dir}/zsh/hidden/" ]; then
+    for f in "${dotfiles_dir}"/zsh/hidden/.*; do
         tf="$(realpath "${f}")"
         ff=$(basename "${f}")
         ln -ns "${tf}" "${HOME}/${ff}"
