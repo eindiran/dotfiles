@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Tue 11 Jun 2024
-" VERSION: 1.4.4
+" VERSION: 1.4.5
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -33,32 +33,32 @@ call plug#begin()
 "---------------------------------------------------------------------
 " General plugins:
 "---------------------------------------------------------------------
-Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }  " Code Completion plugin
-Plug 'puremourning/vimspector'                                 " Debugger
-Plug 'dense-analysis/ale'                                      " Multi lang linting manager
-Plug 'vim-airline/vim-airline'                                 " Use the vim-airline status bar
-Plug 'vim-airline/vim-airline-themes'                          " Setup the theme of the status bar
-Plug 'tmux-plugins/vim-tmux'                                   " For vim-tmux integration
-Plug 'tmux-plugins/vim-tmux-focus-events'                      " For vim-tmux integration
-Plug 'roxma/vim-tmux-clipboard'                                " For vim-tmux integration, for the clipboard
-Plug 'tpope/vim-fugitive'                                      " Integration w/ git
-Plug 'flazz/vim-colorschemes'                                  " Adds options for color-schemes
-Plug 'godlygeek/tabular'                                       " Dependency for MD syntax
-Plug 'scrooloose/nerdtree'                                     " File browsing
-Plug 'jistr/vim-nerdtree-tabs'                                 " Using tabs
+Plug 'ycm-core/YouCompleteMe'              " Code Completion plugin
+Plug 'puremourning/vimspector'             " Debugger
+Plug 'dense-analysis/ale'                  " Multi lang linting manager
+Plug 'vim-airline/vim-airline'             " Use the vim-airline status bar
+Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
+Plug 'tmux-plugins/vim-tmux'               " For vim-tmux integration
+Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
+Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the clipboard
+Plug 'tpope/vim-fugitive'                  " Integration w/ git
+Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
+Plug 'godlygeek/tabular'                   " Dependency for MD syntax
+Plug 'scrooloose/nerdtree'                 " File browsing
+Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plug 'eindiran/awk-support'                                    " awk syntax and inline code running
-Plug 'eindiran/c-support'                                      " C syntax
-Plug 'eindiran/bash-support.vim'                               " Shell scripting integration
-Plug 'elzr/vim-json', { 'for': 'json' }                        " JSON formatting, highlighting and folding
-Plug 'plasticboy/vim-markdown', { 'for': 'md' }                " Markdown syntax
-Plug 'rust-lang/rust.vim', { 'for': 'rs' }                     " Rust syntax highlighting
-Plug 'leafgarland/typescript-vim', { 'for': 'tsx' }            " TypeScript support
-Plug 'mrk21/yaml-vim', { 'for': 'yaml' }                       " YAML support
-Plug 'cespare/vim-toml', { 'for': 'toml' }                     " TOML support
-Plug 'tmhedberg/SimpylFold', { 'for': 'py' }                   " Python folding
+Plug 'eindiran/awk-support'                          " awk syntax and inline code running
+Plug 'eindiran/c-support'                            " C syntax
+Plug 'eindiran/bash-support.vim'                     " Shell scripting integration
+Plug 'tmhedberg/SimpylFold'                          " Python folding
+Plug 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
+Plug 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
+Plug 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
+Plug 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
+Plug 'mrk21/yaml-vim', { 'for': 'yaml' }             " YAML support
+Plug 'cespare/vim-toml', { 'for': 'toml' }           " TOML support
 call plug#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -343,6 +343,7 @@ nmap <silent> =b :call FormatBinary()<CR>
 " SimpylFold
 "---------------------------------------------------------------------
 let g:SimpylFold_docstring_preview=1
+let g:SimpylFold_fold_import=0
 "---------------------------------------------------------------------
 " Git
 "---------------------------------------------------------------------
