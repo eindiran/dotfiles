@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Thu 06 Jun 2024
-" VERSION: 1.4.3
+" LAST MODIFIED: Tue 11 Jun 2024
+" VERSION: 1.4.4
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -49,9 +49,9 @@ Plug 'jistr/vim-nerdtree-tabs'                                 " Using tabs
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plug 'eindiran/awk-support', { 'for': 'awk' }                  " awk syntax and inline code running
-Plug 'eindiran/c-support', { 'for': 'c' }                      " C syntax
-Plug 'eindiran/bash-support.vim', { 'for': 'sh' }              " Shell scripting integration
+Plug 'eindiran/awk-support'                                    " awk syntax and inline code running
+Plug 'eindiran/c-support'                                      " C syntax
+Plug 'eindiran/bash-support.vim'                               " Shell scripting integration
 Plug 'elzr/vim-json', { 'for': 'json' }                        " JSON formatting, highlighting and folding
 Plug 'plasticboy/vim-markdown', { 'for': 'md' }                " Markdown syntax
 Plug 'rust-lang/rust.vim', { 'for': 'rs' }                     " Rust syntax highlighting
