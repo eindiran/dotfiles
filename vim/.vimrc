@@ -94,6 +94,7 @@ let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
+let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
 nmap <silent> =aj :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>
 "---------------------------------------------------------------------
