@@ -297,23 +297,40 @@ export THEFUCK_NUM_CLOSE_MATCHES=7
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
-plugins=(
-    zsh-autosuggestions
-    zsh-history-substring-search
-    zsh-syntax-highlighting
-    zsh-fzf-history-search
-    git
-    bundler
-    dotenv
-    macos
-    thefuck
-    zoxide
-)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    plugins=(
+        iterm2
+        macos
+        zsh-autosuggestions
+        zsh-history-substring-search
+        zsh-syntax-highlighting
+        zsh-fzf-history-search
+        git
+        bundler
+        dotenv
+        thefuck
+        zoxide
+    )
+else
+    plugins=(
+        zsh-autosuggestions
+        zsh-history-substring-search
+        zsh-syntax-highlighting
+        zsh-fzf-history-search
+        git
+        bundler
+        dotenv
+        thefuck
+        zoxide
+    )
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
+#--------------------------------------------------------------------
+
 
 #--------------------------------------------------------------------
 # Aliases
