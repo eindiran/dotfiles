@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Fri 14 Jun 2024
-" VERSION: 1.4.6
+" VERSION: 1.5.0
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -54,10 +54,12 @@ Plug 'eindiran/c-support'                            " C syntax
 Plug 'eindiran/bash-support.vim'                     " Shell scripting integration
 Plug 'tmhedberg/SimpylFold'                          " Python folding
 Plug 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
-Plug 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
-Plug 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
+Plug 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown support
+Plug 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust support
 Plug 'mrk21/yaml-vim', { 'for': 'yaml' }             " YAML support
 Plug 'cespare/vim-toml', { 'for': 'toml' }           " TOML support
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }   " Go support
+Plug 'posva/vim-vue', { 'for': 'vue' }               " Vue support
 call plug#end()
 "---------------------------------------------------------------------
 " Syntax
@@ -69,6 +71,15 @@ if !exists("g:syntax_on")
 endif
 let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 "---------------------------------------------------------------------
+" Folding
+"---------------------------------------------------------------------
+" Enable folding
+set foldmethod=syntax  " Fold by syntax rather than indent or manual
+set foldlevelstart=99  " All folds open on file open
+" Unfold w/ spacebar
+nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<CR>
+vnoremap <space> zf
+"---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
 let g:ale_lint_on_text_changed = 0
@@ -78,24 +89,40 @@ let g:ale_fix_on_save = 1
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-" Don't lint Java code, as the import functionality is garbage:
 let g:ale_linters = {
-    \ 'java': [],
+    \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
+    \ 'go': ['golangci_lint'],
+    \ 'javascript': ['eslint'],
     \ 'python': ['ruff', 'mypy'],
     \ 'rust': ['cargo', 'rustc'],
-    \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
     \ 'sh': ['shellcheck'],
+    \ 'vim': ['vint'],
+    \ 'vue': ['eslint', 'stylelint', 'vls'],
     \ }
+" Alias Vue to support linting/fixing/highlighting with all the
+" relevant filetypes.
+let g:ale_linter_aliases = {'vue': ['vue', 'css', 'javascript', 'html']}
+" Don't enable fixers for all languages, as some plugins for languages
+" already enable them (e.g. vim-go for Go)
 let g:ale_fixers = {
-    \ 'python': ['ruff', 'ruff_format'],
     \ 'c': ['clangformat', 'clangtidy'],
+    \ 'javascript': ['eslint', 'prettier'],
+    \ 'python': ['ruff', 'ruff_format'],
+    \ 'rust': ['rustfmt'],
     \ 'sh': ['shfmt'],
+    \ 'vue': ['eslint', 'prettier'],
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ }
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
 nmap <silent> =aj :ALENext<CR>
+nmap <silent> <leader>j :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>
+nmap <silent> <leader>k :ALEPrevious<CR>
+nmap <silent> =ad :ALEGoToDefinition<CR>
+nmap <silent> <leader>h :ALEHover<CR>
+nmap <silent> =ai :ALEInfo<CR>
+
 "---------------------------------------------------------------------
 " Setup airline status bar and NerdTree:
 "---------------------------------------------------------------------
@@ -313,42 +340,73 @@ function! ShowMappedFKeys()
 endfunction
 nmap <F8> :call ShowMappedFKeys()<CR>
 "---------------------------------------------------------------------
-" Format JSON using jq
-"---------------------------------------------------------------------
-function! FormatJSON()
-    :%!jq .
-endfunction
-" Now add a mapping `=j` to this function
-nmap <silent> =j :call FormatJSON()<CR>
-"---------------------------------------------------------------------
-" Format XML using Python's minidom + some command-mode nonsense
-"---------------------------------------------------------------------
-function! FormatXML()
-    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
-endfunction
-" Now add a mapping `=x` to this function
-nmap <silent> =x :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
-" Note that this also works for HTML, but we want to keep =h for our
-" hex editing below.
-"---------------------------------------------------------------------
 " Format hex using `xxd`
 "---------------------------------------------------------------------
 function! FormatHex()
     set ft=xxd
     :%!xxd
 endfunction
-" Add a mapping to `=h`
-nmap <silent> =h :call FormatHex()<CR>
+" Add a mapping to `=fh`
+nmap <silent> =fh :call FormatHex()<CR>
 " Once editing is complete, use =b to go back to binary
 function! FormatBinary()
     :%!xxd -r
 endfunction
-nmap <silent> =b :call FormatBinary()<CR>
+" Add a mapping to `=fb`
+nmap <silent> =fb :call FormatBinary()<CR>
+"---------------------------------------------------------------------
+" Format JSON using jq
+"---------------------------------------------------------------------
+function! FormatJSON()
+    :%!jq .
+endfunction
+" Now add a mapping `=fj` to this function
+autocmd FileType json nmap <silent> =fj :call FormatJSON()<CR>
+"---------------------------------------------------------------------
+" Format XML using Python's minidom + some command-mode nonsense
+"---------------------------------------------------------------------
+function! FormatXML()
+    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
+endfunction
+" Now add a mapping `=fx` to this function
+autocmd FileType xml nmap <silent> =fx :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
+" And `=fh` for HTML. This overrides the hex formatter above.
+autocmd FileType html nmap <silent> =fh :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
 "---------------------------------------------------------------------
 " SimpylFold
 "---------------------------------------------------------------------
 let g:SimpylFold_docstring_preview=1
 let g:SimpylFold_fold_import=0
+"---------------------------------------------------------------------
+" vim-go
+"---------------------------------------------------------------------
+" These settings were taken from this blogpost:
+" https://jogendra.dev/using-vim-for-go-development
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_operators = 1
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+" Function to build .go files
+function! BuildGoFiles()
+    let l:file = expand('%')
+    if l:file =~# '^\f\+_test\.go$'
+        call go#test#Test(0, 1)
+    elseif l:file =~# '^\f\+\.go$'
+        call go#cmd#Build(0)
+    endif
+endfunction
+" Map keys for most used commands.
+" EX: `\b` for building, `\r` for running, `\t` for running tests,
+" `\i` for running 'go install' and `\d` for getting docs.
+autocmd FileType go nmap <silent> <leader>b :call BuildGoFiles()<CR>
+autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
+autocmd FileType go nmap <silent> <leader>i  <Plug>(go-install)
+autocmd FileType go nmap <silent> <leader>d  <Plug>(go-doc)
 "---------------------------------------------------------------------
 " Git
 "---------------------------------------------------------------------
@@ -379,12 +437,6 @@ noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
-" Enable folding
-set foldmethod=syntax  " Fold by syntax rather than indent or manual
-set foldlevelstart=99  " All folds open on file open
-" Unfold w/ spacebar
-nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<CR>
-vnoremap <space> zf
 " Undo last search highlighting by pressing enter again
 nnoremap <nowait><silent> <CR> :noh<CR><CR>
 " Delete messages buffer
