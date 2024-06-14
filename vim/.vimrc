@@ -56,7 +56,6 @@ Plug 'tmhedberg/SimpylFold'                          " Python folding
 Plug 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
 Plug 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown syntax
 Plug 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust syntax highlighting
-Plug 'leafgarland/typescript-vim', { 'for': 'tsx' }  " TypeScript support
 Plug 'mrk21/yaml-vim', { 'for': 'yaml' }             " YAML support
 Plug 'cespare/vim-toml', { 'for': 'toml' }           " TOML support
 call plug#end()
@@ -217,8 +216,6 @@ au BufNewFile,BufRead *.groovy,*.gradle setf groovy
 " *.yaml,*.yml --> YAML
 au BufNewFile,BufRead *.yaml,*.yml set filetype=yaml foldmethod=indent
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-" *.ts, *.tsx --> TypeScript
-au BufNewFile,BufRead *.ts,*.tsx setfile typescript
 " *.rst --> reStructuredText
 au BufNewFile,BufRead *.rst set filetype=rst foldmethod=indent
 " This autocmd will ensure we reformat using paragraph style
