@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 11 Jun 2024
-" VERSION: 1.4.5
+" LAST MODIFIED: Fri 14 Jun 2024
+" VERSION: 1.4.6
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -219,6 +219,13 @@ au BufNewFile,BufRead *.yaml,*.yml set filetype=yaml foldmethod=indent
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 " *.ts, *.tsx --> TypeScript
 au BufNewFile,BufRead *.ts,*.tsx setfile typescript
+" *.rst --> reStructuredText
+au BufNewFile,BufRead *.rst set filetype=rst foldmethod=indent
+" This autocmd will ensure we reformat using paragraph style
+" after all lines ending in space; combined with ALE settings, this
+" will then remove the space on save.
+" SEE: `:help fo-table` for more info on these.
+autocmd FileType rst setlocal formatoptions+=awn
 "---------------------------------------------------------------------
 " Do Automatic Versioning
 "---------------------------------------------------------------------
