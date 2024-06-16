@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Sun 16 Jun 2024
-" VERSION: 1.5.1
+" VERSION: 1.5.2
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -49,24 +49,19 @@ Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
 Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the clipboard
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
-Plug 'godlygeek/tabular'                   " Dependency for MD syntax
 Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plug 'eindiran/awk-support'                          " awk syntax and inline code running
-Plug 'eindiran/c-support'                            " C syntax
-Plug 'eindiran/bash-support.vim'                     " Shell scripting integration
-Plug 'tmhedberg/SimpylFold'                          " Python folding
-Plug 'elzr/vim-json', { 'for': 'json' }              " JSON formatting, highlighting and folding
-Plug 'plasticboy/vim-markdown', { 'for': 'md' }      " Markdown support
-Plug 'rust-lang/rust.vim', { 'for': 'rs' }           " Rust support
-Plug 'mrk21/yaml-vim', { 'for': 'yaml' }             " YAML support
-Plug 'cespare/vim-toml', { 'for': 'toml' }           " TOML support
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }   " Go support
-Plug 'posva/vim-vue', { 'for': 'vue' }               " Vue support
+Plug 'eindiran/awk-support'                         " awk support
+Plug 'eindiran/c-support'                           " C/C++ support
+Plug 'eindiran/bash-support.vim'                    " Shell scripting integration
+Plug 'tmhedberg/SimpylFold'                         " Python folding
+Plug 'rust-lang/rust.vim'                           " Rust support
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }  " Go support
+Plug 'posva/vim-vue'                                " Vue support
 call plug#end()
 "---------------------------------------------------------------------
 " NERDTree
