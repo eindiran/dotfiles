@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Fri 14 Jun 2024
-" VERSION: 1.5.0
+" LAST MODIFIED: Sun 16 Jun 2024
+" VERSION: 1.5.1
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
