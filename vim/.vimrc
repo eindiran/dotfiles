@@ -114,9 +114,16 @@ imap <C-X><C-L> <Plug>(fzf-complete-line)
 "---------------------------------------------------------------------
 " Enable folding
 set foldmethod=syntax  " Fold by syntax rather than indent or manual
-set foldlevelstart=99  " All folds open on file open
+set foldlevelstart=99  " All folds open on file open; can be overriden
+" on some filetypes/plugins. Eg vim-markdown folds much more aggressively
 " Unfold w/ spacebar
 nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<CR>
+" Reset folds with spacebar minus
+nnoremap <silent> <space>- :e!<CR>
+" Totally unfold everything
+nnoremap <silent> <space>+ @=(foldlevel('.')?'zR':"\<space>")<CR>
+" Totally refold everything
+nmap <silent> <space>= zM<CR>
 vnoremap <space> zf
 "---------------------------------------------------------------------
 " Setup ALE:
@@ -204,7 +211,7 @@ let g:airline#extensions#nerdtree#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 " Make the bar toggle w/ F10
-map <F10> :AirlineToggle<CR>
+map <silent> <F10> :AirlineToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
@@ -293,7 +300,7 @@ nmap ,cw :bcw
 "---------------------------------------------------------------------
 " Maps <F5> key to copying the entire text file to the system clipboard
 nnoremap <silent> <F5> :%y+ <CR>
-" Remove all trailing whitespace by pressing F5
+" Remove all trailing whitespace by pressing F6
 nnoremap <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 "---------------------------------------------------------------------
 :let g:LargeFile=100
@@ -527,7 +534,7 @@ nmap =c /\v\<{7}\|\={7}\|\>{7}<CR>
 function! DeleteConflictSection()
     :,/\v(\<{7}|\={7}|\>{7})/-d
 endfunction
-nmap <silent> =d :call DeleteConflictSection()<CR>
+nnoremap <silent> =d :call DeleteConflictSection()<CR>
 nnoremap <leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
@@ -535,17 +542,21 @@ nnoremap gdl :diffget //3<CR>
 " Commenting
 "---------------------------------------------------------------------
 " Add the following commenting commands in normal, visual,
-" operation-pending, and select modes:
-noremap <silent> =# <Plug>Commentary
-noremap <silent> =/ <Plug>Commentary
+" and operation-pending modes (select and insert excluded):
+nnoremap <silent> =# <Plug>Commentary
+nnoremap <silent> =/ <Plug>Commentary
+xnoremap <silent> =# <Plug>Commentary
+xnoremap <silent> =/ <Plug>Commentary
+onoremap <silent> =# <Plug>Commentary
+onoremap <silent> =/ <Plug>Commentary
 " These are added because historically I didn't use vim-commentary
 " and these were the bindings I used.
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
 " Set the conceallevel manually in normal mode
-noremap <silent> =cl :set conceallevel=2<CR>
-noremap <silent> -cl :set conceallevel=0<CR>
+nnoremap <silent> =cl :set conceallevel=2<CR>
+nnoremap <silent> -cl :set conceallevel=0<CR>
 " Undo last search highlighting by pressing enter again
 nnoremap <nowait><silent> <CR> :noh<CR><CR>
 " Delete messages buffer
