@@ -45,12 +45,12 @@ echo "Installing brew..."
 # Install brew packages:
 echo "Installing brew formulae..."
 
-brew install ansifilter cairo cmake coreutils expect ffmpeg fzf \
-    fastfetch gdk-pixbuf gh ghostscript git git-delta git-lfs gnu-sed \
-    gnupg go gobject-introspection htop imagemagick java jq librsvg \
-    lsd mactex macvim nodejs pandoc perl pkg-config poppler python \
-    python-setuptools rename shellcheck shfmt thefuck tmux tree universal-ctags \
-    watch wget youtube-dl zoxide
+brew install ansifilter cairo cmake coreutils expect fastfetch \
+    ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
+    gnu-sed gnupg go gobject-introspection htop imagemagick java \
+    jq librsvg lsd mactex macvim nodejs pandoc perl pkg-config \
+    poppler python python-setuptools rename shellcheck shfmt \
+    thefuck tmux tree universal-ctags watch wget youtube-dl zoxide
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
@@ -63,8 +63,8 @@ fi
 
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."
-cargo install ripgrep bat broot fd-find procs hx \
-    hyperfine skim numbat-cli hexyl du-dust
+cargo install action-validator bat broot du-dust fd-find hexyl hx hyperfine \
+    numbat-cli procs ripgrep skim
 
 # Setup git repos:
 echo "Setting up Workspace"
@@ -111,6 +111,8 @@ python3 -m venv ~/.venv
 # shellcheck source=/dev/null
 source ~/.venv/bin/activate
 echo "Installing common pip packages..."
-pip install mypy ruff pylint numpy pandas pycairo PyGObject pango meson ninja precommit pillow setuptools matplotlib scipy opencv torch
+pip install PyGObject art build coverage matplotlib meson mypy ninja \
+    numpy opencv pandas pango pillow precommit pycairo pylint qrcode \
+    ruff scipy setuptools setuptools sphinx torch twine wheel
 echo "Setup completed!"
 fastfetch

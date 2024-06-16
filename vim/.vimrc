@@ -479,3 +479,7 @@ nnoremap <nowait><silent> <CR> :noh<CR><CR>
 nnoremap <nowait><silent> <C-C> :messages clear<CR>
 " Allow writes to files owned by root using `w!!`
 cnoremap w!! w !sudo tee %
+" Sort words in a line in normal mode:
+nnoremap <silent> <leader>sw :call setline('.', join(sort(split(getline('.'), ' ')), " "))<CR>
+nnoremap <silent> <leader>sa :%!sort<CR>
+nnoremap <silent> <leader>sn :%!sort -n<CR>
