@@ -81,8 +81,12 @@ cd dotfiles
 
 # Install dotfiles:
 ./installers/install_dotfiles_macos.sh
+echo "Creating zsh cache"
 mkdir -p ~/.cache/zsh/
 # Run vale sync
+echo "Creating vale style cache"
+mkdir -p ~/.vale
+echo "Syncing vale styles/plugins"
 vale --config ~/.vale.ini sync
 
 # Install omz
