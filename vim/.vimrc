@@ -63,6 +63,8 @@ Plug 'tmhedberg/SimpylFold'                         " Python folding
 Plug 'rust-lang/rust.vim'                           " Rust support
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }  " Go support
 Plug 'posva/vim-vue'                                " Vue support
+Plug 'godlygeek/tabular'                            " Markdown dep
+Plug 'preservim/vim-markdown'                       " Markdown
 call plug#end()
 "---------------------------------------------------------------------
 " NERDTree
@@ -127,28 +129,30 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {
-    \ 'c': ['clangd', 'clangcheck', 'clangtidy'],
-    \ 'go': ['golangci_lint'],
-    \ 'javascript': ['eslint'],
-    \ 'python': ['ruff', 'mypy'],
-    \ 'rust': ['cargo', 'rustc'],
-    \ 'sh': ['shellcheck'],
-    \ 'vue': ['eslint', 'stylelint', 'vls'],
-    \ }
+    \'c': ['clangd', 'clangcheck', 'clangtidy'],
+    \'go': ['golangci_lint'],
+    \'javascript': ['eslint'],
+    \'markdown': ['vale'],
+    \'python': ['ruff', 'mypy'],
+    \'rust': ['cargo', 'rustc'],
+    \'sh': ['shellcheck'],
+    \'vue': ['eslint', 'stylelint', 'vls'],
+    \}
 " Alias Vue to support linting/fixing/highlighting with all the
 " relevant filetypes.
 let g:ale_linter_aliases = {'vue': ['vue', 'css', 'javascript', 'html']}
 " Don't enable fixers for all languages, as some plugins for languages
 " already enable them (e.g. vim-go for Go)
 let g:ale_fixers = {
-    \ 'c': ['clangformat', 'clangtidy'],
-    \ 'javascript': ['eslint', 'prettier'],
-    \ 'python': ['ruff', 'ruff_format'],
-    \ 'rust': ['rustfmt'],
-    \ 'sh': ['shfmt'],
-    \ 'vue': ['eslint', 'prettier'],
-    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-    \ }
+    \'c': ['clangformat', 'clangtidy'],
+    \'javascript': ['eslint', 'prettier'],
+    \'markdown': ['prettier'],
+    \'python': ['ruff', 'ruff_format'],
+    \'rust': ['rustfmt'],
+    \'sh': ['shfmt'],
+    \'vue': ['eslint', 'prettier'],
+    \'*': ['remove_trailing_lines', 'trim_whitespace'],
+    \}
 let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
 nmap <silent> =aj :ALENext<CR>
@@ -222,16 +226,15 @@ if trim(system('uname -s')) == "Darwin"
 endif
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
-    \ 'notes':1,
-    \ 'markdown':1,
-    \ 'unite':1,
-    \ 'tagbar':1,
-    \ 'pandoc':1,
-    \ 'qf':1,
-    \ 'vimwiki':1,
-    \ 'infolog':1,
-    \ 'mail':1,
-    \ 'org':1
+    \'notes':1,
+    \'unite':1,
+    \'tagbar':1,
+    \'pandoc':1,
+    \'qf':1,
+    \'vimwiki':1,
+    \'infolog':1,
+    \'mail':1,
+    \'org':1
     \}
 "---------------------------------------------------------------------
 " Spaces & Tabs
@@ -308,6 +311,11 @@ au BufNewFile,BufRead *.rst set filetype=rst foldmethod=indent
 " will then remove the space on save.
 " SEE: `:help fo-table` for more info on these.
 autocmd FileType rst setlocal formatoptions+=awn
+" *.md --> Markdown
+" This is not required if using vim-markdown
+" au BufNewFile,BufRead *.md set filetype=markdown
+" Set the conceallevel to hide by default
+autocmd FileType markdown set conceallevel=2
 "---------------------------------------------------------------------
 " Do Automatic Versioning
 "---------------------------------------------------------------------
@@ -476,6 +484,40 @@ else
     let g:rust_clip_command = 'xclip -selection clipboard'
 endif
 "---------------------------------------------------------------------
+" vim-markdown
+"---------------------------------------------------------------------
+" Enable folding
+let g:vim_markdown_folding_disabled = 0
+" Fold in python-mode:
+let g:vim_markdown_folding_style_pythonic = 1
+" Disable all vim-markdown key bindings
+let g:vim_markdown_no_default_key_mappings = 1
+" Autoshrink TOCs
+let g:vim_markdown_toc_autofit = 1
+" Indentation for new lists. We don't insert bullets as it doesn't play
+" nicely with `gq` formatting
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_auto_insert_bullets = 0
+" Filetype aliases for fenced code blocks:
+let g:vim_markdown_fenced_languages = [
+        \'c++=cpp',
+        \'rs=rust',
+        \'py=python',
+        \'js=javascript',
+        \'ts=typescript',
+        \'bash=sh',
+        \'viml=vim',
+        \]
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_json_frontmatter = 1
+" Support inline latex for math
+let g:vim_markdown_math = 1
+" Format strike-through text
+let g:vim_markdown_strikethrough = 1
+" Support markdown concealing
+let g:vim_markdown_conceal = 2
+"---------------------------------------------------------------------
 " Git
 "---------------------------------------------------------------------
 " Map search for git conflicts to `=c`
@@ -505,6 +547,9 @@ noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
+" Set the conceallevel manually in normal mode
+noremap <silent> =cl :set conceallevel=2<CR>
+noremap <silent> -cl :set conceallevel=0<CR>
 " Undo last search highlighting by pressing enter again
 nnoremap <nowait><silent> <CR> :noh<CR><CR>
 " Delete messages buffer

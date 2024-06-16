@@ -50,7 +50,8 @@ brew install ansifilter cairo cmake coreutils expect fastfetch \
     gnu-sed gnupg go gobject-introspection htop imagemagick java \
     jq librsvg lsd mactex macvim nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
-    thefuck tmux tree universal-ctags watch wget youtube-dl zoxide
+    thefuck tmux tree universal-ctags vale watch wget youtube-dl \
+    zoxide
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
@@ -81,6 +82,8 @@ cd dotfiles
 # Install dotfiles:
 ./installers/install_dotfiles_macos.sh
 mkdir -p ~/.cache/zsh/
+# Run vale sync
+vale --config ~/.vale.ini sync
 
 # Install omz
 echo "Installing ohmyzsh"
