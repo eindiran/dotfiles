@@ -117,6 +117,7 @@ vnoremap <space> zf
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
+let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
@@ -131,7 +132,6 @@ let g:ale_linters = {
     \ 'python': ['ruff', 'mypy'],
     \ 'rust': ['cargo', 'rustc'],
     \ 'sh': ['shellcheck'],
-    \ 'vim': ['vint'],
     \ 'vue': ['eslint', 'stylelint', 'vls'],
     \ }
 " Alias Vue to support linting/fixing/highlighting with all the
@@ -157,7 +157,33 @@ nmap <silent> <leader>k :ALEPrevious<CR>
 nmap <silent> =ad :ALEGoToDefinition<CR>
 nmap <silent> <leader>h :ALEHover<CR>
 nmap <silent> =ai :ALEInfo<CR>
-
+" Function to disable all ALE fixing and linting
+function! DisableALE()
+    let g:ale_lint_on_text_changed = 'never'
+    let g:ale_lint_on_insert_leave = 0
+    let g:ale_lint_on_save = 0
+    let g:ale_fix_on_save = 0
+    let g:ale_lint_on_enter = 0
+endfunction
+" Function to re-enable ALE
+function! EnableALE()
+    let g:ale_lint_on_text_changed = 0
+    let g:ale_lint_on_insert_leave = 1
+    let g:ale_lint_on_save = 1
+    let g:ale_fix_on_save = 1
+    let g:ale_lint_on_enter = 1
+endfunction
+" Function to toggle ALE
+function! ToggleALE()
+    if (g:ale_fix_on_save == 1)
+        call DisableALE()
+    else
+        call EnableALE()
+    endif
+endfunction
+nmap <silent> =da :call DisableALE()<CR>
+nmap <silent> =ea :call EnableALE()<CR>
+map <silent> <F2> :call ToggleALE()<CR>
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
