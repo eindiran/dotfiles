@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Sun 16 Jun 2024
-" VERSION: 1.5.2
+" VERSION: 1.5.3
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -47,6 +47,7 @@ Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
 Plug 'tmux-plugins/vim-tmux'               " For vim-tmux integration
 Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
 Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the clipboard
+Plug 'tpope/vim-commentary'                " Commenting keybinds
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'scrooloose/nerdtree'                 " File browsing
@@ -535,15 +536,10 @@ nnoremap gdl :diffget //3<CR>
 "---------------------------------------------------------------------
 " Add the following commenting commands in normal, visual,
 " operation-pending, and select modes:
-" Python-style commenting
-noremap <silent> =# :s/^/#/<CR>:noh<CR>
-noremap <silent> -# :s/^#//<CR>:noh<CR>
-" Python block commenting
-noremap <silent> =" :s/^/"""\r/<CR>:noh<CR>
-noremap <silent> -" :s/.*""".*//<CR>:noh<CR>
-" C-style commenting
-noremap <silent> =/ :s/^/\/\//<CR>:noh<CR>
-noremap <silent> -/ :s/^\/\///<CR>:noh<CR>
+noremap <silent> =# <Plug>Commentary
+noremap <silent> =/ <Plug>Commentary
+" These are added because historically I didn't use vim-commentary
+" and these were the bindings I used.
 "---------------------------------------------------------------------
 " Other
 "---------------------------------------------------------------------
