@@ -3,6 +3,8 @@
 # Check the top-level git directory for language specific .gitignore files.
 # https://github.com/eindiran/dotfiles/tree/master/git
 
+.tags
+tags
 *.swo
 *.swp
 .DS_Store

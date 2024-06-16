@@ -52,6 +52,7 @@ Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
+Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
@@ -465,6 +466,16 @@ autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
 autocmd FileType go nmap <silent> <leader>i  <Plug>(go-install)
 autocmd FileType go nmap <silent> <leader>d  <Plug>(go-doc)
 "---------------------------------------------------------------------
+" rust.vim
+"---------------------------------------------------------------------
+if trim(system('uname -s')) == "Darwin"
+    " macOS
+    let g:rust_clip_command = 'pbcopy'
+else
+    " Linux
+    let g:rust_clip_command = 'xclip -selection clipboard'
+endif
+"---------------------------------------------------------------------
 " Git
 "---------------------------------------------------------------------
 " Map search for git conflicts to `=c`
@@ -501,6 +512,6 @@ nnoremap <nowait><silent> <C-C> :messages clear<CR>
 " Allow writes to files owned by root using `w!!`
 cnoremap w!! w !sudo tee %
 " Sort words in a line in normal mode:
-nnoremap <silent> <leader>sw :call setline('.', join(sort(split(getline('.'), ' ')), " "))<CR>
-nnoremap <silent> <leader>sa :%!sort<CR>
-nnoremap <silent> <leader>sn :%!sort -n<CR>
+nnoremap <silent> =sw :call setline('.', join(sort(split(getline('.'), ' ')), " "))<CR>
+nnoremap <silent> =sa :%!sort<CR>
+nnoremap <silent> =sn :%!sort -n<CR>
