@@ -15,7 +15,13 @@ set autoread
 " Use `autoread`, for `vim-tmux-focus-events`
 set term=xterm-256color
 "---------------------------------------------------------------------
-filetype off
+" Enable filetype detection, with plugin and indent; see
+" :help filetype for more info.
+filetype plugin indent on
+" `syntax enable` is prefered to `syntax on`
+if !exists("g:syntax_on")
+    syntax enable
+endif
 "---------------------------------------------------------------------
 " vim-plug
 "---------------------------------------------------------------------
@@ -46,6 +52,7 @@ Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'godlygeek/tabular'                   " Dependency for MD syntax
 Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
+Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
@@ -62,14 +69,47 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }   " Go support
 Plug 'posva/vim-vue', { 'for': 'vue' }               " Vue support
 call plug#end()
 "---------------------------------------------------------------------
-" Syntax
+" NERDTree
 "---------------------------------------------------------------------
-filetype plugin indent on
-" `syntax enable` is prefered to `syntax on`
-if !exists("g:syntax_on")
-    syntax enable
-endif
+" Start NERDTree automatically if vim is started with a filename
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0
+    \&& !exists('s:std_in')
+    \| NERDTree
+    \| endif
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1
+    \&& winnr('$') == 1
+    \&& exists('b:NERDTree')
+    \&& b:NERDTree.isTabTree()
+    \| call feedkeys(":quit\<CR>:\<BS>")
+    \| endif
 let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
+" Open current working directory with F11
+map <F11> :NERDTreeCWD<CR>
+" Toggle NerdTree with F12
+map <F12> :NERDTreeToggle<CR>
+"---------------------------------------------------------------------
+" FZF.vim
+"---------------------------------------------------------------------
+if trim(system('uname -s')) == "Darwin"
+    set rtp+=/opt/homebrew/opt/fzf
+else
+    " FZF installed in home directory
+    set rtp+=~/.fzf
+endif
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window = ['hidden,right,50%,<70(up,40%)', 'ctrl-/']
+let g:fzf_vim.commits_log_options = '--graph --color=always'
+let g:fzf_vim.tags_command = 'ctags -R'
+let g:fzf_vim.listproc_rg = { list -> fzf#vim#listproc#location(list) }
+" FZF key-mappings:
+nmap <silent> <leader><Tab> <Plug>(fzf-maps-n)
+xmap <silent> <leader><Tab> <Plug>(fzf-maps-x)
+omap <silent> <leader><Tab> <Plug>(fzf-maps-o)
+imap <C-X><C-K> <Plug>(fzf-complete-word)
+imap <C-X><C-F> <Plug>(fzf-complete-path)
+imap <C-X><C-L> <Plug>(fzf-complete-line)
 "---------------------------------------------------------------------
 " Folding
 "---------------------------------------------------------------------
@@ -124,7 +164,7 @@ nmap <silent> <leader>h :ALEHover<CR>
 nmap <silent> =ai :ALEInfo<CR>
 
 "---------------------------------------------------------------------
-" Setup airline status bar and NerdTree:
+" Setup airline status bar:
 "---------------------------------------------------------------------
 " Airline formatter:
 let g:airline#extensions#tabline#formatter = 'default'
@@ -138,10 +178,6 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 " Make the bar toggle w/ F10
 map <F10> :AirlineToggle<CR>
-" Open current working directory with F11
-map <F11> :NERDTreeCWD<CR>
-" Toggle NerdTree with F12
-map <F12> :NERDTreeToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
