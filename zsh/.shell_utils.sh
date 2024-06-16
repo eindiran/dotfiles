@@ -458,3 +458,12 @@ dotfiles() {
 meld() {
     /Applications/Meld.app/Contents/MacOS/Meld "$@"
 }
+
+sbs() {
+    # Toggle side-by-side mode for git-delta
+    if [[ "${DELTA_FEATURES:-EMPTY}" != "EMPTY" ]]; then
+        unset DELTA_FEATURES
+    else
+        export DELTA_FEATURES="+side-by-side +line-numbers"
+    fi
+}

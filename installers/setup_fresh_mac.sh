@@ -45,12 +45,12 @@ echo "Installing brew..."
 # Install brew packages:
 echo "Installing brew formulae..."
 
-brew install cairo cmake coreutils difftastic expect ffmpeg fzf \
-    fastfetch gdk-pixbuf gh ghostscript git-lfs gnu-sed gnupg go \
-    gobject-introspection htop imagemagick java jq librsvg \
-    lsd mactex macvim nodejs pandoc pkg-config poppler python \
-    python-setuptools rename shellcheck thefuck tmux tree watch \
-    wget youtube-dl zoxide shfmt
+brew install ansifilter cairo cmake coreutils expect ffmpeg fzf \
+    fastfetch gdk-pixbuf gh ghostscript git git-delta git-lfs gnu-sed \
+    gnupg go gobject-introspection htop imagemagick java jq librsvg \
+    lsd mactex macvim nodejs pandoc perl pkg-config poppler python \
+    python-setuptools rename shellcheck shfmt thefuck tmux tree universal-ctags \
+    watch wget youtube-dl zoxide
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
