@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Sun 16 Jun 2024
-" VERSION: 1.5.3
+" VERSION: 1.5.4
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -145,7 +145,7 @@ let g:ale_linters = {
     \'rust': ['cargo', 'rustc'],
     \'sh': ['shellcheck'],
     \'vue': ['eslint', 'stylelint', 'vls'],
-    \}
+\}
 " Alias Vue to support linting/fixing/highlighting with all the
 " relevant filetypes.
 let g:ale_linter_aliases = {'vue': ['vue', 'css', 'javascript', 'html']}
@@ -161,8 +161,7 @@ let g:ale_fixers = {
     \'vue': ['eslint', 'prettier'],
     \'yaml': ['prettier'],
     \'*': ['remove_trailing_lines', 'trim_whitespace'],
-    \}
-let g:ale_python_pylint_options = '--rcfile '.expand('~/.pylintrc')
+\}
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
 nmap <silent> =aj :ALENext<CR>
 nmap <silent> <leader>j :ALENext<CR>
@@ -224,7 +223,6 @@ colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
 "---------------------------------------------------------------------
 set hidden " Helps windows by not allowing buffers to tamper w/ them
 set backspace=indent,eol,start
-let g:vimwiki_list=[{'path': '~/.wiki/'}]
 "---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
@@ -240,7 +238,6 @@ let g:ycm_filetype_blacklist={
     \'tagbar':1,
     \'pandoc':1,
     \'qf':1,
-    \'vimwiki':1,
     \'infolog':1,
     \'mail':1,
     \'org':1
@@ -276,8 +273,41 @@ set list
 set listchars=tab:▸·,trail:·,nbsp:·
 " The above shows what whitespace is tabs
 "---------------------------------------------------------------------
-set wildignore=*.swp,*.bak,*.pyc,*.class,*.o
-" Ignore these (this is like a gitignore)
+" Dynamically set wildignore from .gitignore:
+" Try to use local gitignore, or global one if we can't find or can't
+" load the local one.
+let gitignore_file = (
+    \filereadable('.gitignore')
+    \? '.gitignore'
+    \: '~/.gitignore'
+\)
+if filereadable(gitignore_file)
+    let ignore_string = ''
+    for line in readfile(gitignore_file)
+        let line = substitute(line, '\s|\n|\r', '', 'g')
+        if line =~ '^ *#' | con | endif
+        if line == '^ *$' | con  | endif
+        if line =~ '^!' | con  | endif
+        if line =~ '/$' | let ignore_string .= ',' . line . '*' | con | endif
+        let ignore_string .= ',' . line
+    endfor
+    let ignore_string = substitute(ignore_string, ',,\+', ',', 'g')
+    let ignore_string = join(
+        \uniq(
+            \sort(
+                \split(ignore_string, ',')
+            \)
+        \),
+        \',',
+    \)
+    let exec_string = 'set wildignore+='.substitute(
+        \ignore_string,
+        \'^,\+',
+        \'',
+        \'g'
+    \)
+    execute exec_string
+endif
 "---------------------------------------------------------------------
 set visualbell    " Don't beep
 set noerrorbells  " Don't beep

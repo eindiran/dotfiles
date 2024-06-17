@@ -119,7 +119,7 @@ python3 -m venv ~/.venv
 source ~/.venv/bin/activate
 echo "Installing common pip packages..."
 pip install PyGObject art build coverage matplotlib meson mypy ninja \
-    numpy opencv pandas pango pillow precommit pycairo pylint qrcode \
-    ruff scipy setuptools setuptools sphinx torch twine wheel
+    numpy opencv pandas pango pillow precommit pycairo qrcode ruff scipy \
+    setuptools setuptools sphinx torch twine wheel
 echo "Setup completed!"
 fastfetch
