@@ -266,7 +266,7 @@ which_editor() {
             echo "No default editor set in \$EDITOR."
         else
             # Otherwise, send along path to executable of valid editor
-                >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
+                    >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
             which vi
         fi
     else
@@ -466,4 +466,17 @@ sbs() {
     else
         export DELTA_FEATURES="+side-by-side +line-numbers"
     fi
+}
+
+monday() {
+    echo "Running omz update"
+    omz update
+    echo "Running brew update"
+    brew update
+    echo "Running brew upgrade"
+    brew upgrade
+    echo "Running brew cleanup"
+    brew cleanup
+    echo "Syncing dotfiles"
+    ( cd ~/Workspace/dotfiles/ && git pull )
 }
