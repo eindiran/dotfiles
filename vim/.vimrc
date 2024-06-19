@@ -46,6 +46,7 @@ Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
 Plug 'tmux-plugins/vim-tmux'               " For vim-tmux integration
 Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
 Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the clipboard
+Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
 Plug 'tpope/vim-commentary'                " Commenting keybinds
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
@@ -336,6 +337,14 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 nmap ,cw :bcw
+"---------------------------------------------------------------------
+" Buffer controls
+"---------------------------------------------------------------------
+" Cycle through the buffers with \\ (forward) and \| (backwards)
+nnoremap <nowait><silent> <Leader><Leader> :bn<CR>
+nnoremap <nowait><silent> <Leader><Bar> :bp<CR>
+" Hop to the alternate file buffer with -
+nnoremap <silent> - <C-^>
 "---------------------------------------------------------------------
 " Set behaviors on buffer load for specific filetypes:
 "---------------------------------------------------------------------
