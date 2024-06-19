@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Sun 16 Jun 2024
-" VERSION: 1.5.4
+" LAST MODIFIED: Tue 18 Jun 2024
+" VERSION: 1.5.5
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -14,12 +14,11 @@ set encoding=utf-8
 set autoread
 " Use `autoread`, for `vim-tmux-focus-events`
 set term=xterm-256color
-"---------------------------------------------------------------------
 " Enable filetype detection, with plugin and indent; see
 " :help filetype for more info.
 filetype plugin indent on
 " `syntax enable` is prefered to `syntax on`
-if !exists("g:syntax_on")
+if !exists('g:syntax_on')
     syntax enable
 endif
 "---------------------------------------------------------------------
@@ -84,6 +83,7 @@ autocmd BufEnter * if tabpagenr('$') == 1
     \| call feedkeys(":quit\<CR>:\<BS>")
     \| endif
 let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
+let NERDTreeShowHidden=1  " Show hidden/dot files by default
 " Open current working directory with F11
 map <F11> :NERDTreeCWD<CR>
 " Toggle NerdTree with F12
@@ -91,7 +91,7 @@ map <F12> :NERDTreeToggle<CR>
 "---------------------------------------------------------------------
 " FZF.vim
 "---------------------------------------------------------------------
-if trim(system('uname -s')) == "Darwin"
+if trim(system('uname -s')) ==? 'Darwin'
     set rtp+=/opt/homebrew/opt/fzf
 else
     " FZF installed in home directory
@@ -217,16 +217,10 @@ map <silent> <F10> :AirlineToggle<CR>
 "---------------------------------------------------------------------
 set background=dark   " options: <light, dark>
 colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
-" Can use wal to do dynamic color schemes with pywal
-"---------------------------------------------------------------------
-" Misc
-"---------------------------------------------------------------------
-set hidden " Helps windows by not allowing buffers to tamper w/ them
-set backspace=indent,eol,start
 "---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
-if trim(system('uname -s')) == "Darwin"
+if trim(system('uname -s')) ==? 'Darwin'
     " On macOS, make sure we set up some fiddly bits for YCM
     let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
     " let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
@@ -243,35 +237,43 @@ let g:ycm_filetype_blacklist={
     \'org':1
     \}
 "---------------------------------------------------------------------
-" Spaces & Tabs
+" Spaces, Tabs, and indenting behavior:
+"---------------------------------------------------------------------
 set tabstop=4          " 4 space per tab press
 set expandtab          " Use spaces for tabs
 set softtabstop=4      " 4 space per tab press
-set shiftwidth=4       " "
-set shiftround         " "
-set virtualedit=all    " Allow typing past the final char in a line.
+set shiftwidth=4       " 4 spaces per shift (>)
+set shiftround         " Round indentation to a multiple of shiftwidth
+set virtualedit=all    " Allow movement/insert past the final char in a line
+set autoindent         " Copy indent level from previous line
+set copyindent         " Use the whitespace characters of the previous line
 "---------------------------------------------------------------------
-" Indenting behavior
+" UI
 "---------------------------------------------------------------------
-set autoindent
-set copyindent
-"---------------------------------------------------------------------
-" UI Layout
-"---------------------------------------------------------------------
-set ruler
+set ruler                 " Show line and char/column numbers
 set wrap                  " Do line wrapping
 set number                " Show line numbers
-set ignorecase            " Ignore case when searching
 set hlsearch              " Highlight all matches
-set smartcase
-" macOS - see here:
-" https://stackoverflow.com/questions/17561706/vim-yank-does-not-seem-to-work
-" Linux - see here: vim.wikia.com/wiki/VimTip21
-set clipboard^=unnamed,unnamedplus
-"---------------------------------------------------------------------
+set visualbell            " Don't beep
+set noerrorbells          " Don't beep
+set hidden                " Helps windows by not allowing buffers to tamper w/ them
+set backspace=indent,eol,start
+" The below two lines show which whitespace is tabs vs spaces
 set list
 set listchars=tab:▸·,trail:·,nbsp:·
-" The above shows what whitespace is tabs
+" Make vim use the system clipboard:
+" macOS - see here: https://stackoverflow.com/questions/17561706/
+" Linux - see here: https://vim.wikia.com/wiki/VimTip21
+set clipboard^=unnamed,unnamedplus
+" Maps <F5> key to copying the entire text file to the system clipboard
+nnoremap <silent> <F5> :%y+ <CR>
+"---------------------------------------------------------------------
+" Case sensitivity:
+"---------------------------------------------------------------------
+set ignorecase            " Ignore case when searching
+set smartcase             " Case-insensitive if all chars are lowercase
+" Map F9 to case sensitivity toggle:
+nnoremap <silent> <F9> :set ignorecase! ignorecase?<CR>:set smartcase! smartcase?<CR>
 "---------------------------------------------------------------------
 " Dynamically set wildignore from .gitignore:
 " Try to use local gitignore, or global one if we can't find or can't
@@ -285,10 +287,14 @@ if filereadable(gitignore_file)
     let ignore_string = ''
     for line in readfile(gitignore_file)
         let line = substitute(line, '\s|\n|\r', '', 'g')
-        if line =~ '^ *#' | con | endif
-        if line == '^ *$' | con  | endif
-        if line =~ '^!' | con  | endif
-        if line =~ '/$' | let ignore_string .= ',' . line . '*' | con | endif
+        if line =~ '^<<\+' | continue | endif  " Git conflict marker
+        if line =~ '^>>\+' | continue | endif  " Git conflict marker
+        if line =~ '^==\+' | continue | endif  " Git conflict marker
+        if line =~ '^ *#'  | continue | endif  " Comment line
+        if line =~ '^\s*$' | continue | endif  " Whitespace-only line
+        if line =~ '^!'    | continue | endif  " Negation line
+        " Continuation lines:
+        if line =~ '/$' | let ignore_string .= ',' . line . '*' | continue | endif
         let ignore_string .= ',' . line
     endfor
     let ignore_string = substitute(ignore_string, ',,\+', ',', 'g')
@@ -309,32 +315,27 @@ if filereadable(gitignore_file)
     execute exec_string
 endif
 "---------------------------------------------------------------------
-set visualbell    " Don't beep
-set noerrorbells  " Don't beep
+" Paragraph formatting
 "---------------------------------------------------------------------
 " Use Q for formatting the current paragraph (or selection)
 vmap Q gq
 nmap Q gqap
+" Remove all trailing whitespace by pressing F6
+nnoremap <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 "---------------------------------------------------------------------
-" Let j and k behave more naturally on wrapped lines
-onoremap <silent> j gj
-onoremap <silent> k gk
+" Window controls
 "---------------------------------------------------------------------
 set splitbelow
 set splitright
+" Let j and k behave more naturally on wrapped lines
+onoremap <silent> j gj
+onoremap <silent> k gk
 " Easy window navigation
 map <C-H> <C-W>h
 map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 nmap ,cw :bcw
-"---------------------------------------------------------------------
-" Maps <F5> key to copying the entire text file to the system clipboard
-nnoremap <silent> <F5> :%y+ <CR>
-" Remove all trailing whitespace by pressing F6
-nnoremap <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
-"---------------------------------------------------------------------
-:let g:LargeFile=100
 "---------------------------------------------------------------------
 " Set Language File Extensions For Those Not Natively Supported
 "---------------------------------------------------------------------
@@ -515,7 +516,7 @@ autocmd FileType go nmap <silent> <leader>d  <Plug>(go-doc)
 "---------------------------------------------------------------------
 " rust.vim
 "---------------------------------------------------------------------
-if trim(system('uname -s')) == "Darwin"
+if trim(system('uname -s')) ==? 'Darwin'
     " macOS
     let g:rust_clip_command = 'pbcopy'
 else
@@ -595,6 +596,6 @@ nnoremap <nowait><silent> <C-C> :messages clear<CR>
 " Allow writes to files owned by root using `w!!`
 cnoremap w!! w !sudo tee %
 " Sort words in a line in normal mode:
-nnoremap <silent> =sw :call setline('.', join(sort(split(getline('.'), ' ')), " "))<CR>
+nnoremap <silent> =sw :call setline('.', join(sort(split(getline('.'), ' ')), ' '))<CR>
 nnoremap <silent> =sa :%!sort<CR>
 nnoremap <silent> =sn :%!sort -n<CR>
