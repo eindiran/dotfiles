@@ -1,10 +1,10 @@
-"---------------------------------------------------------------------
+"'---------------------------------------------------------------------
 " FILE: .vimrc
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 18 Jun 2024
-" VERSION: 1.5.5
+" LAST MODIFIED: Wed 19 Jun 2024
+" VERSION: 1.5.6
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -49,6 +49,7 @@ Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the c
 Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
 Plug 'tpope/vim-commentary'                " Commenting keybinds
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
+Plug 'tpope/vim-repeat'                    " Make . handle commentary and surround
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
