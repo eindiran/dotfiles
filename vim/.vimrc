@@ -103,9 +103,9 @@ let g:fzf_vim.commits_log_options = '--graph --color=always'
 let g:fzf_vim.tags_command = 'ctags -R'
 let g:fzf_vim.listproc_rg = { list -> fzf#vim#listproc#location(list) }
 " FZF key-mappings:
-nmap <silent> <leader><Tab> <Plug>(fzf-maps-n)
-xmap <silent> <leader><Tab> <Plug>(fzf-maps-x)
-omap <silent> <leader><Tab> <Plug>(fzf-maps-o)
+nmap <silent> <Leader><Tab> <Plug>(fzf-maps-n)
+xmap <silent> <Leader><Tab> <Plug>(fzf-maps-x)
+omap <silent> <Leader><Tab> <Plug>(fzf-maps-o)
 imap <C-X><C-K> <Plug>(fzf-complete-word)
 imap <C-X><C-F> <Plug>(fzf-complete-path)
 imap <C-X><C-L> <Plug>(fzf-complete-line)
@@ -117,14 +117,14 @@ set foldmethod=syntax  " Fold by syntax rather than indent or manual
 set foldlevelstart=99  " All folds open on file open; can be overriden
 " on some filetypes/plugins. Eg vim-markdown folds much more aggressively
 " Unfold w/ spacebar
-nnoremap <silent> <space> @=(foldlevel('.')?'za':"\<space>")<CR>
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 " Reset folds with spacebar minus
-nnoremap <silent> <space>- :e!<CR>
+nnoremap <silent> <Space>- :e!<CR>
 " Totally unfold everything
-nnoremap <silent> <space>+ @=(foldlevel('.')?'zR':"\<space>")<CR>
+nnoremap <silent> <Space>+ @=(foldlevel('.')?'zR':"\<Space>")<CR>
 " Totally refold everything
-nmap <silent> <space>= zM<CR>
-vnoremap <space> zf
+nmap <silent> <Space>= zM<CR>
+vnoremap <Space> zf
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
@@ -164,11 +164,11 @@ let g:ale_fixers = {
 \}
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
 nmap <silent> =aj :ALENext<CR>
-nmap <silent> <leader>j :ALENext<CR>
+nmap <silent> <Leader>j :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>
-nmap <silent> <leader>k :ALEPrevious<CR>
+nmap <silent> <Leader>k :ALEPrevious<CR>
 nmap <silent> =ad :ALEGoToDefinition<CR>
-nmap <silent> <leader>h :ALEHover<CR>
+nmap <silent> <Leader>h :ALEHover<CR>
 nmap <silent> =ai :ALEInfo<CR>
 " Function to disable all ALE fixing and linting
 function! DisableALE()
@@ -508,11 +508,11 @@ endfunction
 " Map keys for most used commands.
 " EX: `\b` for building, `\r` for running, `\t` for running tests,
 " `\i` for running 'go install' and `\d` for getting docs.
-autocmd FileType go nmap <silent> <leader>b :call BuildGoFiles()<CR>
-autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
-autocmd FileType go nmap <silent> <leader>i  <Plug>(go-install)
-autocmd FileType go nmap <silent> <leader>d  <Plug>(go-doc)
+autocmd FileType go nmap <silent> <Leader>b :call BuildGoFiles()<CR>
+autocmd FileType go nmap <silent> <Leader>r  <Plug>(go-run)
+autocmd FileType go nmap <silent> <Leader>t  <Plug>(go-test)
+autocmd FileType go nmap <silent> <Leader>i  <Plug>(go-install)
+autocmd FileType go nmap <silent> <Leader>d  <Plug>(go-doc)
 "---------------------------------------------------------------------
 " rust.vim
 "---------------------------------------------------------------------
@@ -567,7 +567,7 @@ function! DeleteConflictSection()
     :,/\v(\<{7}|\={7}|\>{7})/-d
 endfunction
 nnoremap <silent> =d :call DeleteConflictSection()<CR>
-nnoremap <leader>gd :Gvdiff<CR>
+nnoremap <Leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
 "---------------------------------------------------------------------
