@@ -337,7 +337,7 @@ map <C-K> <C-W>k
 map <C-L> <C-W>l
 nmap ,cw :bcw
 "---------------------------------------------------------------------
-" Set Language File Extensions For Those Not Natively Supported
+" Set behaviors on buffer load for specific filetypes:
 "---------------------------------------------------------------------
 " *.groovy & *.gradle --> Groovy
 au BufNewFile,BufRead *.groovy,*.gradle setf groovy
@@ -408,12 +408,6 @@ function! s:subst(start, end, pat, rep)
         endif
         let lineno = lineno + 1
     endwhile
-endfunction
-"---------------------------------------------------------------------
-" Function for counting from start of a visual block
-"---------------------------------------------------------------------
-function Vline()
-    return line(".")-line("'<")+1
 endfunction
 "---------------------------------------------------------------------
 " Toggle between relativenumber and norelativenumber
