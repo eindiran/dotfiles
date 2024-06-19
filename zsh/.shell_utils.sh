@@ -266,7 +266,7 @@ which_editor() {
             echo "No default editor set in \$EDITOR."
         else
             # Otherwise, send along path to executable of valid editor
-                    >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
+                            >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
             which vi
         fi
     else
@@ -479,4 +479,9 @@ monday() {
     brew cleanup
     echo "Syncing dotfiles"
     ( cd ~/Workspace/dotfiles/ && git pull )
+}
+
+workspace() {
+    # shellcheck disable=SC2164
+    cd ~/Workspace
 }
