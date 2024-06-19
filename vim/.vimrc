@@ -39,7 +39,6 @@ call plug#begin()
 " General plugins:
 "---------------------------------------------------------------------
 Plug 'ycm-core/YouCompleteMe'              " Code Completion plugin
-Plug 'puremourning/vimspector'             " Debugger
 Plug 'dense-analysis/ale'                  " Multi lang linting manager
 Plug 'vim-airline/vim-airline'             " Use the vim-airline status bar
 Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
@@ -55,6 +54,8 @@ Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
+Plug 'puremourning/vimspector',
+    \{ 'do': ':VimspectorInstall' }        " Debugger
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
@@ -68,6 +69,26 @@ Plug 'posva/vim-vue'                                " Vue support
 Plug 'godlygeek/tabular'                            " Markdown dep
 Plug 'preservim/vim-markdown'                       " Markdown
 call plug#end()
+"---------------------------------------------------------------------
+" vimspector
+"---------------------------------------------------------------------
+let g:vimspector_install_gadgets = ['debugpy', 'CodeLLDB']
+nmap <silent> <Leader><F3>  <Plug>VimspectorStop
+nmap <silent> <Leader><F4>  <Plug>VimspectorRestart
+nmap <silent> <Leader><F5>  <Plug>VimspectorContinue
+nmap <silent> <Leader><F6>  <Plug>VimspectorPause
+nmap <silent> <Leader><F7>  <Plug>VimspectorRunToCursor
+nmap <silent> <Leader><F8>  <Plug>VimspectorToggleConditionalBreakpoint
+nmap <silent> <Leader><F9>  <Plug>VimspectorToggleBreakpoint
+nmap <silent> <Leader><F10> <Plug>VimspectorStepOver
+nmap <silent> <Leader><F11> <Plug>VimspectorStepInto
+nmap <silent> <Leader><F12> <Plug>VimspectorStepOut
+nmap <silent> <Leader>di    <Plug>VimspectorBalloonEval
+xmap <silent> <Leader>di    <Plug>VimspectorBalloonEval
+nmap <silent> =<F11>        <Plug>VimspectorUpFrame
+nmap <silent> =<F12>        <Plug>VimspectorDownFrame
+nmap <silent> <Leader>b     <Plug>VimspectorBreakpoints
+nmap <silent> <Leader><C-D> <Plug>VimspectorDisassemble
 "---------------------------------------------------------------------
 " NERDTree
 "---------------------------------------------------------------------
@@ -108,9 +129,11 @@ let g:fzf_vim.listproc_rg = { list -> fzf#vim#listproc#location(list) }
 nmap <silent> <Leader><Tab> <Plug>(fzf-maps-n)
 xmap <silent> <Leader><Tab> <Plug>(fzf-maps-x)
 omap <silent> <Leader><Tab> <Plug>(fzf-maps-o)
-imap <C-X><C-K> <Plug>(fzf-complete-word)
-imap <C-X><C-F> <Plug>(fzf-complete-path)
+imap <C-X><C-W> <Plug>(fzf-complete-word)
+imap <expr> <C-X><C-P> fzf#vim#complete#path('fd')
+imap <expr> <C-X><C-F> fzf#vim#complete#path('fd -t f')
 imap <C-X><C-L> <Plug>(fzf-complete-line)
+imap <C-X><C-B> <Plug>(fzf-complete-buffer-line)
 "---------------------------------------------------------------------
 " Folding
 "---------------------------------------------------------------------
@@ -210,6 +233,8 @@ let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#ycm#enabled = 1
 " Support using the status bar with NerdTree:
 let g:airline#extensions#nerdtree#enabled = 1
+" Support using the status bar with FZF.vim:
+let g:airline#extensions#fzf#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 " Make the bar toggle w/ F10
@@ -267,8 +292,8 @@ set listchars=tab:▸·,trail:·,nbsp:·
 " macOS - see here: https://stackoverflow.com/questions/17561706/
 " Linux - see here: https://vim.wikia.com/wiki/VimTip21
 set clipboard^=unnamed,unnamedplus
-" Maps <F5> key to copying the entire text file to the system clipboard
-nnoremap <silent> <F5> :%y+ <CR>
+" Maps <F4> key to copying the entire text file to the system clipboard
+nnoremap <silent> <F4> :%y+ <CR>
 "---------------------------------------------------------------------
 " Case sensitivity:
 "---------------------------------------------------------------------
