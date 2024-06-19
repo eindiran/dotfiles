@@ -588,7 +588,7 @@ nnoremap <nowait><silent> <CR> :noh<CR><CR>
 " Delete messages buffer
 nnoremap <nowait><silent> <C-C> :messages clear<CR>
 " Allow writes to files owned by root using `w!!`
-cnoremap w!! w !sudo tee %
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <Bar> edit!
 " Sort words in a line in normal mode:
 nnoremap <silent> =sw :call setline('.', join(sort(split(getline('.'), ' ')), ' '))<CR>
 nnoremap <silent> =sa :%!sort<CR>
