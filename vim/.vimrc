@@ -4,7 +4,7 @@
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
 " LAST MODIFIED: Wed 19 Jun 2024
-" VERSION: 1.5.6
+" VERSION: 1.5.7
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -44,7 +44,7 @@ Plug 'vim-airline/vim-airline'             " Use the vim-airline status bar
 Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
 Plug 'tmux-plugins/vim-tmux'               " For vim-tmux integration
 Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
-Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration, for the clipboard
+Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration w/ clipboard
 Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
 Plug 'tpope/vim-commentary'                " Commenting keybinds
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
@@ -59,15 +59,16 @@ Plug 'puremourning/vimspector',
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
-Plug 'eindiran/awk-support'                         " awk support
-Plug 'eindiran/c-support'                           " C/C++ support
-Plug 'eindiran/bash-support.vim'                    " Shell scripting integration
-Plug 'tmhedberg/SimpylFold'                         " Python folding
-Plug 'rust-lang/rust.vim'                           " Rust support
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }  " Go support
-Plug 'posva/vim-vue'                                " Vue support
-Plug 'godlygeek/tabular'                            " Markdown dep
-Plug 'preservim/vim-markdown'                       " Markdown
+Plug 'eindiran/awk-support'                " awk support
+Plug 'eindiran/c-support'                  " C/C++ support
+Plug 'eindiran/bash-support.vim'           " Shell scripting integration
+Plug 'tmhedberg/SimpylFold'                " Python folding
+Plug 'rust-lang/rust.vim'                  " Rust support
+Plug 'posva/vim-vue'                       " Vue support
+Plug 'godlygeek/tabular'                   " Markdown dep
+Plug 'preservim/vim-markdown'              " Markdown
+Plug 'fatih/vim-go',
+    \{ 'do': ':GoUpdateBinaries' }         " Go support
 call plug#end()
 "---------------------------------------------------------------------
 " vimspector
