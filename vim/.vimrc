@@ -85,9 +85,9 @@ autocmd BufEnter * if tabpagenr('$') == 1
 let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
 let NERDTreeShowHidden=1  " Show hidden/dot files by default
 " Open current working directory with F11
-map <F11> :NERDTreeCWD<CR>
+nmap <F11> :NERDTreeCWD<CR>
 " Toggle NerdTree with F12
-map <F12> :NERDTreeToggle<CR>
+nmap <F12> :NERDTreeToggle<CR>
 "---------------------------------------------------------------------
 " FZF.vim
 "---------------------------------------------------------------------
@@ -196,7 +196,7 @@ function! ToggleALE()
 endfunction
 nmap <silent> =da :call DisableALE()<CR>
 nmap <silent> =ea :call EnableALE()<CR>
-map <silent> <F2> :call ToggleALE()<CR>
+nmap <silent> <F2> :call ToggleALE()<CR>
 "---------------------------------------------------------------------
 " Setup airline status bar:
 "---------------------------------------------------------------------
@@ -211,7 +211,7 @@ let g:airline#extensions#nerdtree#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_gruvbox_dark_hard'
 " Make the bar toggle w/ F10
-map <silent> <F10> :AirlineToggle<CR>
+nmap <silent> <F10> :AirlineToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
