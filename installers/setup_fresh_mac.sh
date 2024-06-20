@@ -48,7 +48,7 @@ echo "Installing brew formulae..."
 brew install ansifilter cairo cmake coreutils expect fastfetch \
     ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
     gnu-sed gnupg go gobject-introspection htop imagemagick java \
-    jq librsvg lsd mactex macvim nodejs pandoc perl pkg-config \
+    jq librsvg llvm lsd mactex macvim nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
     zoxide
