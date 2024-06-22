@@ -17,16 +17,16 @@ extract() {
     # Most common archive types are currently supported
     # Support for new types can be added using the "case" block below:
     if [[ -z "$1" ]] || [ "$1" = "--help" ]; then
-            >&2 echo "extract() -- Decompress common archive formats with a single command."
-            >&2 echo
-            >&2 echo "Usage: extract foo.<filetype>"
-            >&2 echo "Example: extract foo.tar.gz"
-            >&2 echo
-            >&2 echo "extract() supports the following archive types:"
+        echo "extract() -- Decompress common archive formats with a single command."
+        echo
+        echo "Usage: extract foo.<filetype>"
+        echo "Example: extract foo.tar.gz"
+        echo
+        echo "extract() supports the following archive types:"
         for formatname in "${SUPPORTED_FORMATS[@]}"; do
-                >&2 printf "\t* .%s\n" "${formatname}"
+            printf "\t* .%s\n" "${formatname}"
         done
-        return
+        return 0
     elif [[ -f "$1" ]]; then
         case "$1" in
             *.tar)        tar xvf "$1"                  ;;  # tar
@@ -96,13 +96,13 @@ extract() {
             ### Everything has failed to be matched; unknown file extension ###
             ###################################################################
             *)
-                    >&2 echo "Encountered unknown type (${1##*.}) with file: $1"
+                echo "Encountered unknown type (${1##*.}) with file: $1"
                 return 1
                 ;;
         esac
     else
-            >&2 echo "'$1', with filetype '${1##*.}', cannot be found."
-            >&2 echo "Check if the file exists with:  stat '$1'"
+        echo "'$1', with filetype '${1##*.}', cannot be found."
+        echo "Check if the file exists with:  stat '$1'"
         return 1
     fi
 }
@@ -150,7 +150,7 @@ ljar() {
 mcd() {
     # Make a new directory, then cd into it
     mkdir -p "$1"
-    cd "$1" || exit 1
+    cd "$1" || return 1
     pwd
 }
 

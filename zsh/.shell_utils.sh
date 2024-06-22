@@ -109,11 +109,15 @@ jj() {
 }
 
 jjc() {
-    # Compile Java files into a JAR file
-    mkdir -p ./build
-    javac -d ./build ./*.java
-    cd ./build || exit
-    jar cvf "$@" ./*
+    (   
+        # Use a subshell with set -e
+        set -e
+        # Compile Java files into a JAR file
+        mkdir -p ./build
+        javac -d ./build ./*.java
+        cd ./build
+        jar cvf "$@" ./*
+    )
 }
 
 ssh() {
@@ -250,27 +254,6 @@ nhistory() {
         history 0 | tail -n 100
     else
         history 0 | tail -n "$1"
-    fi
-}
-
-which_shell() {
-    # Find which shell is running
-    which "$(ps -p "$$" | tail -n 1 | awk '{print $NF}')"
-}
-
-which_editor() {
-    # Find out the default editor
-    if [ -z "$EDITOR" ]; then
-        if [ -t 1 ]; then
-            # If output is to a terminal just print info
-            echo "No default editor set in \$EDITOR."
-        else
-            # Otherwise, send along path to executable of valid editor
-                                                                        >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
-            which vi
-        fi
-    else
-        echo "$EDITOR"
     fi
 }
 
@@ -452,7 +435,7 @@ resign_discord() {
 
 dotfiles() {
     # Go to my dotfiles directory, since they are symlinked from home:
-    cd "${WORKSPACE}/dotfiles/" || exit 1
+    cd "${WORKSPACE}/dotfiles/"
 }
 
 meld() {
@@ -469,25 +452,29 @@ sbs() {
 }
 
 monday() {
-    echo "Running omz update"
-    # Upgrade via upgrade.sh directly:
-    if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
-        "${ZSH}/tools/upgrade.sh"
-    fi
-    echo "New omz version: $(omz version)"
-    echo "Running brew update"
-    brew update --verbose
-    echo "Brew version: $(brew --version)"
-    echo "Running brew upgrade"
-    brew upgrade --verbose
-    echo "Running brew cleanup"
-    brew cleanup --verbose
-    echo "Syncing dotfiles"
-    ( cd ~/Workspace/dotfiles/ && git pull )
+    (   
+        # Use a subshell with set -e
+        set -e
+        echo "Running omz update"
+        # Upgrade via upgrade.sh directly:
+        if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
+            "${ZSH}/tools/upgrade.sh"
+        fi
+        echo "New omz version: $(omz version)"
+        echo "Running brew update"
+        brew update --verbose
+        echo "Brew version: $(brew --version)"
+        echo "Running brew upgrade"
+        brew upgrade --verbose
+        echo "Running brew cleanup"
+        brew cleanup --verbose
+        echo "Syncing dotfiles"
+        (cd ~/Workspace/dotfiles/ && git pull)
+        echo "Updating vim-plug plugins"
+        "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
+        echo "Updates complete!"
+    )
     refresh
-    echo "Updating vim-plug plugins"
-    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-    echo "Updates complete!"
 }
 
 workspace() {

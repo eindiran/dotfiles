@@ -19,7 +19,7 @@ find_p4_commands() {
         # zsh version
         history 0 | cut -c 8- | rg --only-matching "^(p4 .*|p4[a-z]+)" | awk '{print $1, $2}' | sort | uniq -c | sort --numeric --reverse | rg "p4.*$"
     else
-        if [ ! -n "$BASH_VERSION" ]; then
+        if [ -z "$BASH_VERSION" ]; then
             echo "[WARNING] - This command may not work in your shell."
         fi
         # bash version
@@ -56,24 +56,29 @@ p4of() {
 
 p4e() {
     # Find all files matching a pattern and open them for edit
+    # shellcheck disable=SC2033
     fd -t file "$@" | xargs "p4" edit
 }
 
 p4a() {
     # Same as `p4e`, but for adding files
+    # shellcheck disable=SC2033
     fd -t file "$@" | xargs "p4" add
 }
 
 p4r() {
     # Same as `p4e`, but for reverting files
+    # shellcheck disable=SC2033
     fd -t file "$@" | xargs "p4" revert
 }
 
 p4d() {
     # Same as `p4e`, but for diffing files
+    # shellcheck disable=SC2033
     fd -t file "$@" | xargs "p4" diff | colordiff
 }
 
+# shellcheck disable=SC2033
 p4() {
     # Wrapper for the p4 command
     # Allows us to define p4 blame, log, etc
@@ -83,7 +88,7 @@ p4() {
             shift 1
             command p4 annotate "$@"
             ;;
-        shelves|shelves\ *)
+        shelves | shelves\ *)
             shift 1
             command p4 changes -u "$P4USER" -s shelved "$@"
             ;;
@@ -91,7 +96,7 @@ p4() {
             shift 1
             command p4 changes -s submitted "$@"
             ;;
-        commits|commits\ *)
+        commits | commits\ *)
             shift 1
             command p4 changes -u "$P4USER" -s submitted "$@"
             ;;
@@ -104,11 +109,11 @@ p4() {
             shift 1
             command p4 filelog "$@"
             ;;
-        submits|submits\ *)
+        submits | submits\ *)
             shift 1
             command p4 changes -u "$P4USER" -s submitted "$@"
             ;;
-        pending|pending\ *)
+        pending | pending\ *)
             shift 1
             command p4 changes -u "$P4USER" -s pending "$@"
             ;;
