@@ -105,7 +105,7 @@ git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=
 echo "Installing Vim plugins"
 cd ~/Workspace/dotfiles/vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-./install_plugins.sh
+./plugins.sh -i
 cd ~/.vim/plugged/YouCompleteMe
 python3 install.py --all
 
