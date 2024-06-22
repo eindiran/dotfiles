@@ -211,10 +211,13 @@ setopt PUSHD_MINUS
 
 #--------------------------------------------------------------------
 # Sourcing my scripts:
-[ -f ~/.env_variables ] && source ~/.env_variables
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+# env_variables and hidden.sh should never be checked in and will be
+# unique to each machine.
+[ -f ~/.env_variables ] && source ~/.env_variables
+[ -f ~/.hidden.sh ] && source ~/.hidden.sh
 #--------------------------------------------------------------------
 
 

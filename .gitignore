@@ -1,1 +1,3 @@
 zsh/hidden/*
+.env_variables
+.hidden.sh
