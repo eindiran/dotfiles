@@ -266,7 +266,7 @@ which_editor() {
             echo "No default editor set in \$EDITOR."
         else
             # Otherwise, send along path to executable of valid editor
-                                >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
+                                                        >&2 echo "No default editor set in \$EDITOR. Defaulting to vi."
             which vi
         fi
     else
@@ -470,15 +470,21 @@ sbs() {
 
 monday() {
     echo "Running omz update"
-    omz update
+    # Upgrade via upgrade.sh directly:
+    if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
+        "${ZSH}/tools/upgrade.sh"
+    fi
+    echo "New omz version: $(omz version)"
     echo "Running brew update"
-    brew update
+    brew update --verbose
+    echo "Brew version: $(brew --version)"
     echo "Running brew upgrade"
-    brew upgrade
+    brew upgrade --verbose
     echo "Running brew cleanup"
-    brew cleanup
+    brew cleanup --verbose
     echo "Syncing dotfiles"
     ( cd ~/Workspace/dotfiles/ && git pull )
+    refresh
 }
 
 workspace() {
