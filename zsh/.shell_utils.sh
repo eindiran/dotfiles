@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #===============================================================================
 #
 #          FILE: .shell_utils.sh
 #
 #         USAGE: ./.shell_utils.sh
 #
-#   DESCRIPTION: Add utility functions to the shell. Replaces a lot of aliases
-#                and functions in my .bashrc and .zshrc files.
+#   DESCRIPTION: Add utility functions to the shell. Intended to replace
+#                most of the utility functions and aliases in my .zshrc.
 #
 #         NOTES: Source this file in the rc file of your preferred shell.
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
@@ -141,17 +141,7 @@ fpdfgrep() {
 }
 
 zhg() {
-    # History grep: search your history
-    if [ -n "$ZSH_VERSION" ]; then
-        # zsh version
-        history 0 | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
-    else
-        if [ -z "$BASH_VERSION" ]; then
-            echo "[WARNING] - This command may not work in your shell."
-        fi
-        # bash version
-        history | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
-    fi
+    history 0 | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
 }
 
 history_commands() {
@@ -239,12 +229,6 @@ histsearch() {
     # Search through the history for a given word
     # fc -lim "$@" 1 # not as good
     history 0 | command grep --color=auto "$1"
-}
-
-bhistory() {
-    # Replace zsh's history command with one that behaves like
-    # bash's history command
-    history 0
 }
 
 nhistory() {
@@ -346,7 +330,7 @@ devices() {
                 ;;
             help | --help | -h)
                 echo "Usage: devices <arg>"
-                echo "where <arg> in [all, help, sata, disk, raid, usb, dram, audio, video]"
+                echo "where <arg>: [all, help, sata, disk, raid, usb, dram, audio, video]"
                 ;;
             *)
                 # Unknown args
@@ -455,24 +439,24 @@ monday() {
     (   
         # Use a subshell with set -e
         set -e
-        echo "Running omz update"
+        echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
         # Upgrade via upgrade.sh directly:
         if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
             "${ZSH}/tools/upgrade.sh"
         fi
-        echo "New omz version: $(omz version)"
-        echo "Running brew update"
+        echo "${HI_YELLOW}New omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
+        echo "${HI_YELLOW}Running brew update${ANSI_RESET}"
         brew update --verbose
-        echo "Brew version: $(brew --version)"
-        echo "Running brew upgrade"
+        echo "${HI_YELLOW}Brew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+        echo "${HI_YELLOW}Running brew upgrade${ANSI_RESET}"
         brew upgrade --verbose
-        echo "Running brew cleanup"
+        echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
         brew cleanup --verbose
-        echo "Syncing dotfiles"
+        echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
         (cd ~/Workspace/dotfiles/ && git pull)
-        echo "Updating vim-plug plugins"
+        echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
         "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-        echo "Updates complete!"
+        echo "${HI_YELLOW}Updates complete!${ANSI_RESET}"
     )
     refresh
 }

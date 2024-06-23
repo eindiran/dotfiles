@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #===============================================================================
 #
 #          FILE: plugins.sh
@@ -76,15 +76,15 @@ done
 shift $((OPTIND - 1))
 
 if [[ "${PLUG_INSTALL}" == true ]]; then
-    echo "Installing vim-plug plugins with vimrc: ${VIMRC_PATH}"
+    echo -e "${HI_GREEN}Installing vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
     install_vimplug_plugins "${VIMRC_PATH}"
 fi
 if [[ "${PLUG_UPDATE}" == true ]]; then
-    echo "Updating vim-plug plugins with vimrc: ${VIMRC_PATH}"
+    echo -e "${HI_GREEN}Updating vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
     update_vimplug_plugins "${VIMRC_PATH}"
 fi
 if [[ "${PLUG_CLEAN}" == true ]]; then
-    echo "Cleaning up vim-plug plugins with vimrc: ${VIMRC_PATH}"
+    echo -e "${HI_GREEN}Cleaning up vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
     clean_vimplug_plugins "${VIMRC_PATH}"
 fi
-echo "vim-plug setup complete!"
+echo -e "${HI_GREEN}vim-plug setup complete!${ANSI_RESET}"

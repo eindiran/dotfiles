@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #===============================================================================
 #
 #          FILE: install_dotfiles_macos.sh
