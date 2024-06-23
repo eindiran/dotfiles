@@ -305,7 +305,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     plugins=(
         iterm2
         macos
+        brew
         zsh-autosuggestions
+        zsh-completions
         zsh-history-substring-search
         zsh-syntax-highlighting
         zsh-fzf-history-search
@@ -318,6 +320,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 else
     plugins=(
         zsh-autosuggestions
+        zsh-completions
         zsh-history-substring-search
         zsh-syntax-highlighting
         zsh-fzf-history-search

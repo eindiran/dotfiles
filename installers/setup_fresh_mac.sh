@@ -52,6 +52,8 @@ brew install ansifilter cairo cmake coreutils expect fastfetch \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
     zoxide
+brew install --cask nikitabobko/tap/aerospace
+brew install --cask freecad
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
@@ -100,6 +102,10 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-
 git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
 git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search"
+git clone https://github.com/zsh-users/zsh-completions "${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions"
+
+# Add dragging window support
+defaults write -g NSWindowShouldDragOnGesture YES
 
 # Start setting up vim:
 echo "Installing Vim plugins"
