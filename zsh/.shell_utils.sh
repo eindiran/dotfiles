@@ -109,7 +109,7 @@ jj() {
 }
 
 jjc() {
-    (   
+    (
         # Use a subshell with set -e
         set -e
         # Compile Java files into a JAR file
@@ -436,7 +436,7 @@ sbs() {
 }
 
 monday() {
-    (   
+    (
         # Use a subshell with set -e
         set -e
         echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
@@ -457,8 +457,7 @@ monday() {
         echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
         "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
         echo "${HI_YELLOW}Updates complete!${ANSI_RESET}"
-    )
-    refresh
+    ) && refresh || echo "${HI_RED}monday() failed to complete!${ANSI_RESET}"
 }
 
 workspace() {
