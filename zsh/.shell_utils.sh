@@ -439,25 +439,46 @@ monday() {
     (
         # Use a subshell with set -e
         set -e
+        # OMZ updates:
+        echo "${HI_YELLOW}omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
         echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
         # Upgrade via upgrade.sh directly:
         if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
             "${ZSH}/tools/upgrade.sh"
         fi
         echo "${HI_YELLOW}New omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
+        echo
+        # Homebrew update:
+        echo "${HI_YELLOW}Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
         echo "${HI_YELLOW}Running brew update${ANSI_RESET}"
         brew update --verbose
-        echo "${HI_YELLOW}Brew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+        echo "${HI_YELLOW}New Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+        echo
+        # Homebrew package upgrades:
         echo "${HI_YELLOW}Running brew upgrade${ANSI_RESET}"
         brew upgrade --verbose
+        echo
+        # Homebrew cleanup:
         echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
         brew cleanup --verbose
-        echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
-        (cd ~/Workspace/dotfiles/ && git pull)
+        echo
+        # dotfile repo sync:
+        (
+            cd ~/Workspace/dotfiles/
+            echo "${HI_YELLOW}dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
+            echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
+            git pull
+            echo "${HI_YELLOW}New dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
+        )
+        echo
+        # vim-plug updates and cleanup:
         echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
+        # Install, then update, then clean
         "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-        echo "${HI_YELLOW}Updates complete!${ANSI_RESET}"
-    ) && refresh || echo "${HI_RED}monday() failed to complete!${ANSI_RESET}"
+        echo
+        # Final status:
+        echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
+    ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
 }
 
 workspace() {
