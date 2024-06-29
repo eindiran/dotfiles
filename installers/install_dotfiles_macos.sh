@@ -51,7 +51,7 @@ echo "Using dotfile path: ${dotfiles_dir}"
 echo "Using home path: ${HOME}"
 echo "Using user: ${current_user}"
 
-echo "Installing shell dotfiles, functions, and extensions:"
+echo "Installing shell dotfiles, functions, and extensions"
 for f in "${dotfiles_dir}"/zsh/.*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
@@ -65,24 +65,28 @@ if [ -d "${dotfiles_dir}/zsh/hidden/" ]; then
     done
 fi
 
-echo "Installing FZF dotfiles:"
+echo "Installing FZF dotfiles"
 ln -ns "${dotfiles_dir}/fzf" "${HOME}/.fzf"
 
-echo "Installing .vimrc:"
+echo "Installing .vimrc"
 ln -ns "${dotfiles_dir}/vim/.vimrc" "${HOME}/.vimrc"
 
-echo "Installing .tmux.conf:"
+echo "Installing .tmux.conf"
 ln -ns "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"
 ln -ns "${dotfiles_dir}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
 
-echo "Installing Git configs:"
+echo "Installing Git configs"
 for f in "${dotfiles_dir}"/git/.git*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
     ln -ns "${tf}" "${HOME}/${ff}"
 done
 
-echo "Installing miscellaneous configs:"
+echo "Installing htop config"
+mkdir -p "${HOME}/.config/htop"
+ln -fns "${dotfiles_dir}/misc/htoprc" "${HOME}/.config/htop/htoprc"
+
+echo "Installing miscellaneous configs"
 ln -ns "${dotfiles_dir}/misc/.fdignore" "${HOME}/.fdignore"
 ln -ns "${dotfiles_dir}/misc/.rgignore" "${HOME}/.rgignore"
 ln -ns "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
