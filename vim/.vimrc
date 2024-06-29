@@ -386,7 +386,8 @@ au BufNewFile,BufRead *.rst set filetype=rst foldmethod=indent
 " after all lines ending in space; combined with ALE settings, this
 " will then remove the space on save.
 " SEE: `:help fo-table` for more info on these.
-autocmd FileType rst setlocal formatoptions+=awn
+" autocmd FileType rst setlocal formatoptions+=awn
+" DISABLED FOR NOW
 " *.md --> Markdown
 " This is not required if using vim-markdown
 " au BufNewFile,BufRead *.md set filetype=markdown
