@@ -220,8 +220,7 @@ elif [[ "${OSTYPE}" =~ ^linux ]]; then
         # Create a dot-graph of the dependencies in a Makefile
         local TARGET_NAME
         if [ $# -gt 0 ]; then
-            TARGET_NAME="$1"
-            make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
+            make -Bnd "$@" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
         else
             make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
         fi
@@ -229,18 +228,29 @@ elif [[ "${OSTYPE}" =~ ^linux ]]; then
 fi
 
 lm() {
+    # ls -l to pager
     if [ $# -gt 0 ]; then
-        lh "$1" | bat
+        lh "$@" | bat
     else
         lh | bat
     fi
 }
 
-tm() {
+treep() {
+    # tree with pager
     if [ $# -gt 0 ]; then
-        tree -C "$1" | bat
+        tree -C "$@" | bat
     else
         tree -C | bat
+    fi
+}
+
+treeh() {
+    # Show hidden files with tree, ignore .git
+    if [ $# -gt 0 ]; then
+        tree -a -I .git "$@"
+    else
+        tree -a -I .git
     fi
 }
 
