@@ -364,9 +364,14 @@ zeropad() {
     echo "${1/$NUM/$PADDED_NUM}"
 }
 
-find_swap_files() {
+swap_files() {
     # Find any open swap files
-    fd -H "^\..*\.sw[op]$"
+    fd --hidden --no-ignore "^\..*\.sw[op]$"
+}
+
+hidden_files() {
+    # Find all hidden files
+    fd --type f --type l --hidden --no-ignore "^\..*$"
 }
 
 sbs() {
