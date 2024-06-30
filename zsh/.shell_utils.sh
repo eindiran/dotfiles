@@ -199,19 +199,13 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         (
             # Use a subshell with set -e
             set -e
-            update_omz
-            echo_separator
-            update_homebrew
-            echo_separator
-            sync_dotfiles
-            echo_separator
-            sync_git_tools
-            echo_separator
-            update_vim_plugins
-            echo_separator
+            update_omz; echo_separator
+            update_homebrew; echo_separator
+            sync_dotfiles; echo_separator
+            sync_git_tools; echo_separator
+            update_vim_plugins; echo_separator
             # Final status:
-            echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
-            echo_separator
+            echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"; echo_separator
             fastfetch
         ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
     }
