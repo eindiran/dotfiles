@@ -151,11 +151,6 @@ else
         sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
     }
 
-    fullpath() {
-        # Print out the absolute path for a file
-        readlink -f "$1"
-    }
-
     local_ip() {
         # Display your local network IP address
         hostname -I | cut -f 1 -d' '
@@ -276,52 +271,6 @@ ssh() {
     command ssh -X -Y "$@"
 }
 
-igrep() {
-    # Add support for 'igrep'
-    grep -i "$@"
-}
-
-rgrep() {
-    # Add support for rgrep
-    grep -r "$@"
-}
-
-fpdfgrep() {
-    # Search pdf files in current directory using pdfgrep
-    find . -iname '*.pdf' -exec pdfgrep "$@" {} +
-}
-
-rgp() {
-    # Page the output of rg through bat
-    rg -p "$@" | bat
-}
-
-rga() {
-    # Don't filter out anything with rg
-    rg -uuu "$@"
-}
-
-find_non_utf8_chars() {
-    # Find non-UTF-8 characters
-    # shellcheck disable=SC2063
-    grep -axv '.*' "$@"
-}
-
-find_non_ascii_chars() {
-    # Find non-ASCII characters
-    rg "[^\x00-\x7F]" "$@"
-}
-
-find_non_printable_chars() {
-    # Find non-printable characters
-    rg "[\x00-\x08\x0E-\x1F\x80-\xFF]" "$@"
-}
-
-ski() {
-    # Open interactive 'sk' using 'rg' to do the search
-    sk --ansi -i -c 'rg --color=always --line-number "{}"'
-}
-
 mana()  {
     # An alias for 'man' that will search apropos if no manpage is initially found
     local MAN_PAGE
@@ -341,11 +290,6 @@ disk_usage_percentage() {
     df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
 }
 
-show_path() {
-    # Print our PATH variable
-    echo "$PATH" | tr ":" "\n"
-}
-
 dedup() {
     # Deduplicate a file while preserving the original ordering of lines
     awk '!seen[$0] ++' "$@"
@@ -362,16 +306,6 @@ zeropad() {
     NUM="$(echo "$1" | sed -n -e 's/.*_\([[:digit:]]\+\)\..*/\1/p')"
     PADDED_NUM="$(printf "%0${PADLEN}d" "$NUM")"
     echo "${1/$NUM/$PADDED_NUM}"
-}
-
-swap_files() {
-    # Find any open swap files
-    fd --hidden --no-ignore "^\..*\.sw[op]$"
-}
-
-hidden_files() {
-    # Find all hidden files
-    fd --type f --type l --hidden --no-ignore "^\..*$"
 }
 
 sbs() {

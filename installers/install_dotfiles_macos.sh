@@ -55,6 +55,7 @@ echo "Installing shell dotfiles, functions, and extensions"
 for f in "${dotfiles_dir}"/zsh/.*; do
     tf="$(realpath "${f}")"
     ff=$(basename "${f}")
+    echo "Installing ${f} to ${HOME}/${ff}"
     ln -ns "${tf}" "${HOME}/${ff}"
 done
 if [ -d "${dotfiles_dir}/zsh/hidden/" ]; then

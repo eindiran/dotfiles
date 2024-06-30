@@ -213,6 +213,7 @@ setopt PUSHD_MINUS
 # Sourcing my scripts:
 [ -f ~/.ansi_colors.sh ] && source ~/.ansi_colors.sh
 [ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
+[ -f ~/.search_utils.sh ] && source ~/.search_utils.sh
 [ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
 [ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
 # env_variables and hidden.sh should never be checked in and will be
