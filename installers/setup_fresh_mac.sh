@@ -54,6 +54,7 @@ brew install ansifilter cairo cmake coreutils expect fastfetch \
     zoxide
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
+brew install --cask imhex
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
