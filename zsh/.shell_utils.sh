@@ -67,7 +67,7 @@ m() {
 }
 
 # Define OS specific stuff here:
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "${OSTYPE}" =~ ^darwin ]]; then
     # macOS
     sudoedit() {
         if [[ -n "$EDITOR" ]]; then
@@ -144,7 +144,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
             echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
         ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
     }
-else
+elif [[ "${OSTYPE}" =~ ^linux ]]; then
     # Linux
     trim() {
         # Trim whitespace

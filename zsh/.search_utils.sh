@@ -9,8 +9,8 @@
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 #===============================================================================
 
-if [[ ! "$OSTYPE" == "darwin"* ]]; then
-    # Linux
+if [[ "${OSTYPE}" =~ ^linux ]]; then
+    # Linux-specific functionality:
     fullpath() {
         # Print out the absolute path for a file
         readlink -f "$1"
