@@ -30,6 +30,10 @@ join_by() {
     fi
 }
 
+echo_separator() {
+    echo "==============================================================="
+}
+
 refresh() {
     # Refresh after updating rc files
     # shellcheck disable=SC1090
@@ -66,6 +70,71 @@ m() {
     make "$@"
 }
 
+update_vim_plugins() {
+    # vim-plug updates and cleanup:
+    echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
+    # Install, then update, then clean
+    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
+}
+
+sync_git_tools() {
+    # Sync the git-tools local repo with remote
+    local gittools_version_old
+    local gittools_version_new
+    (
+        set -e
+        cd "${WORKSPACE}/git-tools"
+        gittools_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}git-tools version: ${HI_RED}${gittools_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing git-tools${ANSI_RESET}"
+        git pull
+        gittools_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${gittools_version_new}" != "${gittools_version_old}" ]]; then
+            echo "${HI_YELLOW}New git-tools version: ${HI_RED}${gittools_version_new}${ANSI_RESET}"
+        fi
+    )
+}
+
+sync_dotfiles() {
+    # Sync the dotfiles local repo with remote
+    local dotfiles_version_old
+    local dotfiles_version_new
+    (
+        set -e
+        dotfiles
+        dotfiles_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}dotfiles version: ${HI_RED}${dotfiles_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
+        git pull
+        dotfiles_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${dotfiles_version_new}" != "${dotfiles_version_old}" ]]; then
+            echo "${HI_YELLOW}New dotfiles version: ${HI_RED}${dotfiles_version_new}${ANSI_RESET}"
+        fi
+    )
+
+}
+
+update_omz() {
+    # Update OMZ
+    local omz_version_old
+    local omz_version_new
+    (
+        set -e
+        # OMZ updates:
+        omz_version_old="$(omz version)"
+        echo "${HI_YELLOW}omz version: ${HI_RED}${omz_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
+        # Upgrade via upgrade.sh directly:
+        if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
+            "${ZSH}/tools/upgrade.sh"
+        fi
+        omz_version_new="$(omz version)"
+        if [[ "${omz_version_new}" != "${omz_version_old}" ]]; then
+            echo "${HI_YELLOW}New omz version: ${HI_RED}${omz_version_new}${ANSI_RESET}"
+        fi
+    )
+}
+
 # Define OS specific stuff here:
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     # macOS
@@ -99,49 +168,51 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         echo "Local IP: $(local_ip)"
     }
 
-    monday() {
+    update_homebrew() {
+        # Update homebrew and installed packages
+        local homebrew_version_old
+        local homebrew_version_new
         (
-            # Use a subshell with set -e
             set -e
-            # OMZ updates:
-            echo "${HI_YELLOW}omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
-            echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
-            # Upgrade via upgrade.sh directly:
-            if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
-                "${ZSH}/tools/upgrade.sh"
-            fi
-            echo "${HI_YELLOW}New omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
-            echo
             # Homebrew update:
-            echo "${HI_YELLOW}Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+            homebrew_version_old="$(brew --version)"
+            echo "${HI_YELLOW}Homebrew version: ${HI_RED}${homebrew_version_old}${ANSI_RESET}"
             echo "${HI_YELLOW}Running brew update${ANSI_RESET}"
             brew update --verbose
-            echo "${HI_YELLOW}New Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
-            echo
+            homebrew_version_new="$(brew --version)"
+            if [[ "${homebrew_version_new}" != "${homebrew_version_old}" ]]; then
+                echo "${HI_YELLOW}New Homebrew version: ${HI_RED}${homebrew_version_new}${ANSI_RESET}"
+            fi
+            echo_separator
             # Homebrew package upgrades:
             echo "${HI_YELLOW}Running brew upgrade${ANSI_RESET}"
             brew upgrade --verbose
-            echo
+            echo_separator
             # Homebrew cleanup:
             echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
             brew cleanup --verbose
-            echo
-            # dotfile repo sync:
-            (
-                dotfiles
-                echo "${HI_YELLOW}dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
-                echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
-                git pull
-                echo "${HI_YELLOW}New dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
-            )
-            echo
-            # vim-plug updates and cleanup:
-            echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
-            # Install, then update, then clean
-            "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-            echo
+        )
+    }
+
+    monday() {
+        # Update all tooling repos and packages:
+        (
+            # Use a subshell with set -e
+            set -e
+            update_omz
+            echo_separator
+            update_homebrew
+            echo_separator
+            sync_dotfiles
+            echo_separator
+            sync_git_tools
+            echo_separator
+            update_vim_plugins
+            echo_separator
             # Final status:
             echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
+            echo_separator
+            fastfetch
         ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
     }
 elif [[ "${OSTYPE}" =~ ^linux ]]; then
