@@ -376,17 +376,6 @@ lc() {
     wc -l "$@"
 }
 
-countfiles() {
-    # Count the non-hidden files in directory
-    if [ $# -gt 0 ]; then
-        total_count=$(find "$1" -not -path '*/\.*' -print | wc -l)
-        calc "$total_count"-1 # reduce by one to get count w/o '.'
-    else
-        total_count=$(find . -not -path '*/\.*' -print | wc -l)
-        calc "$total_count"-1
-    fi
-}
-
 histnl() {
     # Print out history without line numbers
     history 0 | sed 's/^ *[0-9]\+\*\? *//'
