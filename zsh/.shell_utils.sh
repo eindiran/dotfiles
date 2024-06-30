@@ -37,6 +37,27 @@ trim() {
     sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
 }
 
+refresh() {
+    # Refresh after updating rc files
+    # shellcheck disable=SC1090
+    source ~/.zshrc
+}
+
+public_ip() {
+    # Display your public IP address
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+workspace() {
+    # shellcheck disable=SC2164
+    cd "${WORKSPACE}"
+}
+
+dotfiles() {
+    # Go to my dotfiles directory, since they are symlinked from home:
+    cd "${WORKSPACE}/dotfiles/"
+}
+
 c() {
     # Alias for quickly typing `clear`
     clear
@@ -52,6 +73,7 @@ m() {
     make "$@"
 }
 
+# Define OS specific stuff here:
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
     sudoedit() {
@@ -59,6 +81,156 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
             sudo "$EDITOR" "$@"
         else
             sudo vim "$@"
+        fi
+    }
+
+    local_ip() {
+        # Display your local network IP address
+        if ! ipconfig getifaddr en1; then
+            ipconfig getifaddr en0
+        fi
+    }
+
+    meld() {
+        # Open the Meld visual diff app from the CLI:
+        /Applications/Meld.app/Contents/MacOS/Meld "$@"
+    }
+
+    resign_discord() {
+        sudo codesign --remove-signature /Applications/Discord.app/Contents/Frameworks/Discord\ Helper* && sudo codesign --sign - /Applications/Discord.app/Contents/Frameworks/Discord\ Helper*
+    }
+
+    chkvpn() {
+        scutil --nc list | grep "Connected" | cut -d' ' -f8-
+        echo "Public IP: $(public_ip)"
+        echo "Local IP: $(local_ip)"
+    }
+
+    monday() {
+        (
+            # Use a subshell with set -e
+            set -e
+            # OMZ updates:
+            echo "${HI_YELLOW}omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
+            echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
+            # Upgrade via upgrade.sh directly:
+            if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
+                "${ZSH}/tools/upgrade.sh"
+            fi
+            echo "${HI_YELLOW}New omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
+            echo
+            # Homebrew update:
+            echo "${HI_YELLOW}Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+            echo "${HI_YELLOW}Running brew update${ANSI_RESET}"
+            brew update --verbose
+            echo "${HI_YELLOW}New Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
+            echo
+            # Homebrew package upgrades:
+            echo "${HI_YELLOW}Running brew upgrade${ANSI_RESET}"
+            brew upgrade --verbose
+            echo
+            # Homebrew cleanup:
+            echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
+            brew cleanup --verbose
+            echo
+            # dotfile repo sync:
+            (
+                dotfiles
+                echo "${HI_YELLOW}dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
+                echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
+                git pull
+                echo "${HI_YELLOW}New dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
+            )
+            echo
+            # vim-plug updates and cleanup:
+            echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
+            # Install, then update, then clean
+            "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
+            echo
+            # Final status:
+            echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
+        ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
+    }
+else
+    # Linux
+    fullpath() {
+        # Print out the absolute path for a file
+        readlink -f "$1"
+    }
+
+    local_ip() {
+        # Display your local network IP address
+        hostname -I | cut -f 1 -d' '
+    }
+
+    chkvpn() {
+        nmcli con | grep -i vpn
+        echo "Public IP: $(public_ip)"
+        echo "Local IP: $(local_ip)"
+    }
+
+    linker_path() {
+        # Prints out the path used by ld
+        local LNKR_PATH
+        LNKR_PATH=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
+        if [ -n "$LD_LIBRARY_PATH" ]; then
+            LNKR_PATH+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<<"$LD_LIBRARY_PATH")
+        fi
+        echo "$LNKR_PATH" | sort -u
+    }
+
+    devices() {
+        # Display info about a particular device
+        # Wraps the `lspci` command
+        if [ $# -gt 0 ]; then
+            case "$*" in
+                video | v*)
+                    # Video card info
+                    lspci -vnn | command grep --color=auto "VGA" -A 10
+                    ;;
+                audio | sound*)
+                    # Sound card info
+                    lspci -vnn | command grep --color=auto "Audio device" -A 7
+                    ;;
+                dram)
+                    # DRAM controller info
+                    lspci -vnn | command grep --color=auto "DRAM" -A 5
+                    ;;
+                usb)
+                    # USB controller info
+                    lspci -vnn | command grep --color=auto "USB" -A 5
+                    ;;
+                sata | disk | raid)
+                    # RAID bus controller info
+                    lspci -vnn | command grep --color=auto "RAID" -A 11
+                    ;;
+                all | --all | -a)
+                    # All devices
+                    lspci -vnn
+                    ;;
+                help | --help | -h)
+                    echo "Usage: devices <arg>"
+                    echo "where <arg>: [all, help, sata, disk, raid, usb, dram, audio, video]"
+                    ;;
+                *)
+                    # Unknown args
+                    printf "Unknown option %s\n" "$*"
+                    ;;
+            esac
+        else
+            # If no args passed, show all devices
+            lspci -vnn
+        fi
+    }
+
+    makefile_deps() {
+        # Create a dot-graph of the dependencies in a Makefile
+        local TARGET_NAME
+        if [ $# -gt 0 ]; then
+            TARGET_NAME="$1"
+            make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
+        else
+            make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
         fi
     }
 fi
@@ -155,7 +327,7 @@ rgp() {
 }
 
 rga() {
-    # Don't filter out anythign with rg
+    # Don't filter out anything with rg
     rg -uuu "$@"
 }
 
@@ -178,11 +350,6 @@ find_non_printable_chars() {
 ski() {
     # Open interactive 'sk' using 'rg' to do the search
     sk --ansi -i -c 'rg --color=always --line-number "{}"'
-}
-
-fullpath() {
-    # Print out the absolute path for a file
-    readlink -f "$1"
 }
 
 man()  {
@@ -246,17 +413,6 @@ broken_links() {
     find . -type l -xtype l -exec /bin/ls -l {} \;
 }
 
-makefile_deps() {
-    # Create a dot-graph of the dependencies in a Makefile
-    local TARGET_NAME
-    if [ $# -gt 0 ]; then
-        TARGET_NAME="$1"
-        make -Bnd "$TARGET_NAME" | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
-    else
-        make -Bnd | /usr/local/bin/make2graph | dot -Tpng -o Makefile_Dependencies.png
-    fi
-}
-
 dow() {
     # Prints the day of the week
     Days=("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
@@ -278,79 +434,9 @@ wf_rank() {
     wf "$1" | nl
 }
 
-refresh() {
-    # Refresh after updating rc files
-    # shellcheck disable=SC1090
-    source ~/.zshrc
-}
-
 get_path() {
     # Print our PATH variable
     echo "$PATH" | tr ":" "\n"
-}
-
-public_ip() {
-    # Display your public IP address
-    dig +short myip.opendns.com @resolver1.opendns.com
-}
-
-local_ip() {
-    # Display your local network IP address
-    hostname -I | cut -f 1 -d' '
-}
-
-devices() {
-    # Display info about a particular device
-    # Wraps the `lspci` command
-    if [ $# -gt 0 ]; then
-        case "$*" in
-            video | v*)
-                # Video card info
-                lspci -vnn | command grep --color=auto "VGA" -A 10
-                ;;
-            audio | sound*)
-                # Sound card info
-                lspci -vnn | command grep --color=auto "Audio device" -A 7
-                ;;
-            dram)
-                # DRAM controller info
-                lspci -vnn | command grep --color=auto "DRAM" -A 5
-                ;;
-            usb)
-                # USB controller info
-                lspci -vnn | command grep --color=auto "USB" -A 5
-                ;;
-            sata | disk | raid)
-                # RAID bus controller info
-                lspci -vnn | command grep --color=auto "RAID" -A 11
-                ;;
-            all | --all | -a)
-                # All devices
-                lspci -vnn
-                ;;
-            help | --help | -h)
-                echo "Usage: devices <arg>"
-                echo "where <arg>: [all, help, sata, disk, raid, usb, dram, audio, video]"
-                ;;
-            *)
-                # Unknown args
-                printf "Unknown option %s\n" "$*"
-                ;;
-        esac
-    else
-        # If no args passed, show all devices
-        lspci -vnn
-    fi
-}
-
-linker_path() {
-    # Prints out the path used by ld
-    local LNKR_PATH
-    LNKR_PATH=$(ldconfig -v 2>/dev/null | command grep --color=auto -v ^$'\t' | cut -d':' -f1)
-    if [ -n "$LD_LIBRARY_PATH" ]; then
-        LNKR_PATH+=$(awk -F: '{for (i=0;++i<=NF;) print $i}' <<<"$LD_LIBRARY_PATH")
-    fi
-    echo "$LNKR_PATH" | sort -u
 }
 
 pmd() {
@@ -413,19 +499,6 @@ find_swap_files() {
     fd -H "^\..*\.sw[op]$"
 }
 
-resign_discord() {
-    sudo codesign --remove-signature /Applications/Discord.app/Contents/Frameworks/Discord\ Helper* && sudo codesign --sign - /Applications/Discord.app/Contents/Frameworks/Discord\ Helper*
-}
-
-dotfiles() {
-    # Go to my dotfiles directory, since they are symlinked from home:
-    cd "${WORKSPACE}/dotfiles/"
-}
-
-meld() {
-    /Applications/Meld.app/Contents/MacOS/Meld "$@"
-}
-
 sbs() {
     # Toggle side-by-side mode for git-delta
     if [[ "${DELTA_FEATURES:-EMPTY}" != "EMPTY" ]]; then
@@ -433,57 +506,6 @@ sbs() {
     else
         export DELTA_FEATURES="+side-by-side +line-numbers"
     fi
-}
-
-monday() {
-    (
-        # Use a subshell with set -e
-        set -e
-        # OMZ updates:
-        echo "${HI_YELLOW}omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
-        echo "${HI_YELLOW}Running 'omz update'${ANSI_RESET}"
-        # Upgrade via upgrade.sh directly:
-        if [[ -e "${ZSH}/tools/upgrade.sh" ]]; then
-            "${ZSH}/tools/upgrade.sh"
-        fi
-        echo "${HI_YELLOW}New omz version: ${HI_RED}$(omz version)${ANSI_RESET}"
-        echo
-        # Homebrew update:
-        echo "${HI_YELLOW}Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
-        echo "${HI_YELLOW}Running brew update${ANSI_RESET}"
-        brew update --verbose
-        echo "${HI_YELLOW}New Homebrew version: ${HI_RED}$(brew --version)${ANSI_RESET}"
-        echo
-        # Homebrew package upgrades:
-        echo "${HI_YELLOW}Running brew upgrade${ANSI_RESET}"
-        brew upgrade --verbose
-        echo
-        # Homebrew cleanup:
-        echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
-        brew cleanup --verbose
-        echo
-        # dotfile repo sync:
-        (
-            cd ~/Workspace/dotfiles/
-            echo "${HI_YELLOW}dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
-            echo "${HI_YELLOW}Syncing dotfiles${ANSI_RESET}"
-            git pull
-            echo "${HI_YELLOW}New dotfiles version: ${HI_RED}$(git rev-parse --short HEAD)${ANSI_RESET}"
-        )
-        echo
-        # vim-plug updates and cleanup:
-        echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
-        # Install, then update, then clean
-        "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-        echo
-        # Final status:
-        echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
-    ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
-}
-
-workspace() {
-    # shellcheck disable=SC2164
-    cd ~/Workspace
 }
 
 s() {
