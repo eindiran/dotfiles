@@ -3,8 +3,6 @@
 #
 #          FILE: .shell_utils.sh
 #
-#         USAGE: ./.shell_utils.sh
-#
 #   DESCRIPTION: Add utility functions to the shell. Intended to replace
 #                most of the utility functions and aliases in my .zshrc.
 #
@@ -30,11 +28,6 @@ join_by() {
     if shift 2; then # 1 for join_by, 1 for delimiter
         printf %s "$elem" "${@/#/$delim}"
     fi
-}
-
-trim() {
-    # Trim whitespace
-    sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
 }
 
 refresh() {
@@ -153,6 +146,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     }
 else
     # Linux
+    trim() {
+        # Trim whitespace
+        sed -e 's/^[[:space:]]*//g' -e 's/[[:space:]]*\$//g'
+    }
+
     fullpath() {
         # Print out the absolute path for a file
         readlink -f "$1"
@@ -236,7 +234,6 @@ else
 fi
 
 lm() {
-    # More advanced version of ls -l | more
     if [ $# -gt 0 ]; then
         lh "$1" | bat
     else
@@ -245,29 +242,11 @@ lm() {
 }
 
 tm() {
-    # More advanced version of tree | more
     if [ $# -gt 0 ]; then
-        tree "$1" | bat
+        tree -C "$1" | bat
     else
-        tree | bat
+        tree -C | bat
     fi
-}
-
-cl() {
-    # Clear, then list the current directory
-    clear
-    ll "$@"
-}
-
-ct() {
-    # Clear, the tree the current directory
-    clear
-    tree "$@"
-}
-
-j() {
-    # Run Java classes: alias for `java ...`
-    java "$@"
 }
 
 jc() {
@@ -312,18 +291,9 @@ fpdfgrep() {
     find . -iname '*.pdf' -exec pdfgrep "$@" {} +
 }
 
-zhg() {
-    history 0 | cut -c 8- | rg "$@" | sort | uniq -c | sort --numeric --reverse | rg "$@"
-}
-
-history_commands() {
-    # Commands only history
-    history 0 | rg --color=never -o "^\s*[0-9]+\*?\s+[0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}\s+(.*)$" -r '$1'
-}
-
 rgp() {
-    # Page the output of rg through less
-    rg -p "$@" | less -RFX
+    # Page the output of rg through bat
+    rg -p "$@" | bat
 }
 
 rga() {
@@ -352,122 +322,33 @@ ski() {
     sk --ansi -i -c 'rg --color=always --line-number "{}"'
 }
 
-man()  {
+mana()  {
     # An alias for 'man' that will search apropos if no manpage is initially found
     local MAN_PAGE
-    MAN_PAGE="$(command man "$@" 2>&1)"
+    MAN_PAGE="$(man "$@" 2>&1)"
     if beginswith "No manual entry for" "$MAN_PAGE"; then
-        command man "$@"
+        man "$@"
         printf "\nSearching for similar pages via apropos...\n\n"
         # Tee apropos to /dev/null to prevent it from using paging
         apropos "$@" | tee /dev/null
     else
-        command man "$@"
+        man "$@"
     fi
 }
 
-lcc() {
-    # Alias for Mono license compiler so that `lc` can be used for the `wc` alias below
-    command lc "$@"
-}
-
-lc() {
-    # Line count; alias for `wc -l`
-    wc -l "$@"
-}
-
-histnl() {
-    # Print out history without line numbers
-    history 0 | sed 's/^ *[0-9]\+\*\? *//'
-}
-
-histsearch() {
-    # Search through the history for a given word
-    # fc -lim "$@" 1 # not as good
-    history 0 | command grep --color=auto "$1"
-}
-
-nhistory() {
-    # Get the last n history entries
-    if [ $# -eq 0 ]; then
-        # If no arg passed, return last 100 entries
-        history 0 | tail -n 100
-    else
-        history 0 | tail -n "$1"
-    fi
-}
-
-broken_links() {
-    # Find broken symbolic links in the current directory
-    find . -type l -xtype l -exec /bin/ls -l {} \;
-}
-
-dow() {
-    # Prints the day of the week
-    Days=("Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday")
-    printf "%s\n" "${Days[$(date +%u)]}"
-}
-
-get_disk_usage_percentage() {
+disk_usage_percentage() {
     # Print the percentage of used disk space for a specific disk
     df "$1" | tail -n 1 | awk '{sub(/%/,""); print $5}'
 }
 
-wf() {
-    # Word frequency
-    sed -e 's/[^[:alpha:]]/ /g' "$1" | tr " " '\n' | sort | uniq -c | sort -nr
-}
-
-wf_rank() {
-    # Word frequency and rank
-    wf "$1" | nl
-}
-
-get_path() {
+show_path() {
     # Print our PATH variable
     echo "$PATH" | tr ":" "\n"
 }
 
-pmd() {
-    # Compile markdown to html w/ pandoc
-    pandoc -f markdown -t html "$1" >"${1%.md}.html"
-}
-
-groff2man() {
-    # Compile [g]roff/troff into a man-page
-    groff -Tascii -man "$@"
-}
-
-fdw() {
-    # Find writable files in the current directory
-    find . -maxdepth 1 -type f -writable
-}
-
-fdnw() {
-    # Find non-writable files in the current directory
-    find . -maxdepth 1 -type f ! -writable
-}
-
-fde() {
-    # Find executable files in the current directory
-    find . -maxdepth 1 -type f -executable
-}
-
-fdne() {
-    # Find non-executable files in the current directory
-    find . -maxdepth 1 -type f ! -executable
-}
-
 dedup() {
     # Deduplicate a file while preserving the original ordering of lines
-    awk '!visited[$0] ++' "$@"
-}
-
-xmlformat() {
-    # Format XML via Python's minidom library
-    # Note that this function may not be appropriate for large XML files on machines
-    # w/ limited resources, as the minidom library operates on the whole file.
-    python3 -c "import xml.dom.minidom, sys; print('\n'.join([line for line in xml.dom.minidom.parse(sys.stdin).toprettyxml(indent=' '*2).split('\n') if line.strip()]), flush=True)"
+    awk '!seen[$0] ++' "$@"
 }
 
 zeropad() {
