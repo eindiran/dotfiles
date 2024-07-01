@@ -112,6 +112,11 @@ skh() {
     sk --ansi -i -c 'rg --hidden --no-ignore-vcs --binary --color=always --line-number "{}"'
 }
 
+skf() {
+    # Like 'ski' above, but using file name matching with fd instead of rg
+    sk --ansi -i -c 'fd --hidden --no-ignore --full-path --color=always "{}"'
+}
+
 show_path() {
     # Print our PATH variable
     echo "$PATH" | tr ":" "\n"
