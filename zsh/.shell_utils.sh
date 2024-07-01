@@ -223,6 +223,9 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             sync_git_tools; echo_separator
             sync_shell_scripts; echo_separator
             update_vim_plugins; echo_separator
+            dotfiles
+            cd installers
+            ./symlink_dotfiles.sh; echo_separator
             # Final status:
             echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"; echo_separator
             fastfetch
