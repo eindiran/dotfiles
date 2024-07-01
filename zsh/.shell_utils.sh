@@ -95,6 +95,24 @@ sync_git_tools() {
     )
 }
 
+sync_shell_scripts() {
+    # Sync the shell-scripts local repo with remote
+    local shellscripts_version_old
+    local shellscripts_version_new
+    (
+        set -e
+        cd "${WORKSPACE}/shell-scripts"
+        shellscripts_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}shell-scripts version: ${HI_RED}${shellscripts_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing shell-scripts${ANSI_RESET}"
+        git pull
+        shellscripts_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${shellscripts_version_new}" != "${shellscripts_version_old}" ]]; then
+            echo "${HI_YELLOW}New shell-scripts version: ${HI_RED}${shellscripts_version_new}${ANSI_RESET}"
+        fi
+    )
+}
+
 sync_dotfiles() {
     # Sync the dotfiles local repo with remote
     local dotfiles_version_old
@@ -203,6 +221,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             update_homebrew; echo_separator
             sync_dotfiles; echo_separator
             sync_git_tools; echo_separator
+            sync_shell_scripts; echo_separator
             update_vim_plugins; echo_separator
             # Final status:
             echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"; echo_separator
