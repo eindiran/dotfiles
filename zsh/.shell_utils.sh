@@ -418,5 +418,10 @@ s() {
 
 we() {
     # Alias for weather script
+    weather -i -v n $@
+}
+
+wer() {
+    # Alias for weather script, with rich data
     weather -r -i $@
 }
