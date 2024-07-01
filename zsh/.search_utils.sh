@@ -17,6 +17,8 @@ if [[ "${OSTYPE}" =~ ^linux ]]; then
     }
 fi
 
+## grep aliases:
+
 igrep() {
     # Add support for 'igrep'
     grep -i "$@"
@@ -27,10 +29,7 @@ rgrep() {
     grep -r "$@"
 }
 
-fpdfgrep() {
-    # Search pdf files in current directory using pdfgrep
-    find . -iname '*.pdf' -exec pdfgrep "$@" {} +
-}
+## ripgrep aliases:
 
 rgp() {
     # Page the output of rg through bat
@@ -39,8 +38,45 @@ rgp() {
 
 rga() {
     # Don't filter out anything with rg
+    # Equivalent to --hidden --no-ignore --binary
     rg -uuu "$@"
 }
+
+rgh() {
+    # Search in hidden files and gitignored files as well;
+    # equivalent to --hidden --no-ignore
+    rg -uu "$@"
+}
+
+## fd aliases:
+
+fdfp() {
+    # Search for matches in the full-path
+    fd --full-path --prune "$@"
+}
+
+fdx() {
+    # When piping results to xargs, use this to null separate results:
+    fd --color=never --print0 "$@"
+}
+
+fda() {
+    # Absolute path is printed, rather than relative path
+    fd --absolute-path "$@"
+}
+
+fdh() {
+    # Search for hidden and gitignored files as well:
+    fd --hidden --no-ignore --exclude='.git' "$@"
+}
+
+fdl() {
+    # Produce results like `ls -lah`/`ll`, but skipping
+    # gitignored files
+    fd --hidden --exclude='.git' --list-details --color=always "$@"
+}
+
+## Character matchers:
 
 find_non_utf8_chars() {
     # Find non-UTF-8 characters
@@ -58,9 +94,22 @@ find_non_printable_chars() {
     rg "[\x00-\x08\x0E-\x1F\x80-\xFF]" "$@"
 }
 
+## Misc:
+
+fpdfgrep() {
+    # Search pdf files in current directory using pdfgrep
+    find . -iname '*.pdf' -exec pdfgrep "$@" {} +
+}
+
 ski() {
     # Open interactive 'sk' using 'rg' to do the search
     sk --ansi -i -c 'rg --color=always --line-number "{}"'
+}
+
+skh() {
+    # Like `ski` above, but with support for hidden files,
+    # gitignored files, and binary files (like -uuu).
+    sk --ansi -i -c 'rg --hidden --no-ignore-vcs --binary --color=always --line-number "{}"'
 }
 
 show_path() {
@@ -74,6 +123,6 @@ swap_files() {
 }
 
 hidden_files() {
-    # Find all hidden files
+    # Find all hidden files and links
     fd --type f --type l --hidden --no-ignore "^\..*$"
 }

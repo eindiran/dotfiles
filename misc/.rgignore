@@ -111,3 +111,6 @@ _site/
 *.zip
 *.tar.gz
 *.rar
+
+# Git files:
+.git/

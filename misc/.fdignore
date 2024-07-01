@@ -100,3 +100,6 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+
+# Git files:
+.git/
