@@ -64,6 +64,10 @@ if [ -f "${HOME}/.cargo/env" ]; then
     # shellcheck source=/dev/null
     source "${HOME}/.cargo/env"
 fi
+# Use rustup to add/update rustfmt and clippy:
+rustup component add rustfmt
+rustup component add clippy
+rustup update
 
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."

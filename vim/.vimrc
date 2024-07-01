@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Wed 19 Jun 2024
-" VERSION: 1.5.7
+" LAST MODIFIED: Sun 30 Jun 2024
+" VERSION: 1.5.8
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -168,7 +168,6 @@ let g:ale_linters = {
     \'javascript': ['eslint'],
     \'markdown': ['vale'],
     \'python': ['ruff', 'mypy'],
-    \'rust': ['cargo', 'rustc'],
     \'sh': ['shellcheck'],
     \'vue': ['eslint', 'stylelint', 'vls'],
 \}
@@ -182,7 +181,6 @@ let g:ale_fixers = {
     \'javascript': ['eslint', 'prettier'],
     \'markdown': ['prettier'],
     \'python': ['ruff', 'ruff_format'],
-    \'rust': ['rustfmt'],
     \'sh': ['shfmt'],
     \'vue': ['eslint', 'prettier'],
     \'yaml': ['prettier'],
@@ -554,6 +552,12 @@ else
     " Linux
     let g:rust_clip_command = 'xclip -selection clipboard'
 endif
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+let g:rust_conceal = 0
+let g:rust_fole = 1
+let g:rust_recommended_style = 1
 "---------------------------------------------------------------------
 " vim-markdown
 "---------------------------------------------------------------------
