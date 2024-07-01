@@ -87,7 +87,7 @@ git clone https://github.com/eindiran/notes.git
 cd dotfiles
 
 # Install dotfiles:
-./installers/install_dotfiles_macos.sh
+./installers/symlink_dotfiles.sh -a -g -t
 echo "Creating zsh cache"
 mkdir -p ~/.cache/zsh/
 # Run vale sync
