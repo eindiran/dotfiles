@@ -428,3 +428,8 @@ wer() {
     # Alias for weather script, with rich data
     weather -r -i $@
 }
+
+cwe() {
+    # Current weather
+    weather -i -v 0 $@ 2> /dev/null | tail -n +2
+}
