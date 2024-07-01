@@ -155,7 +155,7 @@ export LC_ALL='en_US.UTF-8'
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 
 ### Path:
-export PATH="/opt/homebrew/opt/llvm/bin:$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$PATH"
+export PATH="/opt/homebrew/opt/llvm/bin:$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$WORKSPACE/shell-scripts/scripts:$PATH"
 
 ### ld:
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
