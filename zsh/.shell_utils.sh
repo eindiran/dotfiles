@@ -415,3 +415,8 @@ s() {
     # shellcheck disable=SC1091
     source .venv/bin/activate
 }
+
+we() {
+    # Alias for weather script
+    weather -r -i $@
+}
