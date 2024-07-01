@@ -75,9 +75,9 @@ echo "Setting up Workspace"
 mkdir -p "${HOME}/Workspace"
 cd "${HOME}/Workspace"
 echo "Cloning git repos"
+gh auth login
 git clone https://github.com/eindiran/dotfiles.git
 git clone https://github.com/eindiran/git-tools.git
-gh auth login
 git clone https://github.com/eindiran/shell-scripts.git
 git clone https://github.com/eindiran/notes.git
 cd dotfiles
