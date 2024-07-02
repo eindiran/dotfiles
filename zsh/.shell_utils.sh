@@ -43,7 +43,7 @@ refresh() {
 public_ip() {
     # Display your public IP address; try opendns, then fallback to Google
     local public_ip_addr
-    public_ip_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    public_ip_addr="$(curl https://myipv4.p1.opendns.com/get_my_ip 2> /dev/null | jq .ip | sed -e 's|"||g' | head -n 1)"
     if [[ -n "${public_ip_addr}" ]]; then
         echo "${public_ip_addr}"
     else
