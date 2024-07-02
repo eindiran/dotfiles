@@ -425,8 +425,24 @@ we() {
 }
 
 wer() {
+    local current_weather
+    local weather_report
+    local time_report
+    local raw_richtext_report
+    local location_report
     # Alias for weather script, with rich data
-    weather -r -i $@
+    raw_richtext_report="$(weather -i -r $@)"
+    current_weather="$(weather -i -v 0 $@)"
+    weather_report="$(echo "${raw_richtext_report}" | head -n -5)"
+    time_report="$(echo "${raw_richtext_report}" | tail -n 4 | head -n 3)"
+    location_report="$(echo "${raw_richtext_report}" | tail -n 1 | head -n 1)"
+    echo
+    echo "${location_report}"
+    echo
+    echo "${weather_report}"
+    echo "${current_weather}"
+    echo
+    echo "${time_report}"
 }
 
 cwe() {
