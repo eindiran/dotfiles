@@ -181,9 +181,49 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
     }
 
     chkvpn() {
-        scutil --nc list | grep "Connected" | cut -d' ' -f8-
-        echo "Public IP: $(public_ip)"
-        echo "Local IP: $(local_ip)"
+        # Check VPN status
+        # Known limitation: scutil --nc list fails to show
+        # Cisco IPSec type VPNs.
+        local scutil_nc_output
+        scutil_nc_output="$(scutil --nc list)"
+        # Sort into connected and disconnected
+        local scutil_conn
+        scutil_conn="$(echo "${scutil_nc_output}" | grep "Connected" | cut -d' ' -f8- | awk '{ print $4,$3 }')"
+        local scutil_disconn
+        scutil_disconn="$(echo "${scutil_nc_output}" | grep "Disconnected" | cut -d' ' -f8- | awk '{ print $4,$3 }')"
+        # Compute counts
+        local scutil_conn_cnt
+        scutil_conn_cnt="$(echo "${scutil_conn}" | wc -l)"
+        local scutil_disconn_cnt
+        scutil_disconn_cnt="$(echo "${scutil_disconn}" | wc -l)"
+        if (( scutil_conn_cnt < 1 )) && (( scutil_conn_cnt < 1 )); then
+            echo "${BHI_RED}DISCONNECTED: no VPNs found!${ANSI_RESET}"
+        elif (( scutil_conn_cnt >= 1 )); then
+            echo "Currently ${BHI_GREEN}CONNECTED${ANSI_RESET} to VPN"
+            echo "${BHI_GREEN}${scutil_conn}${ANSI_RESET}"
+        else
+            # Disconnected VPN only:
+            echo "Currently ${BHI_YELLOW}DISCONNECTED${ANSI_RESET} from VPN"
+            echo "${BHI_YELLOW}${scutil_disconn}${ANSI_RESET}"
+        fi
+        local internet_conn
+        internet_conn="$(ifconfig | rg -A 7 "^en" | rg -v "^[^e\t]" | awk '/status:/{print toupper($2)}' | sort | head -n 1)"
+        if [[ "${internet_conn}" == "ACTIVE" ]]; then
+            echo "Internet connection is ${BHI_GREEN}${internet_conn}${ANSI_RESET}"
+            local public_ip_addr
+            public_ip_addr="$(public_ip)"
+            if [[ -n "${public_ip_addr}" ]]; then
+                echo "Public IP: ${BHI_BLUE}$(public_ip)${ANSI_RESET}"
+            else
+                # Empty
+                echo "${BHI_RED}Failed to connect to internet, no public IP${ANSI_RESET}"
+            fi
+            local private_ip_addr
+            private_ip_addr="$(local_ip)"
+            echo "Local IP: ${BHI_BLUE}$(local_ip)${ANSI_RESET}"
+        else
+            echo "Internet connection is ${BHI_RED}${internet_conn}${ANSI_RESET}"
+        fi
     }
 
     update_homebrew() {
