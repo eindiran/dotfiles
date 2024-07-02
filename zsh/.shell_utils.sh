@@ -515,4 +515,13 @@ status() {
     weather "New Haven"; echo; echo_separator; echo
     chkvpn; echo; echo_separator; echo
     fastfetch; echo; echo_separator
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        local repo_name
+        repo_name="$(basename "$(git rev-parse --show-toplevel)")"
+        local branch_name
+        branch_name="$(git rev-parse --abbrev-ref HEAD)"
+        echo "\nGit repository: ${BHI_PURPLE}${repo_name}${ANSI_RESET}"
+        echo "\nCurrent branch: ${BHI_PURPLE}${branch_name}${ANSI_RESET}\n"
+        git -c color.status=always status | tail -n +2; echo; echo_separator
+    fi
 }
