@@ -463,18 +463,18 @@ s() {
 
 we() {
     # Alias for weather script
-    weather -i -v n $@
+    weather.sh -i -v n $@
 }
 
-wer() {
+weather() {
     local current_weather
     local weather_report
     local time_report
     local raw_richtext_report
     local location_report
     # Alias for weather script, with rich data
-    raw_richtext_report="$(weather -i -r $@)"
-    current_weather="$(weather -i -v 0 $@)"
+    raw_richtext_report="$(weather.sh -i -r $@)"
+    current_weather="$(weather.sh -i -v 0 $@)"
     weather_report="$(echo "${raw_richtext_report}" | head -n -5)"
     time_report="$(echo "${raw_richtext_report}" | tail -n 4 | head -n 3)"
     location_report="$(echo "${raw_richtext_report}" | tail -n 1 | head -n 1)"
@@ -489,5 +489,5 @@ wer() {
 
 cwe() {
     # Current weather
-    weather -i -v 0 $@ 2> /dev/null | tail -n +2
+    weather.sh -i -v 0 $@ 2> /dev/null | tail -n +2
 }
