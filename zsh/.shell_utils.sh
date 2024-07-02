@@ -41,8 +41,14 @@ refresh() {
 }
 
 public_ip() {
-    # Display your public IP address
-    dig +short myip.opendns.com @resolver1.opendns.com
+    # Display your public IP address; try opendns, then fallback to Google
+    local public_ip_addr
+    public_ip_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    if [[ -n "${public_ip_addr}" ]]; then
+        echo "${public_ip_addr}"
+    else
+        dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | sed -e 's|"||g'
+    fi
 }
 
 workspace() {
@@ -166,10 +172,16 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
 
     local_ip() {
         # Display your local network IP address
-        if ifconfig -a | rg -q "inet .* --> .*"; then
+        local vpn_status
+        vpn_status="$(scutil --nc list | grep "Connected" | wc -l)"
+        local ifaces
+        ifaces=('en0' 'en1' 'en2' 'en3' 'en4' 'en5' 'en6')
+        if (( vpn_status > 0 )) && ifconfig -a | rg -q "inet .* --> .*"; then
             ifconfig -a | rg "inet .* --> .*" | awk ' { print $2 } ' | head -n 1
-        elif ! ipconfig getifaddr en1; then
-            ipconfig getifaddr en0
+        else
+            for i in ${ifaces}; do
+                ipconfig getifaddr $i
+            done | head -n 1
         fi
     }
 
@@ -192,24 +204,25 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         local scutil_conn
         scutil_conn="$(echo "${scutil_nc_output}" | grep "Connected" | cut -d' ' -f8- | awk '{ print $4,$3 }')"
         local scutil_disconn
-        scutil_disconn="$(echo "${scutil_nc_output}" | grep "Disconnected" | cut -d' ' -f8- | awk '{ print $4,$3 }')"
+        scutil_disconn="$(echo "${scutil_nc_output}" | grep "Disconnected" | awk '{ print "    * " $6,$5 }')"
         # Compute counts
         local scutil_conn_cnt
-        scutil_conn_cnt="$(echo "${scutil_conn}" | wc -l)"
+        scutil_conn_cnt="$(echo "${scutil_nc_output}" | grep "Connected" | wc -l)"
         local scutil_disconn_cnt
-        scutil_disconn_cnt="$(echo "${scutil_disconn}" | wc -l)"
-        if (( scutil_conn_cnt < 1 )) && (( scutil_conn_cnt < 1 )); then
+        scutil_disconn_cnt="$(echo "${scutil_nc_output}" | grep "Disconnected" | wc -l)"
+        if (( scutil_conn_cnt < 1 )) && (( scutil_disconn_cnt < 1 )); then
             echo "${BHI_RED}DISCONNECTED: no VPNs found!${ANSI_RESET}"
         elif (( scutil_conn_cnt >= 1 )); then
             echo "Currently ${BHI_GREEN}CONNECTED${ANSI_RESET} to VPN"
             echo "${BHI_GREEN}${scutil_conn}${ANSI_RESET}"
         else
             # Disconnected VPN only:
-            echo "Currently ${BHI_YELLOW}DISCONNECTED${ANSI_RESET} from VPN"
+            echo "Currently ${BHI_RED}DISCONNECTED${ANSI_RESET} from VPN"
+            echo "Available VPNs:"
             echo "${BHI_YELLOW}${scutil_disconn}${ANSI_RESET}"
         fi
         local internet_conn
-        internet_conn="$(ifconfig | rg -A 7 "^en" | rg -v "^[^e\t]" | awk '/status:/{print toupper($2)}' | sort | head -n 1)"
+        internet_conn="$(ifconfig | rg -A 20 "^en" | rg -v "^[^e\t]" | awk '/status:/{print toupper($2)}' | sort | head -n 1)"
         if [[ "${internet_conn}" == "ACTIVE" ]]; then
             echo "Internet connection is ${BHI_GREEN}${internet_conn}${ANSI_RESET}"
             local public_ip_addr
@@ -495,4 +508,11 @@ weather() {
 cwe() {
     # Current weather
     weather.sh -i -v 0 $@ 2> /dev/null | tail -n +2
+}
+
+status() {
+    echo_separator
+    weather "New Haven"; echo; echo_separator; echo
+    chkvpn; echo; echo_separator; echo
+    fastfetch; echo; echo_separator
 }
