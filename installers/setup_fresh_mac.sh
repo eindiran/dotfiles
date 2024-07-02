@@ -52,9 +52,13 @@ brew install ansifilter cairo cmake coreutils expect fastfetch \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
     zoxide
+echo "Installing brew casks..."
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
 brew install --cask imhex
+# Install Nerd fonts
+echo "Installing brew fonts..."
+brew install font-hack-nerd-font
 sudo ln -sfn "$(brew --prefix java)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk.jdk
 
 # Install rustup and cargo:
