@@ -472,6 +472,11 @@ weather() {
     local time_report
     local raw_richtext_report
     local location_report
+    # Check that there was a location passed to this script:
+    if [[ $# -eq 0 ]]; then
+        echo "weather() requires a location to be specified"
+        return 1
+    fi
     # Alias for weather script, with rich data
     raw_richtext_report="$(weather.sh -i -r $@)"
     current_weather="$(weather.sh -i -v 0 $@)"
