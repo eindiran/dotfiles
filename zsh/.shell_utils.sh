@@ -166,7 +166,9 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
 
     local_ip() {
         # Display your local network IP address
-        if ! ipconfig getifaddr en1; then
+        if ifconfig -a | rg -q "inet .* --> .*"; then
+            ifconfig -a | rg "inet .* --> .*" | awk ' { print $2 } ' | head -n 1
+        elif ! ipconfig getifaddr en1; then
             ipconfig getifaddr en0
         fi
     }
