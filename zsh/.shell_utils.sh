@@ -525,3 +525,7 @@ status() {
         git -c color.status=always status | tail -n +2; echo; echo_separator
     fi
 }
+
+iterm2() {
+    /Applications/iTerm.app/Contents/MacOS/iTerm2 2> /dev/null &
+}
