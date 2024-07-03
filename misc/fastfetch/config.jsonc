@@ -24,6 +24,11 @@
       "key": "Architecture"
     },
     "uptime",
+    {
+      "type": "command",
+      "text": "$PACKAGE_MANAGER --version",
+      "key": "Package manager"
+    },
     "packages",
     "shell",
     "display",

@@ -169,6 +169,26 @@ export GOBIN="${HOME}/.go/bin"
 ### Editor setup:
 export SUDO_EDITOR=vim
 export EDITOR=vim
+
+if [[ "${OSTYPE}" =~ ^darwin ]]; then
+    export PACKAGE_MANAGER=brew
+else
+    if command -v apt-get &> /dev/null; then
+        # Debian and derivatives:
+        export PACKAGE_MANAGER=apt-get
+    elif command -v pacman &> /dev/null; then
+        # Arch and derivatives:
+        export PACKAGE_MANAGER=pacman
+    elif command -v dnf &> /dev/null; then
+        # Red Hat family:
+        export PACKAGE_MANAGER=dnf
+    elif command -v emerge &> /dev/null; then
+        # Gentoo and derivatives:
+        export PACKAGE_MANAGER=emerge
+    else
+        echo "Unknown package manager, update the PACKAGE_MANAGER in .zshrc"
+    fi
+fi
 #--------------------------------------------------------------------
 
 
