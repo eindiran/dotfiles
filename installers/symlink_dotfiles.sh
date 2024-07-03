@@ -155,6 +155,8 @@ chklink "${dotfiles_dir}/misc/.rgignore" "${HOME}/.rgignore"
 chklink "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
 chklink "${dotfiles_dir}/misc/.vale.ini" "${HOME}/.vale.ini"
 chklink "${dotfiles_dir}/python/.ruff.toml" "${HOME}/.ruff.toml"
+mkdir -p "${HOME}/.config/fastfetch"
+chklink "${dotfiles_dir}/misc/fastfetch/config.jsonc" "${HOME}/.config/fastfetch/config.jsonc"
 
 if [[ "${install_htop_configs}" == true ]]; then
     echo "Installing htop config"
