@@ -82,15 +82,23 @@ cargo install action-validator bat broot du-dust fd-find hexyl hx hyperfine \
 echo "Setting up Workspace"
 mkdir -p "${HOME}/Workspace"
 cd "${HOME}/Workspace"
+echo "Making scratch directory"
+mkdir -p "scratch"
 echo "Cloning git repos"
 gh auth login
 git clone https://github.com/eindiran/dotfiles.git
 git clone https://github.com/eindiran/git-tools.git
 git clone https://github.com/eindiran/shell-scripts.git
 git clone https://github.com/eindiran/notes.git
-cd dotfiles
+git clone https://github.com/eindiran/brightness.git
+
+echo "Installing brightness"
+cd brightness
+make
+sudo make install
 
 # Install dotfiles:
+cd ../dotfiles
 ./installers/symlink_dotfiles.sh -a -g -t
 echo "Creating zsh cache"
 mkdir -p ~/.cache/zsh/
