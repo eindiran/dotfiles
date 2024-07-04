@@ -157,12 +157,7 @@ export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 ### Path:
 export PATH="/opt/homebrew/opt/llvm/bin:$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$WORKSPACE/shell-scripts/scripts:$PATH"
 
-### ld:
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-export LD_RUN_PATH=$LD_RUN_PATH
-export LDFLAGS="-L/usr/local/opt/ruby/lib"
-export CPPFLAGS="-I/usr/local/opt/ruby/include"
-export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+### Go:
 export GOPATH="${HOME}/.go"
 export GOBIN="${HOME}/.go/bin"
 
