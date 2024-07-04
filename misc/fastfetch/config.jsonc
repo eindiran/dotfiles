@@ -32,6 +32,11 @@
     "packages",
     "shell",
     "display",
+    {
+      "type": "command",
+      "text": "brightness -l | tail -n 1 | awk '{ printf \"%.1f%s\", $NF*100, \"%\" }'",
+      "key": "Screen Brightness"
+    },
     "de",
     "wm",
     "wmtheme",
