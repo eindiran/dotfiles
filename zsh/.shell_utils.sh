@@ -162,6 +162,10 @@ update_omz() {
 # Define OS specific stuff here:
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     # macOS
+    iterm2() {
+        /Applications/iTerm.app/Contents/MacOS/iTerm2 2> /dev/null &
+    }
+
     sudoedit() {
         if [[ -n "$EDITOR" ]]; then
             sudo "$EDITOR" "$@"
@@ -265,26 +269,6 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             echo "${HI_YELLOW}Running brew cleanup${ANSI_RESET}"
             brew cleanup --verbose
         )
-    }
-
-    monday() {
-        # Update all tooling repos and packages:
-        (
-            # Use a subshell with set -e
-            set -e
-            update_omz; echo_separator
-            update_homebrew; echo_separator
-            sync_dotfiles; echo_separator
-            sync_git_tools; echo_separator
-            sync_shell_scripts; echo_separator
-            update_vim_plugins; echo_separator
-            dotfiles
-            cd installers
-            ./symlink_dotfiles.sh; echo_separator
-            # Final status:
-            echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"; echo_separator
-            fastfetch
-        ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
     }
 elif [[ "${OSTYPE}" =~ ^linux ]]; then
     # Linux
@@ -525,7 +509,24 @@ status() {
         git -c color.status=always status | tail -n +2; echo; echo_separator
     fi
 }
-
-iterm2() {
-    /Applications/iTerm.app/Contents/MacOS/iTerm2 2> /dev/null &
-}
+if [[ "${OSTYPE}" =~ ^darwin ]]; then
+    monday() {
+        # Update all tooling repos and packages:
+        (
+            # Use a subshell with set -e
+            set -e
+            update_omz; echo_separator
+            update_homebrew; echo_separator
+            sync_dotfiles; echo_separator
+            sync_git_tools; echo_separator
+            sync_shell_scripts; echo_separator
+            update_vim_plugins; echo_separator
+            dotfiles
+            cd installers
+            ./symlink_dotfiles.sh; echo_separator
+            # Final status:
+            echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
+            status
+        ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
+    }
+fi
