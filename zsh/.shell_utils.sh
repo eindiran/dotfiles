@@ -51,6 +51,11 @@ public_ip() {
     fi
 }
 
+ip_info() {
+    # Print IP info about specified IP:
+    curl "https://ipinfo.io/${1}" 2> /dev/null | python3 -c 'import json; import sys; x=json.loads("".join([l.strip() for l in sys.stdin])); print(x.get("city", "") + ", " + x.get("region", "") + ", " + x.get("country", "") + " " + x.get("postal", "") + "\n" + x.get("loc", "") + "\n" + x.get("org"))'
+}
+
 workspace() {
     # shellcheck disable=SC2164
     cd "${WORKSPACE}"
@@ -229,17 +234,22 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         internet_conn="$(ifconfig | rg -A 20 "^en" | rg -v "^[^e\t]" | awk '/status:/{print toupper($2)}' | sort | head -n 1)"
         if [[ "${internet_conn}" == "ACTIVE" ]]; then
             echo "Internet connection is ${BHI_GREEN}${internet_conn}${ANSI_RESET}"
+            # Local/private IP first:
+            local private_ip_addr
+            private_ip_addr="$(local_ip)"
+            echo "Local IP: ${BHI_BLUE}$(local_ip)${ANSI_RESET}"
+            # Then public IP:
             local public_ip_addr
             public_ip_addr="$(public_ip)"
             if [[ -n "${public_ip_addr}" ]]; then
-                echo "Public IP: ${BHI_BLUE}$(public_ip)${ANSI_RESET}"
+                echo "Public IP: ${BHI_BLUE}${public_ip_addr}${ANSI_RESET}"
+                echo "Public IP info: ${BLUE}"
+                ip_info "${public_ip_addr}"
+                printf "${ANSI_RESET}"
             else
                 # Empty
                 echo "${BHI_RED}Failed to connect to internet, no public IP${ANSI_RESET}"
             fi
-            local private_ip_addr
-            private_ip_addr="$(local_ip)"
-            echo "Local IP: ${BHI_BLUE}$(local_ip)${ANSI_RESET}"
         else
             echo "Internet connection is ${BHI_RED}${internet_conn}${ANSI_RESET}"
         fi
