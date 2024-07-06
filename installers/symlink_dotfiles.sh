@@ -24,11 +24,18 @@
 #  REQUIREMENTS: ---
 #         NOTES: ---
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-#      REVISION: 1.0.0
+#      REVISION: 1.0.1
 #
 #===============================================================================
 
 set -Eeuo pipefail
+
+ANSI_RESET="${ANSI_RESET:-\e[0m}"
+BHI_GREEN="${BHI_GREEN:-\e[1;92m}"
+BHI_RED="${BHI_RED:-\e[1;91m}"
+BHI_YELLOW="${BHI_YELLOW:-\e[1;93m}"
+GREEN="${GREEN:-\e[0;32m}"
+HI_YELLOW="${HI_YELLOW:-\e[0;93m}"
 
 usage() {
     # Print the usage and exit
