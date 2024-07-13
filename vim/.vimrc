@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Sun 30 Jun 2024
-" VERSION: 1.5.8
+" LAST MODIFIED: Tue 09 Jul 2024
+" VERSION: 1.5.9
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -54,8 +54,7 @@ Plug 'scrooloose/nerdtree'                 " File browsing
 Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
-Plug 'puremourning/vimspector',
-    \{ 'do': ':VimspectorInstall' }        " Debugger
+Plug 'puremourning/vimspector'             " Debugger
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------
@@ -67,8 +66,7 @@ Plug 'rust-lang/rust.vim'                  " Rust support
 Plug 'posva/vim-vue'                       " Vue support
 Plug 'godlygeek/tabular'                   " Markdown dep
 Plug 'preservim/vim-markdown'              " Markdown
-Plug 'fatih/vim-go',
-    \{ 'do': ':GoUpdateBinaries' }         " Go support
+Plug 'fatih/vim-go'                        " Go support
 call plug#end()
 "---------------------------------------------------------------------
 " vimspector
@@ -496,7 +494,7 @@ function! FormatJSON()
     :%!jq .
 endfunction
 " Now add a mapping `=fj` to this function
-autocmd FileType json nmap <silent> =fj :call FormatJSON()<CR>
+nmap <silent> =fj :call FormatJSON()<CR>
 "---------------------------------------------------------------------
 " Format XML using Python's minidom + some command-mode nonsense
 "---------------------------------------------------------------------
@@ -504,8 +502,9 @@ function! FormatXML()
     :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
 endfunction
 " Now add a mapping `=fx` to this function
-autocmd FileType xml nmap <silent> =fx :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
-" And `=fh` for HTML. This overrides the hex formatter above.
+nmap <silent> =fx :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
+" And `=fh` for HTML. This overrides the hex formatter above, so make it
+" contingent on the filetype being .html
 autocmd FileType html nmap <silent> =fh :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
 "---------------------------------------------------------------------
 " SimpylFold
