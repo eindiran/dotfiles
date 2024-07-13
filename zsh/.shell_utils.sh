@@ -167,6 +167,11 @@ update_omz() {
 # Define OS specific stuff here:
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     # macOS
+    app() {
+        # Open a macOS application
+        open -W -a $@
+    }
+
     iterm2() {
         /Applications/iTerm.app/Contents/MacOS/iTerm2 2> /dev/null &
     }
@@ -196,7 +201,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
 
     meld() {
         # Open the Meld visual diff app from the CLI:
-        /Applications/Meld.app/Contents/MacOS/Meld "$@"
+        app Meld "$@"
     }
 
     resign_discord() {
