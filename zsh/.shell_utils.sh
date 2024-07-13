@@ -167,6 +167,14 @@ update_omz() {
 # Define OS specific stuff here:
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     # macOS
+    xattrclean() {
+        xattr -rc $@
+    }
+
+    xattrlist() {
+        xattr -rlx $@
+    }
+
     app() {
         # Open a macOS application
         open -W -a $@
