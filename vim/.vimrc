@@ -104,7 +104,16 @@ autocmd BufEnter * if tabpagenr('$') == 1
     \&& b:NERDTree.isTabTree()
     \| call feedkeys(":quit\<CR>:\<BS>")
     \| endif
-let NERDTreeIgnore=['\.pyc$', '\~$'] " Ignore files in NERDTree
+" Ignore files in NERDTree
+let NERDTreeIgnore=[
+    \'\.pyc$',
+    \'\~$',
+    \'\.git$',
+    \'\.idea$',
+    \'\.vscode$',
+    \'\.history$',
+    \'\..*\.sw[op]$'
+    \]
 let NERDTreeShowHidden=1  " Show hidden/dot files by default
 " Open current working directory with F11
 nmap <F11> :NERDTreeCWD<CR>
