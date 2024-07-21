@@ -3,8 +3,8 @@
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 " DESCRIPTION: Config file for Vim
 " CREATED: Thu 06 Jul 2017
-" LAST MODIFIED: Tue 09 Jul 2024
-" VERSION: 1.5.9
+" LAST MODIFIED: Sun 21 Jul 2024
+" VERSION: 1.5.10
 "---------------------------------------------------------------------
 set nocompatible
 " This makes it so vim doesn't need to behave like vi
@@ -564,7 +564,7 @@ let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 let g:rust_conceal = 0
-let g:rust_fole = 1
+let g:rust_fold = 1
 let g:rust_recommended_style = 1
 "---------------------------------------------------------------------
 " vim-markdown
