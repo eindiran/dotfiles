@@ -44,7 +44,8 @@ max_win() {
     # Maximize the current window, or if an argument is given
     # search for a window matching that and maximize it
     local WINDOW_NAME
-                       local WINDOW_ID
+    local WINDOW_ID
+
     if [ $# -gt 0 ]; then
         WINDOW_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
@@ -58,7 +59,8 @@ close_win() {
     # Close the specified window
     # Unlike max_win the default is NOT to close the current window
     local WINDOW_NAME
-                       local WINDOW_ID
+    local WINDOW_ID
+
     WINDOW_NAME="$1"
     WINDOW_ID=$(wmctrl -l | rg "$WINDOW_NAME" | awk '{print $1}')
     wmctrl -ic "$WINDOW_ID"
@@ -77,6 +79,10 @@ sw() {
 
 rename_win() {
     # Rename a window
+    local OLD_WINDOW_NAME
+    local NEW_WINDOW_NAME
+    local WINDOW_ID
+
     if [ $# -eq 2 ]; then
         OLD_WINDOW_NAME="$1"
         NEW_WINDOW_NAME="$2"
@@ -94,6 +100,9 @@ rename_win() {
 sticky_win() {
     # Make a window sticky
     # If its already sticky, toggle its stickiness
+    local WINDOW_ID
+    local TARGET_WIN_NAME
+
     if [ $# -eq 1 ]; then
         TARGET_WIN_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$TARGET_WIN_NAME" | awk '{print $1}')
@@ -106,6 +115,9 @@ sticky_win() {
 shade_win() {
     # Make a window shaded
     # If its already shaded, toggle its shadedness
+    local WINDOW_ID
+    local TARGET_WIN_NAME
+
     if [ $# -eq 1 ]; then
         TARGET_WIN_NAME="$1"
         WINDOW_ID=$(wmctrl -l | rg "$TARGET_WIN_NAME" | awk '{print $1}')
@@ -122,6 +134,8 @@ ldesk() {
 
 newdesk() {
     # Create a new desktop
+    local NUM_DESKTOPS
+
     NUM_DESKTOPS=$(wmctrl -d | wc -l)
     NUM_DESKTOPS=$((NUM_DESKTOPS + 1))
     wmctrl -n "$NUM_DESKTOPS"
@@ -129,6 +143,8 @@ newdesk() {
 
 deldesk() {
     # Shut a desktop down
+    local NUM_DESKTOPS
+
     NUM_DESKTOPS=$(wmctrl -d | wc -l)
     if [ "$NUM_DESKTOPS" -gt 1 ]; then
         NUM_DESKTOPS=$((NUM_DESKTOPS - 1))
@@ -138,6 +154,8 @@ deldesk() {
 
 cdesk() {
     # Get the desktop id for the current desktop
+    local DESKTOP_LIST
+
     DESKTOP_LIST=$(wmctrl -d)
     # shellcheck disable=SC2034
     while read -r ID STATUS REMAINDER; do
@@ -151,6 +169,9 @@ EOF
 
 ndesk() {
     # Advance to the next desktop
+    local CURRENT_DESKTOP
+    local NEXT_DESKTOP
+
     CURRENT_DESKTOP=$(cdesk)
     NEXT_DESKTOP=$((CURRENT_DESKTOP + 1))
     wmctrl -s "$NEXT_DESKTOP"
@@ -158,6 +179,9 @@ ndesk() {
 
 pdesk() {
     # Advance to the previous desktop
+    local CURRENT_DESKTOP
+    local PREV_DESKTOP
+
     CURRENT_DESKTOP=$(cdesk)
     PREV_DESKTOP=$((CURRENT_DESKTOP - 1))
     wmctrl -s "$PREV_DESKTOP"
