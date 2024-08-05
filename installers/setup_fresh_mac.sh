@@ -45,7 +45,7 @@ echo "Installing brew..."
 # Install brew packages:
 echo "Installing brew formulae..."
 
-brew install ansifilter cairo cmake coreutils expect fastfetch \
+brew install age ansifilter cairo cmake coreutils expect fastfetch \
     ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
     gnu-sed gnupg go gobject-introspection htop imagemagick java \
     jq librsvg llvm lsd mactex macvim nodejs pandoc perl pkg-config \
