@@ -229,20 +229,6 @@ setopt PUSHD_MINUS
 
 
 #--------------------------------------------------------------------
-# Sourcing my scripts:
-[ -f ~/.ansi_colors.sh ] && source ~/.ansi_colors.sh
-[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
-[ -f ~/.search_utils.sh ] && source ~/.search_utils.sh
-[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
-[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
-# env_variables and hidden.sh should never be checked in and will be
-# unique to each machine.
-[ -f ~/.env_variables ] && source ~/.env_variables
-[ -f ~/.hidden.sh ] && source ~/.hidden.sh
-#--------------------------------------------------------------------
-
-
-#--------------------------------------------------------------------
 # fzf:
 if [ -f ~/.fzf.zsh ]; then
     # FZF Commands:
@@ -356,6 +342,27 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 source $ZSH/oh-my-zsh.sh
+#--------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# Sourcing my scripts:
+# These should go below source omz, since omz tries to overwrite
+# some of these names:
+[ -f ~/.ansi_colors.sh ] && source ~/.ansi_colors.sh
+[ -f ~/.shell_utils.sh ] && source ~/.shell_utils.sh
+[ -f ~/.search_utils.sh ] && source ~/.search_utils.sh
+[ -f ~/.file_utils.sh ] && source ~/.file_utils.sh
+[ -f ~/.tmux_window_utils.sh ] && source ~/.tmux_window_utils.sh
+# env_variables, .hidden/*.sh and hidden.sh should never be checked in and will be
+# unique to each machine.
+[ -f ~/.env_variables ] && source ~/.env_variables
+[ -f ~/.hidden.sh ] && source ~/.hidden.sh
+if [ -d ~/.hidden ]; then
+    for dotfile in ~/.hidden/.*.sh;  do
+        source ${dotfile}
+    done
+fi
 #--------------------------------------------------------------------
 
 
