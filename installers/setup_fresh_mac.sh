@@ -51,11 +51,12 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
     jq librsvg llvm lsd mactex macvim nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
-    zoxide
+    zoxide freetype lzo sshpass bzip2 wireshark
 echo "Installing brew casks..."
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
 brew install --cask imhex
+brew install --cask wireshark-chmodbpf
 # Install Nerd fonts
 echo "Installing brew fonts..."
 brew install font-hack-nerd-font

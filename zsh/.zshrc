@@ -417,3 +417,11 @@ bindkey -s '^h' '_homefzf\n'
 bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+export PYTHONPATH="${PYTHONPATH}:/Users/elliottindiran/Workspace/scratch/mpm_proc2/mpm_processor"
+alias mpmp='source /Users/elliottindiran/Workspace/scratch/mpm_proc2/mpm_processor/.venv/bin/activate'
+if [ -f '/opt/homebrew/share/google-cloud-sdk/path.zsh.inc' ]; then
+    source '/opt/homebrew/share/google-cloud-sdk/path.zsh.inc'
+fi
+if [ -f '/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc' ]; then
+    source '/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc'
+fi
