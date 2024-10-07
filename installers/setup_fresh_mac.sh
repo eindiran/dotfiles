@@ -77,7 +77,7 @@ rustup update
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."
 cargo install action-validator bat broot du-dust fd-find hexyl hx hyperfine \
-    numbat-cli procs ripgrep skim
+    numbat-cli procs ripgrep skim hwatch
 
 # Setup git repos:
 echo "Setting up Workspace"
