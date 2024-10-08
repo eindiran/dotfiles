@@ -553,3 +553,10 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         ) && refresh || echo "${BHI_RED}monday() failed to complete!${ANSI_RESET}"
     }
 fi
+
+ve() {
+    # Start editing a file with the executable bit set to true
+    touch $1
+    chmod a+x ./$1
+    v $1
+}
