@@ -48,10 +48,15 @@ echo "Installing brew formulae..."
 brew install age ansifilter cairo cmake coreutils expect fastfetch \
     ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
     gnu-sed gnupg go gobject-introspection htop imagemagick java \
-    jq librsvg llvm lsd mactex macvim nodejs pandoc perl pkg-config \
+    jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
     zoxide freetype lzo sshpass bzip2 wireshark
+echo "Installing neovim..."
+brew unlink utf8proc && brew install --HEAD utf8proc
+brew install neovim
+# Install the python3 neovim package to enable Python support:
+pip install --break-system-packages neovim
 echo "Installing brew casks..."
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
@@ -130,13 +135,8 @@ echo "Installing Vim plugins"
 cd ~/Workspace/dotfiles/vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./plugins.sh -i
-cd ~/.vim/plugged/YouCompleteMe
-python3 install.py --all
 
 # Setup pip for Python
-echo "Installing pip"
-cd ~/Downloads && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py
 echo "Setting up top-level venv"
 python3 -m venv ~/.venv
 # shellcheck source=/dev/null

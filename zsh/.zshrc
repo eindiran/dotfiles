@@ -9,7 +9,7 @@
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
 #       MODIFIED:    Sun 30 Jun 2024
-#       REVISION:    v1.5.0
+#       REVISION:    v1.5.1
 #
 # ===============================================================================
 
@@ -396,10 +396,10 @@ unalias_if_exists grep
 alias grep="grep --color=auto"
 
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
-    alias vim='mvim -v'
-    alias v='mvim -v'
+    alias vim='nvim'
+    alias v='nvim'
 else
-    alias v='vim'
+    alias v='nvim'
 fi
 alias rm='rm -iv'
 alias mv='mv -v'

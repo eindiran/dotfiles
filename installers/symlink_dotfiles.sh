@@ -149,8 +149,14 @@ fi
 echo "Installing FZF dotfiles"
 chklink "${dotfiles_dir}/fzf" "${HOME}/.fzf"
 
-echo "Installing .vimrc"
-chklink "${dotfiles_dir}/vim/.vimrc" "${HOME}/.vimrc"
+if [[ -d "neovim/" ]]; then
+    echo "Installing neovim init.vim"
+    mkdir -p "${HOME}/.config/nvim"
+    chklink "${dotfiles_dir}/neovim/init.vim" "${HOME}/.config/nvim/init.vim"
+else
+    echo "Installing .vimrc"
+    chklink "${dotfiles_dir}/vim/.vimrc" "${HOME}/.vimrc"
+fi
 
 echo "Installing .tmux.conf"
 chklink "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"

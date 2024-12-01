@@ -1,3 +1,8 @@
 zsh/hidden/*
 .env_variables
 .hidden.sh
+tags
+tags.lock
+*.swo
+*.swp
+.DS_Store

@@ -12,7 +12,7 @@
 #                  -i: Install via PlugInstall
 #                  -u: Update via PlugUpdate
 #                  -c: Clean via PlugClean
-#                  -v: Specify a .vimrc path
+#                  -v: Specify a .vimrc or init.vim path
 #  REQUIREMENTS: Vim, vim-plug
 #      REVISION: 1.0.0
 #
@@ -28,7 +28,7 @@ usage() {
     echo "    -i: install plugins w/ PlugInstall"
     echo "    -u: update plugins w/ PlugUpdate"
     echo "    -c: clean up plugin installation w/ PlugClean"
-    echo "    -v: specify a vimrc file"
+    echo "    -v: specify a vimrc or init.vim file path"
     echo
     exit "$1"
 }
