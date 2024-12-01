@@ -85,7 +85,7 @@ update_vim_plugins() {
     # vim-plug updates and cleanup:
     echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
     # Install, then update, then clean
-    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
+    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c -v "${VIM_CONFIG}"
 }
 
 sync_git_tools() {
