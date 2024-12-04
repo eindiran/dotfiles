@@ -136,6 +136,10 @@ cd ~/Workspace/dotfiles/vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ./plugins.sh -i
 
+# Install checkmake
+echo "Installing checkmake"
+go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+
 # Setup pip for Python
 echo "Setting up top-level venv"
 python3 -m venv ~/.venv

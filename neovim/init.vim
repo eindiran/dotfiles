@@ -182,6 +182,7 @@ let g:ale_linters = {
     \'c': ['clangd', 'clangcheck', 'clangtidy'],
     \'go': ['golangci_lint'],
     \'javascript': ['eslint'],
+    \'make': ['checkmake'],
     \'markdown': ['vale'],
     \'python': ['ruff', 'mypy'],
     \'sh': ['shellcheck'],
