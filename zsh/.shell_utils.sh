@@ -85,7 +85,14 @@ update_vim_plugins() {
     # vim-plug updates and cleanup:
     echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
     # Install, then update, then clean
-    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c -v "${VIM_CONFIG}"
+    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
+}
+
+update_neovim_plugins() {
+    # vim-plug updates and cleanup:
+    echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
+    # Install, then update, then clean
+    "${WORKSPACE}/dotfiles/neovim/plugins.sh" -i -u -c
 }
 
 sync_git_tools() {
@@ -543,7 +550,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             sync_dotfiles; echo_separator
             sync_git_tools; echo_separator
             sync_shell_scripts; echo_separator
-            update_vim_plugins; echo_separator
+            update_neovim_plugins; echo_separator
             dotfiles
             cd installers
             ./symlink_dotfiles.sh; echo_separator
