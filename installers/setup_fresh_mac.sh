@@ -149,5 +149,15 @@ echo "Installing common pip packages..."
 pip install PyGObject art build coverage matplotlib meson mypy ninja \
     numpy opencv pandas pango pillow precommit pycairo qrcode ruff scipy \
     setuptools setuptools sphinx torch twine wheel
+
+echo "Setting up ZLS for Zig"
+cd ~
+mkdir -p .zls
+cd .zls
+git clone https://github.com/zigtools/zls
+cd zls
+git checkout 0.13.0
+zig build -Doptimize=ReeaseSafe
+
 echo "Setup completed!"
 fastfetch
