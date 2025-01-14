@@ -63,6 +63,7 @@ Plug 'eindiran/c-support'                  " C/C++ support
 Plug 'eindiran/bash-support.vim'           " Shell scripting integration
 Plug 'tmhedberg/SimpylFold'                " Python folding
 Plug 'rust-lang/rust.vim'                  " Rust support
+Plug 'ziglang/zig.vim'                     " Zig support
 Plug 'posva/vim-vue'                       " Vue support
 Plug 'godlygeek/tabular'                   " Markdown dep
 Plug 'preservim/vim-markdown'              " Markdown
