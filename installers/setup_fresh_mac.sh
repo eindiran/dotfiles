@@ -158,6 +158,7 @@ git clone https://github.com/zigtools/zls
 cd zls
 git checkout 0.13.0
 zig build -Doptimize=ReeaseSafe
+sudo ln -fns ~/.zls/zls/zig-out/bin/zls /usr/local/bin/zls
 
 echo "Setup completed!"
 fastfetch
