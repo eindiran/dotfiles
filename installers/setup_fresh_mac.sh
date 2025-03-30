@@ -51,7 +51,7 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
     jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
-    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig
+    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld
 echo "Installing neovim..."
 brew unlink utf8proc && brew install --HEAD utf8proc
 brew install neovim
