@@ -150,12 +150,10 @@ echo "Installing FZF dotfiles"
 chklink "${dotfiles_dir}/fzf" "${HOME}/.fzf"
 
 if [[ -d "neovim/" ]]; then
-    echo "Installing neovim neovim.vim"
+    echo "Installing neovim dotfiles"
     mkdir -p "${HOME}/.config/nvim"
     chklink "${dotfiles_dir}/neovim/neovim.vim" "${HOME}/.config/nvim/neovim.vim"
-    echo "Installing neovim plugs.vim"
     chklink "${dotfiles_dir}/neovim/plugs.vim" "${HOME}/.config/nvim/plugs.vim"
-    echo "Installing neovim init.lua"
     chklink "${dotfiles_dir}/neovim/init.lua" "${HOME}/.config/nvim/init.lua"
 else
     echo "Installing .vimrc"
