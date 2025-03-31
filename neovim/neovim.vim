@@ -15,12 +15,12 @@ set nocompatible
 " which allows it to use plugins and a variety of other goodies.
 set encoding=utf-8
 " Work with UTF-8
+" Use `autoread`, for `vim-tmux-focus-events`
 set autoread
 " Disable writing backups before overwriting files:
 set nobackup
 " Force backup swap files:
 set writebackup
-" Use `autoread`, for `vim-tmux-focus-events`
 " Enable filetype detection, with plugin and indent; see
 " :help filetype for more info.
 filetype plugin indent on
@@ -28,54 +28,8 @@ filetype plugin indent on
 if !exists('g:syntax_on')
     syntax enable
 endif
-"---------------------------------------------------------------------
-" vim-plug
-"---------------------------------------------------------------------
-" First setup vim-plug if required:
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source ~/.config/init.vim
-  \| endif
-" Now call vim-plug begin:
-call plug#begin()
-"---------------------------------------------------------------------
-" General plugins:
-"---------------------------------------------------------------------
-Plug 'ycm-core/YouCompleteMe'              " Code Completion plugin
-Plug 'dense-analysis/ale'                  " Multi lang linting manager
-Plug 'vim-airline/vim-airline'             " Use the vim-airline status bar
-Plug 'vim-airline/vim-airline-themes'      " Setup the theme of the status bar
-Plug 'tmux-plugins/vim-tmux'               " For vim-tmux integration
-Plug 'tmux-plugins/vim-tmux-focus-events'  " For vim-tmux integration
-Plug 'roxma/vim-tmux-clipboard'            " For vim-tmux integration w/ clipboard
-Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
-Plug 'tpope/vim-commentary'                " Commenting keybinds
-Plug 'tpope/vim-fugitive'                  " Integration w/ git
-Plug 'tpope/vim-repeat'                    " Make . handle commentary and surround
-Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
-Plug 'scrooloose/nerdtree'                 " File browsing
-Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
-Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
-Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
-Plug 'puremourning/vimspector'             " Debugger
-"---------------------------------------------------------------------
-" Filetype specific plugins:
-"---------------------------------------------------------------------
-Plug 'eindiran/awk-support'                " awk support
-Plug 'eindiran/c-support'                  " C/C++ support
-Plug 'eindiran/bash-support.vim'           " Shell scripting integration
-Plug 'tmhedberg/SimpylFold'                " Python folding
-Plug 'rust-lang/rust.vim'                  " Rust support
-Plug 'ziglang/zig.vim'                     " Zig support
-Plug 'posva/vim-vue'                       " Vue support
-Plug 'godlygeek/tabular'                   " Markdown dep
-Plug 'preservim/vim-markdown'              " Markdown
-Plug 'fatih/vim-go'                        " Go support
-call plug#end()
+" Source plugins w/ vim-plug:
+source ~/.config/nvim/plugs.vim
 "---------------------------------------------------------------------
 " vimspector
 "---------------------------------------------------------------------
@@ -183,6 +137,7 @@ let g:ale_linters = {
     \'c': ['clangd', 'clangcheck', 'clangtidy'],
     \'go': ['golangci_lint'],
     \'javascript': ['eslint'],
+    \'lua': ['luacheck'],
     \'make': ['checkmake'],
     \'markdown': ['vale'],
     \'python': ['ruff', 'mypy'],
@@ -197,6 +152,7 @@ let g:ale_linter_aliases = {'vue': ['vue', 'css', 'javascript', 'html']}
 let g:ale_fixers = {
     \'c': ['clangformat', 'clangtidy'],
     \'javascript': ['eslint', 'prettier'],
+    \'lua': ['stylua'],
     \'markdown': ['prettier'],
     \'python': ['ruff', 'ruff_format'],
     \'sh': ['shfmt'],
@@ -239,23 +195,8 @@ endfunction
 nmap <silent> =da :call DisableALE()<CR>
 nmap <silent> =ea :call EnableALE()<CR>
 nmap <silent> <F2> :call ToggleALE()<CR>
-"---------------------------------------------------------------------
-" Setup airline status bar:
-"---------------------------------------------------------------------
-" Airline formatter:
-let g:airline#extensions#tabline#formatter = 'default'
-" Support using the status bar with ALE:
-let g:airline#extensions#ale#enabled = 1
-" Support using the status bar with YCM:
-let g:airline#extensions#ycm#enabled = 1
-" Support using the status bar with NerdTree:
-let g:airline#extensions#nerdtree#enabled = 1
-" Support using the status bar with FZF.vim:
-let g:airline#extensions#fzf#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline_theme='base16_gruvbox_dark_hard'
 " Make the bar toggle w/ F10
-nmap <silent> <F10> :AirlineToggle<CR>
+" nmap <silent> <F10> :AirlineToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
@@ -267,7 +208,10 @@ colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
 if trim(system('uname -s')) ==? 'Darwin'
     " On macOS, make sure we set up some fiddly bits for YCM
     let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
-    " let g:ycm_server_python_interpreter='/opt/homebrew/bin/python3'
+
+    " Below doesn't seem necessary anymore, but leaving it here for a while just
+    " in case I need to remember how to do it
+    " let g:ycm_server_python_interpreter = trim(system('brew --prefix python3')).'/bin/python3'
 endif
 let g:ycm_filetype_whitelist={'*': 1}
 let g:ycm_filetype_blacklist={
