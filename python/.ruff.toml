@@ -1,7 +1,7 @@
 # Configuration for ruff linter + ruff formatter
 
-# Assume Python 3.12:
-target-version = "py312"
+# Assume Python 3.13:
+target-version = "py313"
 
 # Max line length:
 line-length = 101
@@ -24,6 +24,7 @@ exclude = [
     ".tox",
     ".venv",
     "__pypackages__",
+    "__pycache__",
     "_build",
     "buck-out",
     "build",
@@ -35,7 +36,8 @@ exclude = [
 [lint]
 # Enable pycodestyle (`E`, `W`), Pyflakes (`F`), flake8-bugbear (`B`),
 # pydocstyle (`D`), Ruff (`RUF`), pyupgrade (`UP`), flake8-async (`ASYNC`),
-# PyLint (`PL`), and Pandas-specific (`PD`) codes.
+# PyLint (`PL`), flake8-annotation (`ANN`), Pandas-specific (`PD`),
+# Numpy (`NPY`), Ruff (`RUF`), and type hint (`TC`) codes.
 # Don't enable C901 (McCabe complexity)
 select = [
     "I",
@@ -46,13 +48,19 @@ select = [
     "D",
     "UP",
     "ASYNC",
+    "ANN",
+    "PD",
+    "NPY",
     "RUF",
     "PL",
+    "TC",
 ]
 ignore = [
-    "D105",  # undocumented-magic-method
-    "D106",  # undocumented-public-nested-class
-    "D107",  # undocumented-public-init
+    "ANN002", # missing-type-args
+    "ANN003", # missing-type-kwargs
+    "ANN101", # missing-type-self
+    "ANN102", # missing-type-cls
+    "ANN401", # any-type
     "D200",  # fits-on-one-line
     "D203",  # one-blank-line-before-class
     "D204",  # one-blank-line-after-class
@@ -61,16 +69,9 @@ ignore = [
     "D212",  # multi-line-summary-first-line
     "D400",  # ends-in-period
     "D401",  # non-imperative-mood
-    "D402",  # no-signature
     "D415",  # ends-in-punctuation
     "D404",  # docstring-starts-with-this
-    "E712",  # true-false-comparison
     "E741",  # ambiguous-variable-name
-    "B009",  # get-attr-with-constant
-    "B010",  # set-attr-with-constant
-    "B905",  # zip-without-explicit-strict
-    "E402",  # module-import-not-at-top-of-file
-    "D413",  # missing-blank-line-after-last-section
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -133,6 +134,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "__init__.py" = [
     "E402",  # Import violations
     "F401",
+    "I001",
 ]
 
 [format]
