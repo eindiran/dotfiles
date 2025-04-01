@@ -58,6 +58,7 @@ brew install neovim
 # Install the python3 neovim package to enable Python support:
 pip install --break-system-packages neovim
 echo "Installing brew casks..."
+brew install --cask iterm2
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
 brew install --cask imhex
