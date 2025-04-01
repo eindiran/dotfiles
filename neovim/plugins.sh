@@ -34,21 +34,21 @@ usage() {
 }
 
 install_vimplug_plugins() {
-    nvim -c ':PlugInstall' -c ':q' -c ':q' -u "$1"
+    nvim -c ':PlugInstall' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
 }
 
 update_vimplug_plugins() {
-    nvim -c ':PlugUpdate' -c ':q' -c ':q' -u "$1"
+    nvim -c ':PlugUpdate' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
 }
 
 clean_vimplug_plugins() {
-    nvim -c ':PlugClean' -c ':q' -c ':q' -u "$1"
+    nvim -c ':PlugClean' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
 }
 
 PLUG_INSTALL=false
 PLUG_UPDATE=false
 PLUG_CLEAN=false
-VIMRC_PATH="$HOME/.config/nvim/init.vim"
+VIMRC_PATH="$HOME/.config/nvim/init.lua"
 
 while getopts "hiucv:" option; do
     case "${option}" in
