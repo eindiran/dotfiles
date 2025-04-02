@@ -9,6 +9,12 @@
 "---------------------------------------------------------------------
 
 "---------------------------------------------------------------------
+" Setup fugitive:
+"---------------------------------------------------------------------
+nnoremap <Leader>gd :Gvdiff<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
+"---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
 let g:ale_disable_lsp = 1
@@ -111,121 +117,6 @@ let g:ycm_language_server =
     \   }
     \]
 "---------------------------------------------------------------------
-" Do Automatic Versioning
-"---------------------------------------------------------------------
-" autocmd! BufWritePre * :call UpdatePatchVersion()
-" Uses 'autocmd' to update the patch version when saving - disabled
-function! UpdatePatchVersion()
-    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\.\)\(\d\+\)@\=submatch(1) . submatch(2) . submatch(3) . (submatch(4) + 1)@
-    " Hardcoded to first 20 lines
-endfunction
-nmap <silent> =vp :call UpdatePatchVersion()<CR>
-function! UpdateMinorVersion()
-    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\d\+\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0@
-    " Hardcoded to first 20 lines
-endfunction
-nmap <silent> =vv :call UpdateMinorVersion()<CR>
-function! UpdateMajorVersion()
-    :1,20s@\(REVISION\s*:\s*\|VERSION\s*:\s*\)\(v\?\)\(\d\+\)\(\.\)\(\d\+\)\(\.\)\(\d\+\)@\=submatch(1) . submatch(2) . (submatch(3) + 1) . submatch(4) . 0 . submatch(6) . 0@
-    " Hardcoded to first 20 lines
-endfunction
-nmap <silent> =vm :call UpdateMajorVersion()<CR>
-"---------------------------------------------------------------------
-" Do Automatic Timestamping
-"---------------------------------------------------------------------
-" autocmd! BufWritePre * :call UpdateTimestamp()
-" Uses 'autocmd' to update timestamp when saving - disabled
-function! UpdateTimestamp()
-    " Matches "[LAST] (CHANGE[D]|UPDATE[D]|MODIFIED): "
-    " Case sensitive. Replaces everything after that w/ timestamp
-    " in format: "FRI 07 JUL 2017"
-    let pat = '\(\(LAST\)\?\s*\(CHANGED\?\|MODIFIED\|UPDATED\?\)\s*:\s*\).*'
-    let rep = '\1' . strftime("%a %d %b %Y")
-    call s:subst(1, 20, pat, rep)
-    " Hardcoded to first 20 lines
-endfunction
-nmap <silent> =t :call UpdateTimestamp()<CR>
-"---------------------------------------------------------------------
-" Substitute within a line
-" This function was taken from timestamp.vim
-"---------------------------------------------------------------------
-function! s:subst(start, end, pat, rep)
-    let lineno = a:start
-    while lineno <= a:end
-        let curline = getline(lineno)
-        if match(curline, a:pat) != -1
-            let newline = substitute(curline, a:pat, a:rep, '')
-            if (newline != curline)
-                " Only substitute if we made a change
-                keepjumps call setline(lineno, newline)
-            endif
-        endif
-        let lineno = lineno + 1
-    endwhile
-endfunction
-"---------------------------------------------------------------------
-" Toggle between relativenumber and norelativenumber
-"---------------------------------------------------------------------
-function! ToggleNumber()
-    if (&relativenumber == 1)
-        set norelativenumber
-        set number
-    else
-        set relativenumber
-    endif
-endfunction
-nmap <silent> =n :call ToggleNumber()<CR>
-"---------------------------------------------------------------------
-" Show all currently mapped keys
-"---------------------------------------------------------------------
-function! ShowAllMappedKeys()
-    :map
-endfunction
-"---------------------------------------------------------------------
-" Show the currently mapped Fn keys
-"---------------------------------------------------------------------
-function! ShowMappedFKeys()
-    for i in range(1, 12)
-        if !empty(mapcheck('<F'.i.'>'))
-            execute 'map <F'.i.'>'
-        endif
-    endfor
-endfunction
-"---------------------------------------------------------------------
-" Format hex using `xxd`
-"---------------------------------------------------------------------
-function! FormatHex()
-    set ft=xxd
-    :%!xxd
-endfunction
-" Add a mapping to `=fh`
-nmap <silent> =fh :call FormatHex()<CR>
-" Once editing is complete, use =b to go back to binary
-function! FormatBinary()
-    :%!xxd -r
-endfunction
-" Add a mapping to `=fb`
-nmap <silent> =fb :call FormatBinary()<CR>
-"---------------------------------------------------------------------
-" Format JSON using jq
-"---------------------------------------------------------------------
-function! FormatJSON()
-    :%!jq .
-endfunction
-" Now add a mapping `=fj` to this function
-nmap <silent> =fj :call FormatJSON()<CR>
-"---------------------------------------------------------------------
-" Format XML using Python's minidom + some command-mode nonsense
-"---------------------------------------------------------------------
-function! FormatXML()
-    :%!python3 -c "import xml.dom.minidom, sys; print(xml.dom.minidom.parse(sys.stdin).toprettyxml())"
-endfunction
-" Now add a mapping `=fx` to this function
-nmap <silent> =fx :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
-" And `=fh` for HTML. This overrides the hex formatter above, so make it
-" contingent on the filetype being .html
-autocmd FileType html nmap <silent> =fh :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
-"---------------------------------------------------------------------
 " vim-go
 "---------------------------------------------------------------------
 " These settings were taken from this blogpost:
@@ -305,16 +196,3 @@ let g:vim_markdown_math = 1
 let g:vim_markdown_strikethrough = 1
 " Support markdown concealing
 let g:vim_markdown_conceal = 2
-"---------------------------------------------------------------------
-" Git
-"---------------------------------------------------------------------
-" Map search for git conflicts to `=c`
-nmap =c /\v\<{7}\|\={7}\|\>{7}<CR>
-" Map function that deletes the conflict under the cursor to `=d`
-function! DeleteConflictSection()
-    :,/\v(\<{7}|\={7}|\>{7})/-d
-endfunction
-nnoremap <silent> =d :call DeleteConflictSection()<CR>
-nnoremap <Leader>gd :Gvdiff<CR>
-nnoremap gdh :diffget //2<CR>
-nnoremap gdl :diffget //3<CR>

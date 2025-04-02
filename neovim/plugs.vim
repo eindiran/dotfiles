@@ -24,10 +24,12 @@ Plug 'nvim-lualine/lualine.nvim'           " Status line for nvim
 Plug 'nvim-neo-tree/neo-tree.nvim'         " File browser
 Plug 'echasnovski/mini.nvim'               " Powerful plugin with many features
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
+Plug 'tpope/vim-abolish'                   " Smart handling of advanced regexes
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
 Plug 'puremourning/vimspector'             " Debugger
+Plug 'eindiran/utils.vim'                  " General utilities
 "---------------------------------------------------------------------
 " Filetype specific plugins:
 "---------------------------------------------------------------------

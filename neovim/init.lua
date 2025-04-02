@@ -4,7 +4,7 @@
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
 --  LAST MODIFIED: Wed 02 Apr 2025
---  VERSION: 1.0.6
+--  VERSION: 1.0.11
 -----------------------------------------------------------------
 
 -----------------------------------------------------------------
@@ -86,6 +86,13 @@ vim.o.listchars = "tab:▸·,trail:·,nbsp:·"
 vim.opt.clipboard:prepend("unnamed,unnamedplus")
 
 -----------------------------------------------------------------
+-- utils.vim
+-----------------------------------------------------------------
+vim.g.utilsvim_gitconflict_exact = 1
+vim.g.utilsvim_autoversion = 0
+vim.g.utilsvim_autotimestamp = 1
+
+-----------------------------------------------------------------
 -- Case sensitivity:
 -----------------------------------------------------------------
 vim.o.ignorecase = true -- Ignore case when searching
@@ -149,6 +156,16 @@ if vim.fn.filereadable(gitignore_file) == 1 then
 end
 
 -----------------------------------------------------------------
+-- Yanking
+-----------------------------------------------------------------
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.hl.on_yank()
+    end,
+    desc = "Briefly highlight yanked text",
+})
+
+-----------------------------------------------------------------
 -- Paragraph formatting
 -----------------------------------------------------------------
 -- Use Q for formatting the current paragraph (or selection)
@@ -200,6 +217,7 @@ map("n", "=sw", function()
 end, { silent = true, remap = false })
 map("n", "=sa", ":%!sort<CR>", { silent = true, remap = false })
 map("n", "=sn", ":%!sort -n<CR>", { silent = true, remap = false })
+
 -----------------------------------------------------------------
 -- Set behaviors on buffer load for specific filetypes:
 -----------------------------------------------------------------
@@ -586,6 +604,57 @@ require("neo-tree").setup({
 --  Other than the key mappings defined above ^
 --  And the F-key mappings defined below
 -----------------------------------------------------------------
+map(
+    "n",
+    "=vp",
+    "<Plug>(UpdatePatchVersion)",
+    { silent = true, remap = false, desc = "Update the patch version number" }
+)
+map(
+    "n",
+    "=vi",
+    "<Plug>(UpdateMinorVersion)",
+    { silent = true, remap = false, desc = "Update the minor version number" }
+)
+map(
+    "n",
+    "=vm",
+    "<Plug>(UpdateMajorVersion)",
+    { silent = true, remap = false, desc = "Update the major version number" }
+)
+map(
+    "n",
+    "=t",
+    "<Plug>(UpdateTimestamp)",
+    { silent = true, remap = false, desc = "Update the timestamp for last modification" }
+)
+map(
+    "n",
+    "=n",
+    "<Plug>(ToggleRelativeNumber)",
+    { silent = true, remap = false, desc = "Toggle relative line numbers" }
+)
+map("n", "=fh", "<Plug>(FormatHex)", { silent = true, remap = false, desc = "Format hex file" })
+map(
+    "n",
+    "=fb",
+    "<Plug>(FormatBinary)",
+    { silent = true, remap = false, desc = "Format binary file" }
+)
+map("n", "=fj", "<Plug>(FormatJSON)", { silent = true, remap = false, desc = "Format JSON file" })
+map("n", "=fx", "<Plug>(FormatXML)", { silent = true, remap = false, desc = "Format XML file" })
+map(
+    "n",
+    "=c",
+    "<Plug>(SearchGitConflictMarkers)",
+    { silent = true, remap = false, desc = "Automatically search for conflict markers" }
+)
+map(
+    "n",
+    "=d",
+    "<Plug>(DeleteGitConflictSection)",
+    { silent = true, remap = false, desc = "Delete git conflict section currently under the cursor" }
+)
 
 -----------------------------------------------------------------
 --  F-key mappings
@@ -594,7 +663,7 @@ require("neo-tree").setup({
 map(
     "n",
     "<F1>",
-    ":call ShowMappedFKeys()<CR>",
+    "<Plug>(ShowMappedFKeys)",
     { silent = true, remap = false, desc = "Show the list of mapped Function keys" }
 )
 map(
