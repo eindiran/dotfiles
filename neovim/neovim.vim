@@ -1,10 +1,11 @@
 "'---------------------------------------------------------------------
-" FILE: init.vim
+" FILE: neovim.vim
 " AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-" DESCRIPTION: Config file for NeoVim
+" DESCRIPTION: Config file for NeoVim (in vimscript). Slowly being
+" being replaced by init.lua which is in NeoVim's native Lua
 " CREATED: Sun 21 Jul 2024
-" LAST MODIFIED: Tue 17 Dec 2024
-" VERSION: 1.0.4
+" LAST MODIFIED: Tue 01 Apr 2025
+" VERSION: 1.0.6
 "---------------------------------------------------------------------
 " NeoVim specifics:
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -30,96 +31,6 @@ if !exists('g:syntax_on')
 endif
 " Source plugins w/ vim-plug:
 source ~/.config/nvim/plugs.vim
-"---------------------------------------------------------------------
-" vimspector
-"---------------------------------------------------------------------
-let g:vimspector_install_gadgets = ['debugpy', 'CodeLLDB']
-nmap <silent> <Leader><F3>  <Plug>VimspectorStop
-nmap <silent> <Leader><F4>  <Plug>VimspectorRestart
-nmap <silent> <Leader><F5>  <Plug>VimspectorContinue
-nmap <silent> <Leader><F6>  <Plug>VimspectorPause
-nmap <silent> <Leader><F7>  <Plug>VimspectorRunToCursor
-nmap <silent> <Leader><F8>  <Plug>VimspectorToggleConditionalBreakpoint
-nmap <silent> <Leader><F9>  <Plug>VimspectorToggleBreakpoint
-nmap <silent> <Leader><F10> <Plug>VimspectorStepOver
-nmap <silent> <Leader><F11> <Plug>VimspectorStepInto
-nmap <silent> <Leader><F12> <Plug>VimspectorStepOut
-nmap <silent> <Leader>di    <Plug>VimspectorBalloonEval
-xmap <silent> <Leader>di    <Plug>VimspectorBalloonEval
-nmap <silent> =<F11>        <Plug>VimspectorUpFrame
-nmap <silent> =<F12>        <Plug>VimspectorDownFrame
-nmap <silent> <Leader>b     <Plug>VimspectorBreakpoints
-nmap <silent> <Leader><C-D> <Plug>VimspectorDisassemble
-"---------------------------------------------------------------------
-" NERDTree
-"---------------------------------------------------------------------
-" Start NERDTree automatically if vim is started with a filename
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0
-    \&& !exists('s:std_in')
-    \| NERDTree
-    \| endif
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-autocmd BufEnter * if tabpagenr('$') == 1
-    \&& winnr('$') == 1
-    \&& exists('b:NERDTree')
-    \&& b:NERDTree.isTabTree()
-    \| call feedkeys(":quit\<CR>:\<BS>")
-    \| endif
-" Ignore files in NERDTree
-let NERDTreeIgnore=[
-    \'\.pyc$',
-    \'\~$',
-    \'\.git$',
-    \'\.idea$',
-    \'\.vscode$',
-    \'\.history$',
-    \'\..*\.sw[op]$'
-    \]
-let NERDTreeShowHidden=1  " Show hidden/dot files by default
-" Open current working directory with F11
-nmap <F11> :NERDTreeCWD<CR>
-" Toggle NerdTree with F12
-nmap <F12> :NERDTreeToggle<CR>
-"---------------------------------------------------------------------
-" FZF.vim
-"---------------------------------------------------------------------
-if trim(system('uname -s')) ==? 'Darwin'
-    set rtp+=/opt/homebrew/opt/fzf
-else
-    " FZF installed in home directory
-    set rtp+=~/.fzf
-endif
-let g:fzf_vim = {}
-let g:fzf_vim.preview_window = ['hidden,right,50%,<70(up,40%)', 'ctrl-/']
-let g:fzf_vim.commits_log_options = '--graph --color=always'
-let g:fzf_vim.tags_command = 'ctags -R'
-let g:fzf_vim.listproc_rg = { list -> fzf#vim#listproc#location(list) }
-" FZF key-mappings:
-nmap <silent> <Leader><Tab> <Plug>(fzf-maps-n)
-xmap <silent> <Leader><Tab> <Plug>(fzf-maps-x)
-omap <silent> <Leader><Tab> <Plug>(fzf-maps-o)
-imap <C-X><C-W> <Plug>(fzf-complete-word)
-imap <expr> <C-X><C-P> fzf#vim#complete#path('fd')
-imap <expr> <C-X><C-F> fzf#vim#complete#path('fd -t f')
-imap <C-X><C-L> <Plug>(fzf-complete-line)
-imap <C-X><C-B> <Plug>(fzf-complete-buffer-line)
-"---------------------------------------------------------------------
-" Folding
-"---------------------------------------------------------------------
-" Enable folding
-set foldmethod=syntax  " Fold by syntax rather than indent or manual
-set foldlevelstart=99  " All folds open on file open; can be overriden
-" on some filetypes/plugins. Eg vim-markdown folds much more aggressively
-" Unfold w/ spacebar
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-" Reset folds with spacebar minus
-nnoremap <silent> <Space>- :e!<CR>
-" Totally unfold everything
-nnoremap <silent> <Space>+ @=(foldlevel('.')?'zR':"\<Space>")<CR>
-" Totally refold everything
-nmap <silent> <Space>= zM<CR>
-vnoremap <Space> zf
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
@@ -192,11 +103,6 @@ function! ToggleALE()
         call EnableALE()
     endif
 endfunction
-nmap <silent> =da :call DisableALE()<CR>
-nmap <silent> =ea :call EnableALE()<CR>
-nmap <silent> <F2> :call ToggleALE()<CR>
-" Make the bar toggle w/ F10
-" nmap <silent> <F10> :AirlineToggle<CR>
 "---------------------------------------------------------------------
 " Colors <background, syntax colors>
 "---------------------------------------------------------------------
@@ -261,15 +167,11 @@ set listchars=tab:▸·,trail:·,nbsp:·
 " macOS - see here: https://stackoverflow.com/questions/17561706/
 " Linux - see here: https://vim.wikia.com/wiki/VimTip21
 set clipboard^=unnamed,unnamedplus
-" Maps <F4> key to copying the entire text file to the system clipboard
-nnoremap <silent> <F4> :%y+ <CR>
 "---------------------------------------------------------------------
 " Case sensitivity:
 "---------------------------------------------------------------------
 set ignorecase            " Ignore case when searching
 set smartcase             " Case-insensitive if all chars are lowercase
-" Map F9 to case sensitivity toggle:
-nnoremap <silent> <F9> :set ignorecase! ignorecase?<CR>:set smartcase! smartcase?<CR>
 "---------------------------------------------------------------------
 " Dynamically set wildignore from .gitignore:
 " Try to use local gitignore, or global one if we can't find or can't
@@ -316,8 +218,6 @@ endif
 " Use Q for formatting the current paragraph (or selection)
 vmap Q gq
 nmap Q gqap
-" Remove all trailing whitespace by pressing F6
-nnoremap <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 "---------------------------------------------------------------------
 " Window controls
 "---------------------------------------------------------------------
@@ -432,7 +332,6 @@ nmap <silent> =n :call ToggleNumber()<CR>
 function! ShowAllMappedKeys()
     :map
 endfunction
-nmap <F1> :call ShowAllMappedKeys()<CR>
 "---------------------------------------------------------------------
 " Show the currently mapped Fn keys
 "---------------------------------------------------------------------
@@ -443,7 +342,6 @@ function! ShowMappedFKeys()
         endif
     endfor
 endfunction
-nmap <F8> :call ShowMappedFKeys()<CR>
 "---------------------------------------------------------------------
 " Format hex using `xxd`
 "---------------------------------------------------------------------

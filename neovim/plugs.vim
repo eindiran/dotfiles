@@ -15,17 +15,18 @@ call plug#begin()
 "---------------------------------------------------------------------
 " General plugins:
 "---------------------------------------------------------------------
+Plug 'nvim-lua/plenary.nvim'               " Dependency of many packages
+Plug 'MunifTanjim/nui.nvim'                " UI component library for NeoVim
+Plug 'nvim-tree/nvim-web-devicons'         " NeoVim Icon support
 Plug 'ycm-core/YouCompleteMe'              " Code Completion plugin
 Plug 'dense-analysis/ale'                  " Multi lang linting manager
 Plug 'nvim-lualine/lualine.nvim'           " Status line for nvim
-Plug 'nvim-tree/nvim-web-devicons'         " Icon support for lualine.nvim
+Plug 'nvim-neo-tree/neo-tree.nvim'         " File browser
 Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
 Plug 'tpope/vim-commentary'                " Commenting keybinds
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
 Plug 'tpope/vim-repeat'                    " Make . handle commentary and surround
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
-Plug 'scrooloose/nerdtree'                 " File browsing
-Plug 'jistr/vim-nerdtree-tabs'             " Using tabs
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 Plug 'ludovicchabant/vim-gutentags'        " Tag file generator
 Plug 'puremourning/vimspector'             " Debugger
