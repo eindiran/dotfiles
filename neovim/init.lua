@@ -3,10 +3,13 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Tue 01 Apr 2025
---  VERSION: 1.0.5
+--  LAST MODIFIED: Wed 02 Apr 2025
+--  VERSION: 1.0.6
 -----------------------------------------------------------------
 
+-----------------------------------------------------------------
+-- Notes:
+-----------------------------------------------------------------
 -- In the far off happy world where the vimscript is replaced entirely,
 -- we should source the vimplug code here specifically:
 -- vim.cmd('source ~/.config/nvim/plugs.vim')
@@ -22,14 +25,192 @@
 -- or avante (https://github.com/yetone/avante.nvim)
 -- Debugger: nvim-dap (https://github.com/mfussenegger/nvim-dap)
 
--- vim.opt.termguicolors = true
-
--- Source vimscript neovim config
-vim.cmd("source ~/.config/nvim/neovim.vim")
+-----------------------------------------------------------------
+-- Initial setup
+-----------------------------------------------------------------
+-- Prepend ~/.vim to runtimepath
+-- Equivalent to: set runtimepath^=~/.vim
+vim.opt.runtimepath:prepend(vim.fn.expand("~/.vim"))
+-- Append ~/.vim/after to runtimepath
+-- Equivalent to: set runtimepath+=~/.vim/after
+vim.opt.runtimepath:append(vim.fn.expand("~/.vim/after"))
+-- Set packpath to equal the modified runtimepath
+-- Equivalent to: let &packpath = &runtimepath
+vim.opt.packpath = vim.opt.runtimepath:get()
 -- Set the <Leader> key to \ (backslash)
 vim.g.mapleader = "\\"
 -- Get system OS info:
 local uname_info = vim.loop.os_uname()
+-- Make it so we don't need to type 'vim.keymap.set' every time we
+-- want to map keys
+local map = vim.keymap.set
+
+-----------------------------------------------------------------
+-- Source plugins w/ vim-plug, then source vimscript neovim config.
+-- This is done to gradually bootstrap into using Lua for the entire
+-- config.
+-----------------------------------------------------------------
+vim.cmd("source " .. vim.fn.expand("~/.config/nvim/plugs.vim"))
+vim.cmd("source " .. vim.fn.expand("~/.config/nvim/neovim.vim"))
+
+-----------------------------------------------------------------
+--  Color scheme
+-----------------------------------------------------------------
+vim.opt.background = "dark"
+vim.opt.termguicolors = true
+vim.cmd("colorscheme gruvbox")
+
+-----------------------------------------------------------------
+-- Spaces, Tabs, and indenting behavior:
+-----------------------------------------------------------------
+vim.o.tabstop = 4 -- 4 space per tab press
+vim.o.expandtab = true -- Use spaces for tabs
+vim.o.softtabstop = 4 -- 4 space per tab press
+vim.o.shiftwidth = 4 -- 4 spaces per shift (>)
+vim.o.shiftround = true -- Round indentation to a multiple of shiftwidth
+vim.o.virtualedit = "all" -- Allow movement/insert past the final char in a line
+vim.o.copyindent = true -- Use the whitespace characters of the previous line
+
+-----------------------------------------------------------------
+-- UI
+-----------------------------------------------------------------
+vim.o.number = true -- Show line numbers
+vim.o.visualbell = true -- Don't beep
+vim.o.errorbells = false -- Don't beep
+-- The below two lines show which whitespace is tabs vs spaces
+vim.o.list = true
+vim.o.listchars = "tab:▸·,trail:·,nbsp:·"
+-- Make vim use the system clipboard:
+-- macOS - see here: https://stackoverflow.com/questions/17561706/
+-- Linux - see here: https://vim.wikia.com/wiki/VimTip21
+vim.opt.clipboard:prepend("unnamed,unnamedplus")
+
+-----------------------------------------------------------------
+-- Case sensitivity:
+-----------------------------------------------------------------
+vim.o.ignorecase = true -- Ignore case when searching
+vim.o.smartcase = true -- Case-insensitive if all chars are lowercase
+
+-----------------------------------------------------------------
+-- Dynamically set wildignore from .gitignore
+-----------------------------------------------------------------
+-- Try to use local gitignore, or global one if we can't find or can't
+-- load the local one.
+local local_gitignore = ".gitignore"
+local global_gitignore = vim.fn.expand("~/.gitignore")
+local gitignore_file = (vim.fn.filereadable(local_gitignore) == 1) and local_gitignore
+    or global_gitignore
+if vim.fn.filereadable(gitignore_file) == 1 then
+    local lines = vim.fn.readfile(gitignore_file)
+    local ignore_patterns = {}
+    for _, line in ipairs(lines) do
+        local processed_line = vim.trim(line)
+        if
+            processed_line:match("^%s*$") -- Whitespace-only line (Lua %s matches whitespace)
+            or processed_line:match("^%s*#") -- Comment line
+            or processed_line:match("^!") -- Negation line
+            or processed_line:match("^<<+") -- Git conflict marker
+            or processed_line:match("^>>+") -- Git conflict marker
+            or processed_line:match("^==+")
+        then -- Git conflict marker
+        -- If any condition matches, skip to the next line (implicit continue)
+        else
+            -- Continuation lines:
+            -- Check if line ends with '/' (directory pattern)
+            if processed_line:match("/$") then
+                -- Append the pattern followed by '*' to match directory contents
+                table.insert(ignore_patterns, processed_line .. "*")
+            else
+                -- Otherwise, add the pattern as is
+                table.insert(ignore_patterns, processed_line)
+            end
+        end
+    end
+    if #ignore_patterns > 0 then
+        table.sort(ignore_patterns)
+        local unique_patterns = {}
+        if #ignore_patterns > 0 then
+            unique_patterns[1] = ignore_patterns[1]
+            local j = 1
+            for i = 2, #ignore_patterns do
+                if ignore_patterns[i] ~= ignore_patterns[i - 1] then
+                    j = j + 1
+                    unique_patterns[j] = ignore_patterns[i]
+                end
+            end
+        end
+        -- Join the unique, sorted patterns into a single comma-separated string
+        local ignore_string = table.concat(unique_patterns, ",")
+        -- Append the resulting string to Neovim's 'wildignore' option
+        if ignore_string ~= "" then
+            vim.opt.wildignore:append(ignore_string)
+        end
+    end
+end
+
+-----------------------------------------------------------------
+-- Paragraph formatting
+-----------------------------------------------------------------
+-- Use Q for formatting the current paragraph (or selection)
+map("v", "Q", "gq", { remap = true })
+map("n", "Q", "gqap", { remap = true })
+
+-----------------------------------------------------------------
+-- Window controls
+-----------------------------------------------------------------
+-- Let j and k behave more naturally on wrapped lines
+map("o", "j", "gj", { silent = true })
+map("o", "k", "gk", { silent = true })
+-- Easy window navigation
+map({ "n", "v", "o" }, "<C-H>", "<C-W>h", { remap = true })
+map({ "n", "v", "o" }, "<C-J>", "<C-W>j", { remap = true })
+map({ "n", "v", "o" }, "<C-K>", "<C-W>k", { remap = true })
+map({ "n", "v", "o" }, "<C-L>", "<C-W>l", { remap = true })
+
+-----------------------------------------------------------------
+-- Buffer controls
+-----------------------------------------------------------------
+-- Cycle through the buffers with \\ (forward) and \| (backwards)
+map("n", "<Leader><Leader>", ":bn<CR>", { silent = true, nowait = true })
+map("n", "<Leader>|", ":bp<CR>", { silent = true, nowait = true })
+-- Hop to the alternate file buffer with -
+map("n", "-", "<C-^>", { silent = true })
+
+-----------------------------------------------------------------
+-- Set behaviors on buffer load for specific filetypes:
+-----------------------------------------------------------------
+-- Create an autocommand group to organize these settings
+local filetype_settings_group = vim.api.nvim_create_augroup("FileTypeSettings", { clear = true })
+-- *.yaml,*.yml --> YAML
+-- Set filetype and foldmethod when opening yaml files
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetype_settings_group,
+    pattern = { "*.yaml", "*.yml" },
+    command = "set filetype=yaml foldmethod=indent",
+})
+-- Set buffer-local options specifically for yaml filetypes
+vim.api.nvim_create_autocmd("FileType", {
+    group = filetype_settings_group,
+    pattern = "yaml",
+    command = "setlocal ts=2 sts=2 sw=2 expandtab",
+})
+-- *.rst --> reStructuredText
+-- Set filetype and foldmethod when opening rst files
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+    group = filetype_settings_group,
+    pattern = "*.rst",
+    command = "set filetype=rst foldmethod=indent",
+})
+-- Set the conceallevel to hide by default
+-- Set window-local conceallevel for markdown filetypes
+vim.api.nvim_create_autocmd("FileType", {
+    group = filetype_settings_group,
+    pattern = "markdown",
+    callback = function()
+        -- 'conceallevel' is window-local, so we set it via vim.wo
+        vim.wo.conceallevel = 2
+    end,
+})
 
 -----------------------------------------------------------------
 --  Folding
@@ -44,7 +225,7 @@ vim.opt.foldlevelstart = 99
 -- Otherwise, execute the default action for <Space>
 -- Equivalent to:
 -- nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-vim.keymap.set("n", " ", function()
+map("n", " ", function()
     if vim.fn.foldlevel(".") > 0 then
         return "za"
     else
@@ -58,7 +239,7 @@ end, {
 
 -- Reset folds
 -- Equivalent to zx
-vim.keymap.set("n", " -", "zx", {
+map("n", " -", "zx", {
     silent = true,
     noremap = true,
     desc = "Reset folds",
@@ -67,7 +248,7 @@ vim.keymap.set("n", " -", "zx", {
 -- Totally unfold everything
 -- Equivalent to:
 -- nnoremap <silent> <Space>+ @=(foldlevel('.')?'zR':"\<Space>")<CR>
-vim.keymap.set("n", " +", function()
+map("n", " +", function()
     if vim.fn.foldlevel(".") > 0 then
         return "zR" -- Unfold all levels
     else
@@ -80,13 +261,13 @@ end, {
 })
 
 -- Totally refold everything
-vim.keymap.set("n", " =", "zM", {
+map("n", " =", "zM", {
     silent = true,
     remap = true,
     desc = "Refold all",
 })
 -- Create fold with spacebar
-vim.keymap.set("v", " ", "zf", {
+map("v", " ", "zf", {
     silent = true,
     noremap = true,
     desc = "Create fold in visual mode",
@@ -104,18 +285,13 @@ vim.api.nvim_create_autocmd("CmdwinEnter", {
 })
 -- Delete default key-mapping for command window since is annoying
 -- and I constantly press it on accident when quiting
-vim.keymap.set(
+map(
     "n",
     "q:",
     "<nop>",
     { silent = true, remap = false, desc = "Disable q: for Command-line window" }
 )
-vim.keymap.set(
-    "n",
-    "<Leader>q:",
-    "q:",
-    { silent = true, remap = false, desc = "Enable Command-line window" }
-)
+map("n", "<Leader>q:", "q:", { silent = true, remap = false, desc = "Enable Command-line window" })
 
 -----------------------------------------------------------------
 --  fzf.vim setup
@@ -142,55 +318,55 @@ end
 vim.g.fzf_vim.listproc_rg = function(list)
     return vim.fn["fzf#vim#listproc#location"](list)
 end
-vim.keymap.set(
+map(
     "n",
     "<Leader><Tab>",
     "<Plug>(fzf-maps-n)",
     { silent = true, noremap = true, desc = "fzf Normal maps" }
 )
-vim.keymap.set(
+map(
     "x",
     "<Leader><Tab>",
     "<Plug>(fzf-maps-x)",
     { silent = true, noremap = true, desc = "fzf Visual maps" }
 )
-vim.keymap.set(
+map(
     "o",
     "<Leader><Tab>",
     "<Plug>(fzf-maps-o)",
     { silent = true, noremap = true, desc = "fzf Operator-pending maps" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-W>",
     "<Plug>(fzf-complete-word)",
     { silent = true, noremap = true, desc = "fzf Complete word" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-P>",
     "fzf#vim#complete#path('fd')",
     { silent = true, expr = true, noremap = true, desc = "fzf Complete path (fd)" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-F>",
     "fzf#vim#complete#path('fd -t f')",
     { silent = true, expr = true, noremap = true, desc = "fzf Complete file path (fd)" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-K>",
     "fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})",
     { silent = true, expr = true, noremap = true, desc = "fzf Complete word with popup window" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-L>",
     "<Plug>(fzf-complete-line)",
     { silent = true, noremap = true, desc = "fzf Complete line" }
 )
-vim.keymap.set(
+map(
     "i",
     "<C-X><C-B>",
     "<Plug>(fzf-complete-buffer-line)",
@@ -277,12 +453,7 @@ local function __lualine_toggle()
         unhide = __lualine_unhidden,
     })
 end
-vim.keymap.set(
-    "n",
-    "<F7>",
-    __lualine_toggle,
-    { silent = true, remap = false, desc = "Toggle lualine" }
-)
+map("n", "<F7>", __lualine_toggle, { silent = true, remap = false, desc = "Toggle lualine" })
 
 -----------------------------------------------------------------
 --  Vimspector setup
@@ -291,32 +462,27 @@ vim.keymap.set(
 -- Select "gadgets" to use in vimspector
 vim.g.vimspector_install_gadgets = { "debugpy", "CodeLLDB" }
 
-vim.keymap.set("n", "<Leader><F3>", "<Plug>VimspectorStop", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F4>", "<Plug>VimspectorRestart", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F5>", "<Plug>VimspectorContinue", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F6>", "<Plug>VimspectorPause", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F7>", "<Plug>VimspectorRunToCursor", { silent = true, remap = false })
-vim.keymap.set(
+map("n", "<Leader><F3>", "<Plug>VimspectorStop", { silent = true, remap = false })
+map("n", "<Leader><F4>", "<Plug>VimspectorRestart", { silent = true, remap = false })
+map("n", "<Leader><F5>", "<Plug>VimspectorContinue", { silent = true, remap = false })
+map("n", "<Leader><F6>", "<Plug>VimspectorPause", { silent = true, remap = false })
+map("n", "<Leader><F7>", "<Plug>VimspectorRunToCursor", { silent = true, remap = false })
+map(
     "n",
     "<Leader><F8>",
     "<Plug>VimspectorToggleConditionalBreakpoint",
     { silent = true, remap = false }
 )
-vim.keymap.set(
-    "n",
-    "<Leader><F9>",
-    "<Plug>VimspectorToggleBreakpoint",
-    { silent = true, remap = false }
-)
-vim.keymap.set("n", "<Leader><F10>", "<Plug>VimspectorStepOver", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F11>", "<Plug>VimspectorStepInto", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><F12>", "<Plug>VimspectorStepOut", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader>di", "<Plug>VimspectorBalloonEval", { silent = true, remap = false })
-vim.keymap.set("x", "<Leader>di", "<Plug>VimspectorBalloonEval", { silent = true, remap = false })
-vim.keymap.set("n", "=<F11>", "<Plug>VimspectorUpFrame", { silent = true, remap = false })
-vim.keymap.set("n", "=<F12>", "<Plug>VimspectorDownFrame", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader>b", "<Plug>VimspectorBreakpoints", { silent = true, remap = false })
-vim.keymap.set("n", "<Leader><C-D>", "<Plug>VimspectorDisassemble", { silent = true, remap = false })
+map("n", "<Leader><F9>", "<Plug>VimspectorToggleBreakpoint", { silent = true, remap = false })
+map("n", "<Leader><F10>", "<Plug>VimspectorStepOver", { silent = true, remap = false })
+map("n", "<Leader><F11>", "<Plug>VimspectorStepInto", { silent = true, remap = false })
+map("n", "<Leader><F12>", "<Plug>VimspectorStepOut", { silent = true, remap = false })
+map("n", "<Leader>di", "<Plug>VimspectorBalloonEval", { silent = true, remap = false })
+map("x", "<Leader>di", "<Plug>VimspectorBalloonEval", { silent = true, remap = false })
+map("n", "=<F11>", "<Plug>VimspectorUpFrame", { silent = true, remap = false })
+map("n", "=<F12>", "<Plug>VimspectorDownFrame", { silent = true, remap = false })
+map("n", "<Leader>b", "<Plug>VimspectorBreakpoints", { silent = true, remap = false })
+map("n", "<Leader><C-D>", "<Plug>VimspectorDisassemble", { silent = true, remap = false })
 
 -----------------------------------------------------------------
 --  neo-tree setup
@@ -324,7 +490,7 @@ vim.keymap.set("n", "<Leader><C-D>", "<Plug>VimspectorDisassemble", { silent = t
 -----------------------------------------------------------------
 -- Key mapping for toggling Neotree full-screen: if opening, open in the
 -- current directory and reveal the opened file if any.
-vim.keymap.set(
+map(
     "n",
     "<F8>",
     ":Neotree toggle position=current reveal<CR>",
@@ -332,7 +498,7 @@ vim.keymap.set(
 )
 -- Key mapping for toggling Neotree sidebar: if opening, open in the current
 -- directory and reveal the opened file if any.
-vim.keymap.set(
+map(
     "n",
     "<F9>",
     ":Neotree toggle reveal<CR>",
@@ -401,37 +567,32 @@ require("neo-tree").setup({
 --  F-key mappings
 --  Other than the F-key mappings defined above ^
 -----------------------------------------------------------------
-vim.keymap.set(
+map(
     "n",
     "<F1>",
     ":call ShowMappedFKeys()<CR>",
     { silent = true, remap = false, desc = "Show the list of mapped Function keys" }
 )
-vim.keymap.set(
+map(
     "n",
     "<F2>",
     ":map<CR>",
     { silent = true, remap = false, desc = "Show the entire list of mapped keys" }
 )
-vim.keymap.set(
-    "n",
-    "<F3>",
-    ":call ToggleALE()<CR>",
-    { silent = true, remap = false, desc = "Toggle ALE" }
-)
-vim.keymap.set(
+map("n", "<F3>", ":call ToggleALE()<CR>", { silent = true, remap = false, desc = "Toggle ALE" })
+map(
     "n",
     "<F4>",
     ":%y+ <CR>",
     { silent = true, remap = false, desc = "Yank entire file into system clipboard" }
 )
-vim.keymap.set(
+map(
     "n",
     "<F5>",
     ":set ignorecase! ignorecase?<CR>:set smartcase! smartcase?<CR>",
     { silent = true, remap = false, desc = "Toggle case sensitivity" }
 )
-vim.keymap.set(
+map(
     "n",
     "<F6>",
     ":let _s=@/<Bar>:%s/s+$//e<Bar>:let @/=_s<Bar><CR>",

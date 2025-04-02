@@ -4,33 +4,10 @@
 " DESCRIPTION: Config file for NeoVim (in vimscript). Slowly being
 " being replaced by init.lua which is in NeoVim's native Lua
 " CREATED: Sun 21 Jul 2024
-" LAST MODIFIED: Tue 01 Apr 2025
-" VERSION: 1.0.6
+" LAST MODIFIED: Wed 02 Apr 2025
+" VERSION: 2.0.0
 "---------------------------------------------------------------------
-" NeoVim specifics:
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-" Main setup:
-set nocompatible
-" This makes it so vim doesn't need to behave like vi
-" which allows it to use plugins and a variety of other goodies.
-set encoding=utf-8
-" Work with UTF-8
-" Use `autoread`, for `vim-tmux-focus-events`
-set autoread
-" Disable writing backups before overwriting files:
-set nobackup
-" Force backup swap files:
-set writebackup
-" Enable filetype detection, with plugin and indent; see
-" :help filetype for more info.
-filetype plugin indent on
-" `syntax enable` is prefered to `syntax on`
-if !exists('g:syntax_on')
-    syntax enable
-endif
-" Source plugins w/ vim-plug:
-source ~/.config/nvim/plugs.vim
+
 "---------------------------------------------------------------------
 " Setup ALE:
 "---------------------------------------------------------------------
@@ -104,11 +81,6 @@ function! ToggleALE()
     endif
 endfunction
 "---------------------------------------------------------------------
-" Colors <background, syntax colors>
-"---------------------------------------------------------------------
-set background=dark   " options: <light, dark>
-colorscheme gruvbox " options: <gruvbox, solarized, molokai, etc.>
-"---------------------------------------------------------------------
 " YouCompleteMe Configuration
 "---------------------------------------------------------------------
 if trim(system('uname -s')) ==? 'Darwin'
@@ -138,129 +110,6 @@ let g:ycm_language_server =
     \    'cmdline': [ '/usr/local/bin/zls' ]
     \   }
     \]
-"---------------------------------------------------------------------
-" Spaces, Tabs, and indenting behavior:
-"---------------------------------------------------------------------
-set tabstop=4          " 4 space per tab press
-set expandtab          " Use spaces for tabs
-set softtabstop=4      " 4 space per tab press
-set shiftwidth=4       " 4 spaces per shift (>)
-set shiftround         " Round indentation to a multiple of shiftwidth
-set virtualedit=all    " Allow movement/insert past the final char in a line
-set autoindent         " Copy indent level from previous line
-set copyindent         " Use the whitespace characters of the previous line
-"---------------------------------------------------------------------
-" UI
-"---------------------------------------------------------------------
-set ruler                 " Show line and char/column numbers
-set wrap                  " Do line wrapping
-set number                " Show line numbers
-set hlsearch              " Highlight all matches
-set visualbell            " Don't beep
-set noerrorbells          " Don't beep
-set hidden                " Helps windows by not allowing buffers to tamper w/ them
-set backspace=indent,eol,start
-" The below two lines show which whitespace is tabs vs spaces
-set list
-set listchars=tab:▸·,trail:·,nbsp:·
-" Make vim use the system clipboard:
-" macOS - see here: https://stackoverflow.com/questions/17561706/
-" Linux - see here: https://vim.wikia.com/wiki/VimTip21
-set clipboard^=unnamed,unnamedplus
-"---------------------------------------------------------------------
-" Case sensitivity:
-"---------------------------------------------------------------------
-set ignorecase            " Ignore case when searching
-set smartcase             " Case-insensitive if all chars are lowercase
-"---------------------------------------------------------------------
-" Dynamically set wildignore from .gitignore:
-" Try to use local gitignore, or global one if we can't find or can't
-" load the local one.
-let gitignore_file = (
-    \filereadable('.gitignore')
-    \? '.gitignore'
-    \: '~/.gitignore'
-\)
-if filereadable(gitignore_file)
-    let ignore_string = ''
-    for line in readfile(gitignore_file)
-        let line = substitute(line, '\s|\n|\r', '', 'g')
-        if line =~ '^<<\+' | continue | endif  " Git conflict marker
-        if line =~ '^>>\+' | continue | endif  " Git conflict marker
-        if line =~ '^==\+' | continue | endif  " Git conflict marker
-        if line =~ '^ *#'  | continue | endif  " Comment line
-        if line =~ '^\s*$' | continue | endif  " Whitespace-only line
-        if line =~ '^!'    | continue | endif  " Negation line
-        " Continuation lines:
-        if line =~ '/$' | let ignore_string .= ',' . line . '*' | continue | endif
-        let ignore_string .= ',' . line
-    endfor
-    let ignore_string = substitute(ignore_string, ',,\+', ',', 'g')
-    let ignore_string = join(
-        \uniq(
-            \sort(
-                \split(ignore_string, ',')
-            \)
-        \),
-        \',',
-    \)
-    let exec_string = 'set wildignore+='.substitute(
-        \ignore_string,
-        \'^,\+',
-        \'',
-        \'g'
-    \)
-    execute exec_string
-endif
-"---------------------------------------------------------------------
-" Paragraph formatting
-"---------------------------------------------------------------------
-" Use Q for formatting the current paragraph (or selection)
-vmap Q gq
-nmap Q gqap
-"---------------------------------------------------------------------
-" Window controls
-"---------------------------------------------------------------------
-set splitbelow
-set splitright
-" Let j and k behave more naturally on wrapped lines
-onoremap <silent> j gj
-onoremap <silent> k gk
-" Easy window navigation
-map <C-H> <C-W>h
-map <C-J> <C-W>j
-map <C-K> <C-W>k
-map <C-L> <C-W>l
-nmap ,cw :bcw
-"---------------------------------------------------------------------
-" Buffer controls
-"---------------------------------------------------------------------
-" Cycle through the buffers with \\ (forward) and \| (backwards)
-nnoremap <nowait><silent> <Leader><Leader> :bn<CR>
-nnoremap <nowait><silent> <Leader><Bar> :bp<CR>
-" Hop to the alternate file buffer with -
-nnoremap <silent> - <C-^>
-"---------------------------------------------------------------------
-" Set behaviors on buffer load for specific filetypes:
-"---------------------------------------------------------------------
-" *.groovy & *.gradle --> Groovy
-au BufNewFile,BufRead *.groovy,*.gradle setf groovy
-" *.yaml,*.yml --> YAML
-au BufNewFile,BufRead *.yaml,*.yml set filetype=yaml foldmethod=indent
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-" *.rst --> reStructuredText
-au BufNewFile,BufRead *.rst set filetype=rst foldmethod=indent
-" This autocmd will ensure we reformat using paragraph style
-" after all lines ending in space; combined with ALE settings, this
-" will then remove the space on save.
-" SEE: `:help fo-table` for more info on these.
-" autocmd FileType rst setlocal formatoptions+=awn
-" DISABLED FOR NOW
-" *.md --> Markdown
-" This is not required if using vim-markdown
-" au BufNewFile,BufRead *.md set filetype=markdown
-" Set the conceallevel to hide by default
-autocmd FileType markdown set conceallevel=2
 "---------------------------------------------------------------------
 " Do Automatic Versioning
 "---------------------------------------------------------------------
@@ -376,11 +225,6 @@ nmap <silent> =fx :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:
 " And `=fh` for HTML. This overrides the hex formatter above, so make it
 " contingent on the filetype being .html
 autocmd FileType html nmap <silent> =fh :call FormatXML()<CR>:%s/\t/  /g<CR>:%s/ \+$//<CR>:g/^$/d<CR>:noh<CR>
-"---------------------------------------------------------------------
-" SimpylFold
-"---------------------------------------------------------------------
-let g:SimpylFold_docstring_preview=1
-let g:SimpylFold_fold_import=0
 "---------------------------------------------------------------------
 " vim-go
 "---------------------------------------------------------------------
