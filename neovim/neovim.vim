@@ -318,32 +318,3 @@ nnoremap <silent> =d :call DeleteConflictSection()<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
-"---------------------------------------------------------------------
-" Commenting
-"---------------------------------------------------------------------
-" Add the following commenting commands in normal, visual,
-" and operation-pending modes (select and insert excluded):
-nnoremap <silent> =# <Plug>Commentary
-nnoremap <silent> =/ <Plug>Commentary
-xnoremap <silent> =# <Plug>Commentary
-xnoremap <silent> =/ <Plug>Commentary
-onoremap <silent> =# <Plug>Commentary
-onoremap <silent> =/ <Plug>Commentary
-" These are added because historically I didn't use vim-commentary
-" and these were the bindings I used.
-"---------------------------------------------------------------------
-" Other
-"---------------------------------------------------------------------
-" Set the conceallevel manually in normal mode
-nnoremap <silent> =cl :set conceallevel=2<CR>
-nnoremap <silent> -cl :set conceallevel=0<CR>
-" Undo last search highlighting by pressing enter again
-nnoremap <nowait><silent> <CR> :noh<CR><CR>
-" Delete messages buffer
-nnoremap <nowait><silent> <C-C> :messages clear<CR>
-" Allow writes to files owned by root using `w!!`
-cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <Bar> edit!
-" Sort words in a line in normal mode:
-nnoremap <silent> =sw :call setline('.', join(sort(split(getline('.'), ' ')), ' '))<CR>
-nnoremap <silent> =sa :%!sort<CR>
-nnoremap <silent> =sn :%!sort -n<CR>

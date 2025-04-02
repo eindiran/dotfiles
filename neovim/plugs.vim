@@ -22,10 +22,8 @@ Plug 'ycm-core/YouCompleteMe'              " Code Completion plugin
 Plug 'dense-analysis/ale'                  " Multi lang linting manager
 Plug 'nvim-lualine/lualine.nvim'           " Status line for nvim
 Plug 'nvim-neo-tree/neo-tree.nvim'         " File browser
-Plug 'tpope/vim-surround'                  " Automate parens, quotes, etc
-Plug 'tpope/vim-commentary'                " Commenting keybinds
+Plug 'echasnovski/mini.nvim'               " Powerful plugin with many features
 Plug 'tpope/vim-fugitive'                  " Integration w/ git
-Plug 'tpope/vim-repeat'                    " Make . handle commentary and surround
 Plug 'flazz/vim-colorschemes'              " Adds options for color-schemes
 Plug 'junegunn/fzf.vim'                    " FZF bindings and delta bindings
 Plug 'ludovicchabant/vim-gutentags'        " Tag file generator

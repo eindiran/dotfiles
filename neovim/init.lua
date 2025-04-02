@@ -170,12 +170,36 @@ map({ "n", "v", "o" }, "<C-L>", "<C-W>l", { remap = true })
 -----------------------------------------------------------------
 -- Buffer controls
 -----------------------------------------------------------------
--- Cycle through the buffers with \\ (forward) and \| (backwards)
-map("n", "<Leader><Leader>", ":bn<CR>", { silent = true, nowait = true })
-map("n", "<Leader>|", ":bp<CR>", { silent = true, nowait = true })
+-- Cycle through the buffers with \\ (forward) and \| or \<Space> (backwards)
+map("n", "<Leader><Leader>", ":bn<CR>", { silent = true, remap = false })
+map("n", "<Leader>|", ":bp<CR>", { silent = true, remap = false })
+map("n", "<Leader> ", ":bp<CR>", { silent = true, remap = false })
 -- Hop to the alternate file buffer with -
-map("n", "-", "<C-^>", { silent = true })
-
+map("n", "-", "<C-^>", { silent = true, remap = false })
+-- Set the conceallevel manually in normal mode
+map("n", "=cl", ":set conceallevel=2<CR>", { silent = true, remap = false })
+map("n", "-cl", ":set conceallevel=0<CR>", { silent = true, remap = false })
+-- Undo last search highlighting by pressing enter again
+map("n", "<CR>", ":noh<CR><CR>", { silent = true, remap = false })
+-- Delete messages buffer
+map("n", "<C-C>", ":messages clear<CR>", { silent = true, remap = false })
+-- Allow writes to files owned by root using `w!!`
+vim.cmd([[cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <Bar> edit!]])
+-- Sort words in a line in normal mode:
+map("n", "=sw", function()
+    local line_num = vim.api.nvim_win_get_cursor(0)[1]
+    local line_content = vim.api.nvim_buf_get_lines(0, line_num - 1, line_num, false)[1]
+    if line_content == nil or line_content == "" then
+        return
+    end
+    -- Split by one or more spaces to handle varying spacing
+    local words = vim.split(line_content, "%s+")
+    table.sort(words)
+    local sorted_line = table.concat(words, " ")
+    vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, false, { sorted_line })
+end, { silent = true, remap = false })
+map("n", "=sa", ":%!sort<CR>", { silent = true, remap = false })
+map("n", "=sn", ":%!sort -n<CR>", { silent = true, remap = false })
 -----------------------------------------------------------------
 -- Set behaviors on buffer load for specific filetypes:
 -----------------------------------------------------------------
