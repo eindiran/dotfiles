@@ -98,6 +98,12 @@ require("lazy").setup({
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
+    {
+        --    Gruvbox colorscheme
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
+        config = true,
+    },
     -----------------------------------------------------------------
     -- General plugins:
     -----------------------------------------------------------------
@@ -105,7 +111,6 @@ require("lazy").setup({
     "dense-analysis/ale", --           Multi lang linting manager
     "tpope/vim-fugitive", --           Integration w/ git
     "tpope/vim-abolish", --            Smart handling of advanced regexes
-    "flazz/vim-colorschemes", --       Adds options for color-schemes
     "junegunn/fzf.vim", --             FZF bindings and delta bindings
     "linrongbin16/gentags.nvim", --    Tag file generator
     "puremourning/vimspector", --      Debugger
@@ -137,6 +142,30 @@ vim.cmd("source " .. vim.fn.expand("~/.config/nvim/neovim.vim"))
 -----------------------------------------------------------------
 vim.opt.background = "dark"
 vim.opt.termguicolors = true
+require("gruvbox").setup({
+  terminal_colors = true, -- add neovim terminal colors
+  undercurl = true,
+  underline = true,
+  bold = true,
+  italic = {
+    strings = true,
+    emphasis = true,
+    comments = true,
+    operators = false,
+    folds = true,
+  },
+  strikethrough = true,
+  invert_selection = false,
+  invert_signs = false,
+  invert_tabline = false,
+  invert_intend_guides = false,
+  inverse = true, -- invert background for search, diffs, statuslines and errors
+  contrast = "", -- can be "hard", "soft" or empty string
+  palette_overrides = {},
+  overrides = {},
+  dim_inactive = false,
+  transparent_mode = false,
+})
 vim.cmd("colorscheme gruvbox")
 
 -----------------------------------------------------------------
@@ -339,7 +368,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Fold by syntax rather than indent or manual
 vim.opt.foldmethod = "syntax"
 -- All folds open on file open; can be overriden
--- on some filetypes/plugins. Eg vim-markdown folds much more aggressively
+-- on some filetypes/plugins.
 vim.opt.foldlevelstart = 99
 -- Toggle fold w/ spacebar
 -- If cursor is on a folded line (>0), toggle the fold ('za').

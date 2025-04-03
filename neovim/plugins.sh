@@ -1,20 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #===============================================================================
 #
 #          FILE: plugins.sh
 #
-#         USAGE: ./plugins.sh [-h] [-i | -u] [-c] [-v <vimrc>]
+#         USAGE: ./plugins.sh [-h] [-v <vimrc>]
 #
 #   DESCRIPTION:
 #
 #       OPTIONS:
 #                  -h: Print the usage and exit
-#                  -i: Install via PlugInstall
-#                  -u: Update via PlugUpdate
-#                  -c: Clean via PlugClean
-#                  -v: Specify a .vimrc or init.vim path
-#  REQUIREMENTS: Vim, vim-plug
-#      REVISION: 1.0.0
+#                  -v: Optionally specify a .vimrc, init.vim, or init.lua path
+#  REQUIREMENTS: neovim, lazy.nvim
+#      REVISION: 2.0.0
 #
 #===============================================================================
 
@@ -23,48 +20,31 @@ set -Eeuo pipefail
 usage() {
     # Print the usage and exit
     echo "plugins.sh"
-    echo "Usage: plugins.sh [-h] [-i | -u] [-c] [-v <vimrc>]"
+    echo "Usage: plugins.sh [-h] [-v <vimrc>]"
     echo "    -h: print the usage and exit"
-    echo "    -i: install plugins w/ PlugInstall"
-    echo "    -u: update plugins w/ PlugUpdate"
-    echo "    -c: clean up plugin installation w/ PlugClean"
-    echo "    -v: specify a vimrc or init.vim file path"
+    echo "    -v: optionally specify a vimrc, init.vim, or init.lua file path"
     echo
     exit "$1"
 }
 
-install_vimplug_plugins() {
-    nvim -c ':PlugInstall' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
+lazy_plugins() {
+    if [[ "$#" -eq 1 ]]; then
+        nvim --headless '+Lazy! sync' +qa -u "$1"
+    else
+        nvim --headless '+Lazy! sync' +qa
+    fi
 }
 
-update_vimplug_plugins() {
-    nvim -c ':PlugUpdate' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
-}
-
-clean_vimplug_plugins() {
-    nvim -c ':PlugClean' -c ':sleep 1' -c ':q' -c ':q' -u "$1"
-}
-
-PLUG_INSTALL=false
-PLUG_UPDATE=false
-PLUG_CLEAN=false
+USE_VIMRC_PATH=false
 VIMRC_PATH="$HOME/.config/nvim/init.lua"
 
-while getopts "hiucv:" option; do
+while getopts "hv:" option; do
     case "${option}" in
         h)
             usage 0
             ;;
-        i)
-            PLUG_INSTALL=true
-            ;;
-        u)
-            PLUG_UPDATE=true
-            ;;
-        c)
-            PLUG_CLEAN=true
-            ;;
         v)
+            USE_VIMRC_PATH=true
             VIMRC_PATH="${OPTARG}"
             ;;
         *)
@@ -75,16 +55,10 @@ while getopts "hiucv:" option; do
 done
 shift $((OPTIND - 1))
 
-if [[ "${PLUG_INSTALL}" == true ]]; then
-    echo -e "${HI_GREEN}Installing vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
-    install_vimplug_plugins "${VIMRC_PATH}"
+echo "${HI_GREEN}Installing lazy.nvim plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
+if [[ "${USE_VIMRC_PATH}" = true ]]; then
+    lazy_plugins "${VIMRC_PATH}"
+else
+    lazy_plugins
 fi
-if [[ "${PLUG_UPDATE}" == true ]]; then
-    echo -e "${HI_GREEN}Updating vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
-    update_vimplug_plugins "${VIMRC_PATH}"
-fi
-if [[ "${PLUG_CLEAN}" == true ]]; then
-    echo -e "${HI_GREEN}Cleaning up vim-plug plugins with vimrc: ${HI_YELLOW}${VIMRC_PATH}${ANSI_RESET}"
-    clean_vimplug_plugins "${VIMRC_PATH}"
-fi
-echo -e "${HI_GREEN}vim-plug setup complete!${ANSI_RESET}"
+echo "${HI_GREEN}lazy.nvim setup complete!${ANSI_RESET}"

@@ -89,10 +89,9 @@ update_vim_plugins() {
 }
 
 update_neovim_plugins() {
-    # vim-plug updates and cleanup:
-    echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
+    echo "${HI_YELLOW}Updating lazy.nvim plugins${ANSI_RESET}"
     # Install, then update, then clean
-    "${WORKSPACE}/dotfiles/neovim/plugins.sh" -i -u -c
+    "${WORKSPACE}/dotfiles/neovim/plugins.sh"
 }
 
 sync_git_tools() {
