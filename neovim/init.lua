@@ -28,12 +28,19 @@
 -----------------------------------------------------------------
 -- Initial setup
 -----------------------------------------------------------------
--- Prepend ~/.vim to runtimepath
--- Equivalent to: set runtimepath^=~/.vim
-vim.opt.runtimepath:prepend(vim.fn.expand("~/.vim"))
--- Append ~/.vim/after to runtimepath
--- Equivalent to: set runtimepath+=~/.vim/after
-vim.opt.runtimepath:append(vim.fn.expand("~/.vim/after"))
+-- Setup lazy.nvim (if required):
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 -- Set packpath to equal the modified runtimepath
 -- Equivalent to: let &packpath = &runtimepath
 vim.opt.packpath = vim.opt.runtimepath:get()
@@ -46,11 +53,86 @@ local uname_info = vim.loop.os_uname()
 local map = vim.keymap.set
 
 -----------------------------------------------------------------
--- Source plugins w/ vim-plug, then source vimscript neovim config.
+-- lazy.nvim plugin specification
+-----------------------------------------------------------------
+require("lazy").setup({
+    {
+        -- Completion
+        "ycm-core/YouCompleteMe",
+        build = function(plugin)
+            print("Running post-install for " .. plugin.name)
+            local build_cmd = { "./install.py", "--all" }
+            local opts = {
+                cwd = plugin.dir,
+                text = true,
+                stdout = vim.NIL,
+                stderr = vim.NIL,
+            }
+            local result = vim.system(build_cmd, opts):wait()
+            if result.code == 0 then
+                vim.notify(plugin.name .. " built successfully!", vim.log.levels.INFO)
+                print(result.stdout)
+                return true
+            else
+                vim.notify(
+                    "Build failed for " .. plugin.name .. "(" .. result.code .. ")",
+                    vim.log.levels.ERROR
+                )
+                print(result.stdout)
+                print(result.stderr)
+                return false
+            end
+        end,
+    },
+    {
+        --  File browser
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "MunifTanjim/nui.nvim",
+            "3rd/image.nvim",
+        },
+        lazy = false,
+    },
+    {
+        --    Status line for nvim
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    -----------------------------------------------------------------
+    -- General plugins:
+    -----------------------------------------------------------------
+    "echasnovski/mini.nvim", --        Powerful plugin with many features
+    "dense-analysis/ale", --           Multi lang linting manager
+    "tpope/vim-fugitive", --           Integration w/ git
+    "tpope/vim-abolish", --            Smart handling of advanced regexes
+    "flazz/vim-colorschemes", --       Adds options for color-schemes
+    "junegunn/fzf.vim", --             FZF bindings and delta bindings
+    "linrongbin16/gentags.nvim", --    Tag file generator
+    "puremourning/vimspector", --      Debugger
+    "eindiran/utils.vim", --           General utilities
+    -----------------------------------------------------------------
+    -- Filetype specific plugins:
+    -----------------------------------------------------------------
+    "eindiran/awk-support", --         awk support
+    "eindiran/c-support", --           C/C++ support
+    "eindiran/bash-support.vim", --    Shell scripting integration
+    "rust-lang/rust.vim", --           Rust support
+    "ziglang/zig.vim", --              Zig support
+    "posva/vim-vue", --                Vue support
+    "godlygeek/tabular", --            Markdown dep
+    "preservim/vim-markdown", --       Markdown
+    "fatih/vim-go", --                 Go support
+})
+map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
+
+-----------------------------------------------------------------
+-- Source vimscript neovim config.
 -- This is done to gradually bootstrap into using Lua for the entire
 -- config.
 -----------------------------------------------------------------
-vim.cmd("source " .. vim.fn.expand("~/.config/nvim/plugs.vim"))
 vim.cmd("source " .. vim.fn.expand("~/.config/nvim/neovim.vim"))
 
 -----------------------------------------------------------------
@@ -496,6 +578,12 @@ local function __lualine_toggle()
     })
 end
 map("n", "<F7>", __lualine_toggle, { silent = true, remap = false, desc = "Toggle lualine" })
+
+-----------------------------------------------------------------
+--  gentags setup
+--  See: https://github.com/linrongbin16/gentags.nvim
+-----------------------------------------------------------------
+require("gentags").setup()
 
 -----------------------------------------------------------------
 --  Vimspector setup
