@@ -184,10 +184,6 @@ require("lazy").setup({
     "eindiran/awk-support", --         awk support
     "eindiran/c-support", --           C/C++ support
     "eindiran/bash-support.vim", --    Shell scripting integration
-    "rust-lang/rust.vim", --           Rust support
-    "ziglang/zig.vim", --              Zig support
-    "posva/vim-vue", --                Vue support
-    "fatih/vim-go", --                 Go support
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
 
