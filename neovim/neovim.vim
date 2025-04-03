@@ -55,6 +55,7 @@ let g:ale_fixers = {
     \'*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
+let g:ale_lua_luacheck_options = '--globals vim'
 nmap <silent> =aj :ALENext<CR>
 nmap <silent> <Leader>j :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>

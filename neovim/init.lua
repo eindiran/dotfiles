@@ -6,6 +6,8 @@
 --  LAST MODIFIED: Wed 02 Apr 2025
 --  VERSION: 1.0.12
 -----------------------------------------------------------------
+-- luacheck:ignore 542
+-- luacheck:ignore 631
 
 -----------------------------------------------------------------
 -- Notes:
@@ -130,34 +132,6 @@ require("lazy").setup({
         },
         opts_extend = { "sources.default" },
     },
-    -- {
-    --     -- Completion
-    --     "ycm-core/YouCompleteMe",
-    --     build = function(plugin)
-    --         print("Running post-install for " .. plugin.name)
-    --         local build_cmd = { "./install.py", "--all" }
-    --         local opts = {
-    --             cwd = plugin.dir,
-    --             text = true,
-    --             stdout = vim.NIL,
-    --             stderr = vim.NIL,
-    --         }
-    --         local result = vim.system(build_cmd, opts):wait()
-    --         if result.code == 0 then
-    --             vim.notify(plugin.name .. " built successfully!", vim.log.levels.INFO)
-    --             print(result.stdout)
-    --             return true
-    --         else
-    --             vim.notify(
-    --                 "Build failed for " .. plugin.name .. "(" .. result.code .. ")",
-    --                 vim.log.levels.ERROR
-    --             )
-    --             print(result.stdout)
-    --             print(result.stderr)
-    --             return false
-    --         end
-    --     end,
-    -- },
     {
         --  File browser
         "nvim-neo-tree/neo-tree.nvim",
@@ -199,7 +173,7 @@ require("lazy").setup({
         },
     },
     -----------------------------------------------------------------
-    -- General plugins:
+    -- General plugins that don't require configuration
     -----------------------------------------------------------------
     "echasnovski/mini.nvim", --        Powerful plugin with many features
     "dense-analysis/ale", --           Multi lang linting manager
@@ -257,8 +231,9 @@ vim.lsp.config["luals"] = {
     root_markers = { ".luarc.json", ".luarc.jsonc" },
     settings = {
         Lua = {
-            runtime = {
-                version = "LuaJIT",
+            diagnostics = {
+                disable = { "incomplete-signature-doc" },
+                globals = { "MiniMap", "vim" },
             },
         },
     },
@@ -356,14 +331,14 @@ if vim.fn.filereadable(gitignore_file) == 1 then
     for _, line in ipairs(lines) do
         local processed_line = vim.trim(line)
         if
-            processed_line:match("^%s*$") -- Whitespace-only line (Lua %s matches whitespace)
+            processed_line:match("^%s*$") --    Whitespace-only line
             or processed_line:match("^%s*#") -- Comment line
-            or processed_line:match("^!") -- Negation line
-            or processed_line:match("^<<+") -- Git conflict marker
-            or processed_line:match("^>>+") -- Git conflict marker
+            or processed_line:match("^!") --    Negation line
+            or processed_line:match("^<<+") --  Git conflict marker
+            or processed_line:match("^>>+") --  Git conflict marker
             or processed_line:match("^==+")
         then -- Git conflict marker
-        -- If any condition matches, skip to the next line (implicit continue)
+            -- implicit pass
         else
             -- Continuation lines:
             -- Check if line ends with '/' (directory pattern)
