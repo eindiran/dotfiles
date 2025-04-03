@@ -49,6 +49,18 @@ local uname_info = vim.loop.os_uname()
 -- want to map keys
 local map = vim.keymap.set
 
+-- Setup LSP configs:
+vim.lsp.config.clangd = {
+    cmd = {
+        "clangd",
+        "--clang-tidy",
+        "--background-index",
+        "--offset-encoding=utf-8",
+    },
+    root_markers = { ".clangd", "compile_commands.json" },
+    filetypes = { "c", "cpp" },
+}
+
 -----------------------------------------------------------------
 -- lazy.nvim plugin specification
 -----------------------------------------------------------------
@@ -98,33 +110,62 @@ require("lazy").setup({
         end,
     },
     {
-        -- Completion
-        "ycm-core/YouCompleteMe",
-        build = function(plugin)
-            print("Running post-install for " .. plugin.name)
-            local build_cmd = { "./install.py", "--all" }
-            local opts = {
-                cwd = plugin.dir,
-                text = true,
-                stdout = vim.NIL,
-                stderr = vim.NIL,
-            }
-            local result = vim.system(build_cmd, opts):wait()
-            if result.code == 0 then
-                vim.notify(plugin.name .. " built successfully!", vim.log.levels.INFO)
-                print(result.stdout)
-                return true
-            else
-                vim.notify(
-                    "Build failed for " .. plugin.name .. "(" .. result.code .. ")",
-                    vim.log.levels.ERROR
-                )
-                print(result.stdout)
-                print(result.stderr)
-                return false
-            end
-        end,
+        "saghen/blink.cmp",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        version = "*",
+        opts = {
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = { preset = "super-tab" },
+            appearance = {
+                nerd_font_variant = "mono",
+            },
+            completion = { documentation = { auto_show = false } },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+        },
+        opts_extend = { "sources.default" },
     },
+    -- {
+    --     -- Completion
+    --     "ycm-core/YouCompleteMe",
+    --     build = function(plugin)
+    --         print("Running post-install for " .. plugin.name)
+    --         local build_cmd = { "./install.py", "--all" }
+    --         local opts = {
+    --             cwd = plugin.dir,
+    --             text = true,
+    --             stdout = vim.NIL,
+    --             stderr = vim.NIL,
+    --         }
+    --         local result = vim.system(build_cmd, opts):wait()
+    --         if result.code == 0 then
+    --             vim.notify(plugin.name .. " built successfully!", vim.log.levels.INFO)
+    --             print(result.stdout)
+    --             return true
+    --         else
+    --             vim.notify(
+    --                 "Build failed for " .. plugin.name .. "(" .. result.code .. ")",
+    --                 vim.log.levels.ERROR
+    --             )
+    --             print(result.stdout)
+    --             print(result.stderr)
+    --             return false
+    --         end
+    --     end,
+    -- },
     {
         --  File browser
         "nvim-neo-tree/neo-tree.nvim",
@@ -154,8 +195,6 @@ require("lazy").setup({
         lazy = false,
         build = ":TSInstall markdown markdown_inline html latex typst yaml",
 
-        -- For blink.cmp's completion
-        -- source
         dependencies = {
             "saghen/blink.cmp",
             "nvim-treesitter/nvim-treesitter",
@@ -184,10 +223,6 @@ require("lazy").setup({
     "eindiran/awk-support", --         awk support
     "eindiran/c-support", --           C/C++ support
     "eindiran/bash-support.vim", --    Shell scripting integration
-    "rust-lang/rust.vim", --           Rust support
-    "ziglang/zig.vim", --              Zig support
-    "posva/vim-vue", --                Vue support
-    "fatih/vim-go", --                 Go support
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
 
