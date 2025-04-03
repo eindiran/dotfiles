@@ -51,7 +51,8 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
     jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
-    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld trash btop
+    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld \
+    lua-language-server trash btop
 echo "Installing neovim..."
 brew unlink utf8proc && brew install --HEAD utf8proc
 brew install neovim
@@ -78,6 +79,7 @@ fi
 # Use rustup to add/update rustfmt and clippy:
 rustup component add rustfmt
 rustup component add clippy
+rustup component add rust-analyzer
 rustup update
 
 # Install cargo packages and binaries:
@@ -140,6 +142,10 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.c
 # Install checkmake
 echo "Installing checkmake"
 go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+
+echo "Installing go language server"
+go install github.com/nametake/golangci-lint-langserver@latest
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Setup pip for Python
 echo "Setting up top-level venv"

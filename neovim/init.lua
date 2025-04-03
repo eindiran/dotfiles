@@ -49,22 +49,14 @@ local uname_info = vim.loop.os_uname()
 -- want to map keys
 local map = vim.keymap.set
 
--- Setup LSP configs:
-vim.lsp.config.clangd = {
-    cmd = {
-        "clangd",
-        "--clang-tidy",
-        "--background-index",
-        "--offset-encoding=utf-8",
-    },
-    root_markers = { ".clangd", "compile_commands.json" },
-    filetypes = { "c", "cpp" },
-}
-
 -----------------------------------------------------------------
 -- lazy.nvim plugin specification
 -----------------------------------------------------------------
 require("lazy").setup({
+    {
+        -- Default LSP configs
+        "neovim/nvim-lspconfig",
+    },
     {
         -- Tresitter interaction
         "nvim-treesitter/nvim-treesitter",
@@ -103,7 +95,7 @@ require("lazy").setup({
                     "yaml",
                     "zig",
                 },
-                sync_install = false,
+                sync_install = true,
                 -- highlight = { enable = true },
                 -- indent = { enable = true },
             })
@@ -225,6 +217,53 @@ require("lazy").setup({
     "eindiran/bash-support.vim", --    Shell scripting integration
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
+
+-----------------------------------------------------------------
+-- Setup LSP configs:
+-----------------------------------------------------------------
+-- Python via pyright
+vim.lsp.config["pyright"] = {
+    cmd = { "pyright-langserver", "--stdio" },
+    filetypes = { "python" },
+}
+vim.lsp.enable("pyright")
+-- C/C++ via clangd
+vim.lsp.config["clangd"] = {
+    cmd = {
+        "clangd",
+        "--clang-tidy",
+        "--background-index",
+        "--offset-encoding=utf-8",
+    },
+    root_markers = { ".clangd", "compile_commands.json" },
+    filetypes = { "c", "cpp" },
+}
+vim.lsp.enable("clangd")
+-- Rust Analyzer
+vim.lsp.config["rust_analyzer"] = {
+    cmd = { "rust-analyzer" },
+    filetypes = { "rs" },
+}
+vim.lsp.enable("rust_analyzer")
+-- Zig via clangd
+vim.lsp.config["zls"] = {
+    cmd = { "zls" },
+    filetypes = { "zig", "zir", "zon" },
+}
+vim.lsp.enable("zls")
+vim.lsp.config["luals"] = {
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+    root_markers = { ".luarc.json", ".luarc.jsonc" },
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT",
+            },
+        },
+    },
+}
+vim.lsp.enable("luals")
 
 -----------------------------------------------------------------
 -- Source vimscript neovim config.
