@@ -54,6 +54,50 @@ local map = vim.keymap.set
 -----------------------------------------------------------------
 require("lazy").setup({
     {
+        -- Tresitter interaction
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            local configs = require("nvim-treesitter.configs")
+
+            configs.setup({
+                ensure_installed = {
+                    "bash",
+                    "c",
+                    "cmake",
+                    "cpp",
+                    "dockerfile",
+                    "html",
+                    "javascript",
+                    "json",
+                    "latex",
+                    "llvm",
+                    "lua",
+                    "make",
+                    "markdown",
+                    "markdown_inline",
+                    "python",
+                    "query",
+                    "rst",
+                    "rust",
+                    "sql",
+                    "toml",
+                    "typescript",
+                    "typst",
+                    "vim",
+                    "vimdoc",
+                    "vue",
+                    "xml",
+                    "yaml",
+                    "zig",
+                },
+                sync_install = false,
+                -- highlight = { enable = true },
+                -- indent = { enable = true },
+            })
+        end,
+    },
+    {
         -- Completion
         "ycm-core/YouCompleteMe",
         build = function(plugin)
@@ -104,6 +148,25 @@ require("lazy").setup({
         priority = 1000,
         config = true,
     },
+    {
+        --    Markdown support
+        "OXY2DEV/markview.nvim",
+        lazy = false,
+        build = ":TSInstall markdown markdown_inline html latex typst yaml",
+
+        -- For blink.cmp's completion
+        -- source
+        dependencies = {
+            "saghen/blink.cmp",
+            "nvim-treesitter/nvim-treesitter",
+        },
+
+        config = {
+            preview = {
+                icon_provider = "devicons",
+            },
+        },
+    },
     -----------------------------------------------------------------
     -- General plugins:
     -----------------------------------------------------------------
@@ -124,8 +187,6 @@ require("lazy").setup({
     "rust-lang/rust.vim", --           Rust support
     "ziglang/zig.vim", --              Zig support
     "posva/vim-vue", --                Vue support
-    "godlygeek/tabular", --            Markdown dep
-    "preservim/vim-markdown", --       Markdown
     "fatih/vim-go", --                 Go support
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
@@ -143,28 +204,28 @@ vim.cmd("source " .. vim.fn.expand("~/.config/nvim/neovim.vim"))
 vim.opt.background = "dark"
 vim.opt.termguicolors = true
 require("gruvbox").setup({
-  terminal_colors = true, -- add neovim terminal colors
-  undercurl = true,
-  underline = true,
-  bold = true,
-  italic = {
-    strings = true,
-    emphasis = true,
-    comments = true,
-    operators = false,
-    folds = true,
-  },
-  strikethrough = true,
-  invert_selection = false,
-  invert_signs = false,
-  invert_tabline = false,
-  invert_intend_guides = false,
-  inverse = true, -- invert background for search, diffs, statuslines and errors
-  contrast = "", -- can be "hard", "soft" or empty string
-  palette_overrides = {},
-  overrides = {},
-  dim_inactive = false,
-  transparent_mode = false,
+    terminal_colors = true, -- add neovim terminal colors
+    undercurl = true,
+    underline = true,
+    bold = true,
+    italic = {
+        strings = true,
+        emphasis = true,
+        comments = true,
+        operators = false,
+        folds = true,
+    },
+    strikethrough = true,
+    invert_selection = false,
+    invert_signs = false,
+    invert_tabline = false,
+    invert_intend_guides = false,
+    inverse = true, -- invert background for search, diffs, statuslines and errors
+    contrast = "", -- can be "hard", "soft" or empty string
+    palette_overrides = {},
+    overrides = {},
+    dim_inactive = false,
+    transparent_mode = false,
 })
 vim.cmd("colorscheme gruvbox")
 

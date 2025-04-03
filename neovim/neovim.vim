@@ -162,37 +162,3 @@ let g:rustfmt_fail_silently = 0
 let g:rust_conceal = 0
 let g:rust_fold = 1
 let g:rust_recommended_style = 1
-"---------------------------------------------------------------------
-" vim-markdown
-"---------------------------------------------------------------------
-" Enable folding
-let g:vim_markdown_folding_disabled = 0
-" Fold in python-mode:
-let g:vim_markdown_folding_style_pythonic = 1
-" Disable all vim-markdown key bindings
-let g:vim_markdown_no_default_key_mappings = 1
-" Autoshrink TOCs
-let g:vim_markdown_toc_autofit = 1
-" Indentation for new lists. We don't insert bullets as it doesn't play
-" nicely with `gq` formatting
-let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_auto_insert_bullets = 0
-" Filetype aliases for fenced code blocks:
-let g:vim_markdown_fenced_languages = [
-        \'c++=cpp',
-        \'rs=rust',
-        \'py=python',
-        \'js=javascript',
-        \'ts=typescript',
-        \'bash=sh',
-        \'viml=vim',
-        \]
-let g:vim_markdown_frontmatter = 1
-let g:vim_markdown_toml_frontmatter = 1
-let g:vim_markdown_json_frontmatter = 1
-" Support inline latex for math
-let g:vim_markdown_math = 1
-" Format strike-through text
-let g:vim_markdown_strikethrough = 1
-" Support markdown concealing
-let g:vim_markdown_conceal = 2
