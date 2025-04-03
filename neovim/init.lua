@@ -4,7 +4,7 @@
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
 --  LAST MODIFIED: Wed 02 Apr 2025
---  VERSION: 1.0.11
+--  VERSION: 1.0.12
 -----------------------------------------------------------------
 
 -----------------------------------------------------------------
@@ -16,11 +16,8 @@
 
 -- In the even more far off happy world where we move away (mostly) from
 -- vimscript plugins, we should consider using some of the following:
--- Package manager: lazy (https://github.com/folke/lazy.nvim)
 -- LSP: switch from ycm to built-in LSP + completion with coq (
 -- https://github.com/ms-jpq/coq_nvim)
--- File explorer: chadtree (https://github.com/ms-jpq/chadtree)
--- or nvim-tree (https://github.com/nvim-tree/nvim-tree.lua)
 -- LLM integration: codecompanion (https://github.com/olimorris/codecompanion.nvim)
 -- or avante (https://github.com/yetone/avante.nvim)
 -- Debugger: nvim-dap (https://github.com/mfussenegger/nvim-dap)
