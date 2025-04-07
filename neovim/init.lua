@@ -196,10 +196,18 @@ map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy
 -- Setup LSP configs:
 -----------------------------------------------------------------
 -- Python via pyright
-vim.lsp.config["pyright"] = {
-    cmd = { "pyright-langserver", "--stdio" },
-    filetypes = { "python" },
-}
+-- vim.lsp.config["jedi_language_server"] = {
+--     cmd = { "pyright-langserver", "--stdio" },
+--     filetypes = { "python" },
+--     settings = {
+--         python = {
+--             analysis = {
+--                 ignore = { "*" },
+--                 typeCheckingMode = "off",
+--             },
+--         },
+--     },
+-- }
 vim.lsp.enable("pyright")
 -- C/C++ via clangd
 vim.lsp.config["clangd"] = {
@@ -822,6 +830,27 @@ require("neo-tree").setup({
         trash_visual = trash_visual,
     },
 })
+
+-----------------------------------------------------------------
+--  Diagnostics
+--
+-----------------------------------------------------------------
+vim.g.diagnostics_active = true
+function _G.toggle_nvim_diagnostics()
+    if vim.g.diagnostics_active then
+        vim.g.diagnostics_active = not vim.g.diagnostics_active
+        vim.diagnostic.hide()
+    else
+        vim.g.diagnostics_active = not vim.g.diagnostics_active
+        vim.diagnostic.show(nil, nil, nil, { virtual_text = { source = true } })
+    end
+end
+map(
+    "n",
+    "<F12>",
+    ":call v:lua.toggle_nvim_diagnostics()<CR>",
+    { silent = true, remap = false, desc = "Toggle whether diagnostics are shown" }
+)
 
 -----------------------------------------------------------------
 --  Key mappings
