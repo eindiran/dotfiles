@@ -195,13 +195,30 @@ map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy
 -----------------------------------------------------------------
 -- Setup LSP configs:
 -----------------------------------------------------------------
+-- Setup blink.cmp capabilities
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+capabilities =
+    vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities({}, false))
+
+capabilities = vim.tbl_deep_extend("force", capabilities, {
+    textDocument = {
+        foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true,
+        },
+    },
+})
 -- Python via Jedi
-vim.lsp.config["jedi_language_server"] = {
+
+vim.lsp.config("jedi_language_server", {
+    cmd = { "jedi-language-server" },
     filetypes = { "python" },
-}
+    capabilities = capabilities,
+})
 vim.lsp.enable("jedi_language_server")
 -- C/C++ via clangd
-vim.lsp.config["clangd"] = {
+vim.lsp.config("clangd", {
     cmd = {
         "clangd",
         "--clang-tidy",
@@ -210,21 +227,24 @@ vim.lsp.config["clangd"] = {
     },
     root_markers = { ".clangd", "compile_commands.json" },
     filetypes = { "c", "cpp" },
-}
+    capabilities = capabilities,
+})
 vim.lsp.enable("clangd")
 -- Rust Analyzer
-vim.lsp.config["rust_analyzer"] = {
+vim.lsp.config("rust_analyzer", {
     cmd = { "rust-analyzer" },
     filetypes = { "rs" },
-}
+    capabilities = capabilities,
+})
 vim.lsp.enable("rust_analyzer")
 -- Zig via clangd
-vim.lsp.config["zls"] = {
+vim.lsp.config("zls", {
     cmd = { "zls" },
     filetypes = { "zig", "zir", "zon" },
-}
+    capabilities = capabilities,
+})
 vim.lsp.enable("zls")
-vim.lsp.config["luals"] = {
+vim.lsp.config("luals", {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
     root_markers = { ".luarc.json", ".luarc.jsonc" },
@@ -236,7 +256,8 @@ vim.lsp.config["luals"] = {
             },
         },
     },
-}
+    capabilities = capabilities,
+})
 vim.lsp.enable("luals")
 
 -----------------------------------------------------------------
