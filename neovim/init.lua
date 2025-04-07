@@ -3,8 +3,8 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Wed 02 Apr 2025
---  VERSION: 1.0.12
+--  LAST MODIFIED: Mon 07 Apr 2025
+--  VERSION: 1.0.13
 -----------------------------------------------------------------
 -- luacheck:ignore 542
 -- luacheck:ignore 631
@@ -12,17 +12,13 @@
 -----------------------------------------------------------------
 -- Notes:
 -----------------------------------------------------------------
--- In the far off happy world where the vimscript is replaced entirely,
--- we should source the vimplug code here specifically:
--- vim.cmd('source ~/.config/nvim/plugs.vim')
-
 -- In the even more far off happy world where we move away (mostly) from
 -- vimscript plugins, we should consider using some of the following:
--- LSP: switch from ycm to built-in LSP + completion with coq (
--- https://github.com/ms-jpq/coq_nvim)
+-- LSP manager: mason
 -- LLM integration: codecompanion (https://github.com/olimorris/codecompanion.nvim)
 -- or avante (https://github.com/yetone/avante.nvim)
 -- Debugger: nvim-dap (https://github.com/mfussenegger/nvim-dap)
+-- Replace ALE?
 
 -----------------------------------------------------------------
 -- Initial setup
@@ -209,14 +205,15 @@ capabilities = vim.tbl_deep_extend("force", capabilities, {
         },
     },
 })
--- Python via Jedi
 
+-- Python via Jedi
 vim.lsp.config("jedi_language_server", {
     cmd = { "jedi-language-server" },
     filetypes = { "python" },
     capabilities = capabilities,
 })
 vim.lsp.enable("jedi_language_server")
+
 -- C/C++ via clangd
 vim.lsp.config("clangd", {
     cmd = {
@@ -230,6 +227,7 @@ vim.lsp.config("clangd", {
     capabilities = capabilities,
 })
 vim.lsp.enable("clangd")
+
 -- Rust Analyzer
 vim.lsp.config("rust_analyzer", {
     cmd = { "rust-analyzer" },
@@ -237,13 +235,16 @@ vim.lsp.config("rust_analyzer", {
     capabilities = capabilities,
 })
 vim.lsp.enable("rust_analyzer")
--- Zig via clangd
+
+-- Zig via zls
 vim.lsp.config("zls", {
     cmd = { "zls" },
     filetypes = { "zig", "zir", "zon" },
     capabilities = capabilities,
 })
 vim.lsp.enable("zls")
+
+-- Lua via luals
 vim.lsp.config("luals", {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
