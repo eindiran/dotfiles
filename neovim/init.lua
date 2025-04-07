@@ -195,20 +195,11 @@ map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy
 -----------------------------------------------------------------
 -- Setup LSP configs:
 -----------------------------------------------------------------
--- Python via pyright
--- vim.lsp.config["jedi_language_server"] = {
---     cmd = { "pyright-langserver", "--stdio" },
---     filetypes = { "python" },
---     settings = {
---         python = {
---             analysis = {
---                 ignore = { "*" },
---                 typeCheckingMode = "off",
---             },
---         },
---     },
--- }
-vim.lsp.enable("pyright")
+-- Python via Jedi
+vim.lsp.config["jedi_language_server"] = {
+    filetypes = { "python" },
+}
+vim.lsp.enable("jedi_language_server")
 -- C/C++ via clangd
 vim.lsp.config["clangd"] = {
     cmd = {
@@ -406,9 +397,13 @@ map("o", "j", "gj", { silent = true })
 map("o", "k", "gk", { silent = true })
 -- Easy window navigation
 map({ "n", "v", "o" }, "<C-H>", "<C-W>h", { remap = true })
+map({ "n", "v", "o" }, "<M-Left>", "<C-W>h", { remap = true })
 map({ "n", "v", "o" }, "<C-J>", "<C-W>j", { remap = true })
+map({ "n", "v", "o" }, "<M-Down>", "<C-W>j", { remap = true })
 map({ "n", "v", "o" }, "<C-K>", "<C-W>k", { remap = true })
+map({ "n", "v", "o" }, "<M-Up>", "<C-W>k", { remap = true })
 map({ "n", "v", "o" }, "<C-L>", "<C-W>l", { remap = true })
+map({ "n", "v", "o" }, "<M-Right>", "<C-W>l", { remap = true })
 
 -----------------------------------------------------------------
 -- Buffer controls
