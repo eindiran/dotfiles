@@ -7,7 +7,7 @@
     name = Elliott Indiran
     email = eindiran@users.noreply.github.com
 [core]
-    editor = vim
+    editor = neovim
     excludesfile = ~/.gitignore
     pager = delta
 [advice]

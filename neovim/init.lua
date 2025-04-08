@@ -207,12 +207,12 @@ capabilities = vim.tbl_deep_extend("force", capabilities, {
 })
 
 -- Python via Jedi
-vim.lsp.config("jedi_language_server", {
-    cmd = { "jedi-language-server" },
-    filetypes = { "python" },
-    capabilities = capabilities,
-})
-vim.lsp.enable("jedi_language_server")
+-- vim.lsp.config("jedi_language_server", {
+--     cmd = { "jedi-language-server" },
+--     filetypes = { "python" },
+--     capabilities = capabilities,
+-- })
+-- vim.lsp.enable("jedi_language_server")
 
 -- C/C++ via clangd
 vim.lsp.config("clangd", {
