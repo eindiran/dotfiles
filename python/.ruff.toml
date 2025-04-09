@@ -72,6 +72,7 @@ ignore = [
     "D415",  # ends-in-punctuation
     "D404",  # docstring-starts-with-this
     "E741",  # ambiguous-variable-name
+    "PLC0206",
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
