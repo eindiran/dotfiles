@@ -55,6 +55,7 @@ let g:ale_fixers = {
     \'*': ['remove_trailing_lines', 'trim_whitespace'],
 \}
 let g:ale_sh_shfmt_options = '-i=4 -ln=bash -ci -kp'
+let g:ale_lua_luacheck_options = '--globals vim'
 nmap <silent> =aj :ALENext<CR>
 nmap <silent> <Leader>j :ALENext<CR>
 nmap <silent> =ak :ALEPrevious<CR>
@@ -86,33 +87,3 @@ function! ToggleALE()
         call EnableALE()
     endif
 endfunction
-"---------------------------------------------------------------------
-" YouCompleteMe Configuration
-"---------------------------------------------------------------------
-if trim(system('uname -s')) ==? 'Darwin'
-    " On macOS, make sure we set up some fiddly bits for YCM
-    let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
-
-    " Below doesn't seem necessary anymore, but leaving it here for a while just
-    " in case I need to remember how to do it
-    " let g:ycm_server_python_interpreter = trim(system('brew --prefix python3')).'/bin/python3'
-endif
-let g:ycm_filetype_whitelist={'*': 1}
-let g:ycm_filetype_blacklist={
-    \'notes':1,
-    \'unite':1,
-    \'tagbar':1,
-    \'pandoc':1,
-    \'qf':1,
-    \'infolog':1,
-    \'mail':1,
-    \'org':1
-    \}
-let g:ycm_language_server =
-    \[
-    \   {
-    \    'name': 'zls',
-    \    'filetypes': [ 'zig' ],
-    \    'cmdline': [ '/usr/local/bin/zls' ]
-    \   }
-    \]

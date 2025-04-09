@@ -51,7 +51,8 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
     jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
     poppler python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
-    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld trash btop
+    zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld \
+    lua-language-server trash btop zls uv
 echo "Installing neovim..."
 brew unlink utf8proc && brew install --HEAD utf8proc
 brew install neovim
@@ -78,6 +79,7 @@ fi
 # Use rustup to add/update rustfmt and clippy:
 rustup component add rustfmt
 rustup component add clippy
+rustup component add rust-analyzer
 rustup update
 
 # Install cargo packages and binaries:
@@ -131,15 +133,13 @@ git clone https://github.com/joshskidmore/zsh-fzf-history-search "${ZSH_CUSTOM:=
 # Add dragging window support
 defaults write -g NSWindowShouldDragOnGesture YES
 
-# Start setting up vim:
-echo "Installing Vim plugins"
-cd ~/Workspace/dotfiles/vim
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-./plugins.sh -i
-
 # Install checkmake
 echo "Installing checkmake"
 go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+
+echo "Installing go language server"
+go install github.com/nametake/golangci-lint-langserver@latest
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Setup pip for Python
 echo "Setting up top-level venv"
@@ -150,16 +150,6 @@ echo "Installing common pip packages..."
 pip install PyGObject art build coverage matplotlib meson mypy ninja \
     numpy opencv pandas pango pillow precommit pycairo qrcode ruff scipy \
     setuptools setuptools sphinx torch twine wheel
-
-echo "Setting up ZLS for Zig"
-cd ~
-mkdir -p .zls
-cd .zls
-git clone https://github.com/zigtools/zls
-cd zls
-git checkout 0.13.0
-zig build -Doptimize=ReeaseSafe
-sudo ln -fns ~/.zls/zls/zig-out/bin/zls /usr/local/bin/zls
 
 echo "Setup completed!"
 fastfetch

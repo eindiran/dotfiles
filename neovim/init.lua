@@ -3,24 +3,22 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Wed 02 Apr 2025
---  VERSION: 1.0.12
+--  LAST MODIFIED: Mon 07 Apr 2025
+--  VERSION: 1.0.13
 -----------------------------------------------------------------
+-- luacheck:ignore 542
+-- luacheck:ignore 631
 
 -----------------------------------------------------------------
 -- Notes:
 -----------------------------------------------------------------
--- In the far off happy world where the vimscript is replaced entirely,
--- we should source the vimplug code here specifically:
--- vim.cmd('source ~/.config/nvim/plugs.vim')
-
 -- In the even more far off happy world where we move away (mostly) from
 -- vimscript plugins, we should consider using some of the following:
--- LSP: switch from ycm to built-in LSP + completion with coq (
--- https://github.com/ms-jpq/coq_nvim)
+-- LSP manager: mason
 -- LLM integration: codecompanion (https://github.com/olimorris/codecompanion.nvim)
 -- or avante (https://github.com/yetone/avante.nvim)
 -- Debugger: nvim-dap (https://github.com/mfussenegger/nvim-dap)
+-- Replace ALE?
 
 -----------------------------------------------------------------
 -- Initial setup
@@ -53,6 +51,10 @@ local map = vim.keymap.set
 -- lazy.nvim plugin specification
 -----------------------------------------------------------------
 require("lazy").setup({
+    {
+        -- Default LSP configs
+        "neovim/nvim-lspconfig",
+    },
     {
         -- Tresitter interaction
         "nvim-treesitter/nvim-treesitter",
@@ -91,39 +93,40 @@ require("lazy").setup({
                     "yaml",
                     "zig",
                 },
-                sync_install = false,
+                sync_install = true,
                 -- highlight = { enable = true },
                 -- indent = { enable = true },
             })
         end,
     },
     {
-        -- Completion
-        "ycm-core/YouCompleteMe",
-        build = function(plugin)
-            print("Running post-install for " .. plugin.name)
-            local build_cmd = { "./install.py", "--all" }
-            local opts = {
-                cwd = plugin.dir,
-                text = true,
-                stdout = vim.NIL,
-                stderr = vim.NIL,
-            }
-            local result = vim.system(build_cmd, opts):wait()
-            if result.code == 0 then
-                vim.notify(plugin.name .. " built successfully!", vim.log.levels.INFO)
-                print(result.stdout)
-                return true
-            else
-                vim.notify(
-                    "Build failed for " .. plugin.name .. "(" .. result.code .. ")",
-                    vim.log.levels.ERROR
-                )
-                print(result.stdout)
-                print(result.stderr)
-                return false
-            end
-        end,
+        "saghen/blink.cmp",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        version = "*",
+        opts = {
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = { preset = "super-tab" },
+            appearance = {
+                nerd_font_variant = "mono",
+            },
+            completion = { documentation = { auto_show = false } },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+        },
+        opts_extend = { "sources.default" },
     },
     {
         --  File browser
@@ -154,8 +157,6 @@ require("lazy").setup({
         lazy = false,
         build = ":TSInstall markdown markdown_inline html latex typst yaml",
 
-        -- For blink.cmp's completion
-        -- source
         dependencies = {
             "saghen/blink.cmp",
             "nvim-treesitter/nvim-treesitter",
@@ -168,7 +169,7 @@ require("lazy").setup({
         },
     },
     -----------------------------------------------------------------
-    -- General plugins:
+    -- General plugins that don't require configuration
     -----------------------------------------------------------------
     "echasnovski/mini.nvim", --        Powerful plugin with many features
     "dense-analysis/ale", --           Multi lang linting manager
@@ -186,6 +187,79 @@ require("lazy").setup({
     "eindiran/bash-support.vim", --    Shell scripting integration
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
+
+-----------------------------------------------------------------
+-- Setup LSP configs:
+-----------------------------------------------------------------
+-- Setup blink.cmp capabilities
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+capabilities =
+    vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities({}, false))
+
+capabilities = vim.tbl_deep_extend("force", capabilities, {
+    textDocument = {
+        foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true,
+        },
+    },
+})
+
+-- Python via Jedi
+-- vim.lsp.config("jedi_language_server", {
+--     cmd = { "jedi-language-server" },
+--     filetypes = { "python" },
+--     capabilities = capabilities,
+-- })
+-- vim.lsp.enable("jedi_language_server")
+
+-- C/C++ via clangd
+vim.lsp.config("clangd", {
+    cmd = {
+        "clangd",
+        "--clang-tidy",
+        "--background-index",
+        "--offset-encoding=utf-8",
+    },
+    root_markers = { ".clangd", "compile_commands.json" },
+    filetypes = { "c", "cpp" },
+    capabilities = capabilities,
+})
+vim.lsp.enable("clangd")
+
+-- Rust Analyzer
+vim.lsp.config("rust_analyzer", {
+    cmd = { "rust-analyzer" },
+    filetypes = { "rs" },
+    capabilities = capabilities,
+})
+vim.lsp.enable("rust_analyzer")
+
+-- Zig via zls
+vim.lsp.config("zls", {
+    cmd = { "zls" },
+    filetypes = { "zig", "zir", "zon" },
+    capabilities = capabilities,
+})
+vim.lsp.enable("zls")
+
+-- Lua via luals
+vim.lsp.config("luals", {
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+    root_markers = { ".luarc.json", ".luarc.jsonc" },
+    settings = {
+        Lua = {
+            diagnostics = {
+                disable = { "incomplete-signature-doc" },
+                globals = { "MiniMap", "vim" },
+            },
+        },
+    },
+    capabilities = capabilities,
+})
+vim.lsp.enable("luals")
 
 -----------------------------------------------------------------
 -- Source vimscript neovim config.
@@ -278,14 +352,14 @@ if vim.fn.filereadable(gitignore_file) == 1 then
     for _, line in ipairs(lines) do
         local processed_line = vim.trim(line)
         if
-            processed_line:match("^%s*$") -- Whitespace-only line (Lua %s matches whitespace)
+            processed_line:match("^%s*$") --    Whitespace-only line
             or processed_line:match("^%s*#") -- Comment line
-            or processed_line:match("^!") -- Negation line
-            or processed_line:match("^<<+") -- Git conflict marker
-            or processed_line:match("^>>+") -- Git conflict marker
+            or processed_line:match("^!") --    Negation line
+            or processed_line:match("^<<+") --  Git conflict marker
+            or processed_line:match("^>>+") --  Git conflict marker
             or processed_line:match("^==+")
         then -- Git conflict marker
-        -- If any condition matches, skip to the next line (implicit continue)
+            -- implicit pass
         else
             -- Continuation lines:
             -- Check if line ends with '/' (directory pattern)
@@ -345,9 +419,13 @@ map("o", "j", "gj", { silent = true })
 map("o", "k", "gk", { silent = true })
 -- Easy window navigation
 map({ "n", "v", "o" }, "<C-H>", "<C-W>h", { remap = true })
+map({ "n", "v", "o" }, "<M-Left>", "<C-W>h", { remap = true })
 map({ "n", "v", "o" }, "<C-J>", "<C-W>j", { remap = true })
+map({ "n", "v", "o" }, "<M-Down>", "<C-W>j", { remap = true })
 map({ "n", "v", "o" }, "<C-K>", "<C-W>k", { remap = true })
+map({ "n", "v", "o" }, "<M-Up>", "<C-W>k", { remap = true })
 map({ "n", "v", "o" }, "<C-L>", "<C-W>l", { remap = true })
+map({ "n", "v", "o" }, "<M-Right>", "<C-W>l", { remap = true })
 
 -----------------------------------------------------------------
 -- Buffer controls
@@ -769,6 +847,27 @@ require("neo-tree").setup({
         trash_visual = trash_visual,
     },
 })
+
+-----------------------------------------------------------------
+--  Diagnostics
+--
+-----------------------------------------------------------------
+vim.g.diagnostics_active = true
+function _G.toggle_nvim_diagnostics()
+    if vim.g.diagnostics_active then
+        vim.g.diagnostics_active = not vim.g.diagnostics_active
+        vim.diagnostic.hide()
+    else
+        vim.g.diagnostics_active = not vim.g.diagnostics_active
+        vim.diagnostic.show(nil, nil, nil, { virtual_text = { source = true } })
+    end
+end
+map(
+    "n",
+    "<F12>",
+    ":call v:lua.toggle_nvim_diagnostics()<CR>",
+    { silent = true, remap = false, desc = "Toggle whether diagnostics are shown" }
+)
 
 -----------------------------------------------------------------
 --  Key mappings
