@@ -3,8 +3,8 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Mon 07 Apr 2025
---  VERSION: 1.0.13
+--  LAST MODIFIED: Fri 11 Apr 2025
+--  VERSION: 1.0.14
 -----------------------------------------------------------------
 -- luacheck:ignore 542
 -- luacheck:ignore 631
@@ -150,23 +150,6 @@ require("lazy").setup({
         "ellisonleao/gruvbox.nvim",
         priority = 1000,
         config = true,
-    },
-    {
-        --    Markdown support
-        "OXY2DEV/markview.nvim",
-        lazy = false,
-        build = ":TSInstall markdown markdown_inline html latex typst yaml",
-
-        dependencies = {
-            "saghen/blink.cmp",
-            "nvim-treesitter/nvim-treesitter",
-        },
-
-        config = {
-            preview = {
-                icon_provider = "devicons",
-            },
-        },
     },
     -----------------------------------------------------------------
     -- General plugins that don't require configuration
