@@ -3,8 +3,8 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Fri 11 Apr 2025
---  VERSION: 1.0.14
+--  LAST MODIFIED: Mon 14 Apr 2025
+--  VERSION: 1.0.15
 -----------------------------------------------------------------
 -- luacheck:ignore 542
 -- luacheck:ignore 631
@@ -908,6 +908,45 @@ map(
     "<Plug>(DeleteGitConflictSection)",
     { silent = true, remap = false, desc = "Delete git conflict section currently under the cursor" }
 )
+-- For toggling ALE fix on save
+map("n", "=af", function()
+    local current_value = vim.g.ale_fix_on_save or 0
+    if current_value ~= 0 then
+        vim.g.ale_fix_on_save = 0
+        print("ALE fix on save toggled off (0)")
+    else
+        vim.g.ale_fix_on_save = 1
+        print("ALE fix on save toggled on (1)")
+    end
+end, { silent = true, remap = false, desc = "Toggle ALE autofixers" })
+local function disable_ale()
+    vim.g.ale_lint_on_text_changed = "never" -- Disable linting while typing
+    vim.g.ale_lint_on_insert_leave = 0 -- Disable lint on leaving insert mode
+    vim.g.ale_lint_on_save = 0 -- Disable lint on save
+    vim.g.ale_fix_on_save = 0 -- Disable fix on save
+    vim.g.ale_lint_on_enter = 0 -- Disable lint on buffer enter
+    vim.diagnostic.hide(nil, 0)
+    print("ALE auto linting/fixing disabled.")
+end
+local function enable_ale()
+    vim.g.ale_lint_on_text_changed = "normal"
+    vim.g.ale_lint_on_insert_leave = 1 -- Enable lint on leaving insert mode
+    vim.g.ale_lint_on_save = 1 -- Enable lint on save
+    vim.g.ale_fix_on_save = 1 -- Enable fix on save
+    vim.g.ale_lint_on_enter = 1 -- Enable lint on buffer enter
+    vim.diagnostic.show(nil, 0)
+    vim.cmd("ALELint")
+    print("ALE auto linting/fixing enabled (fix on save ON).")
+end
+local function toggle_ale()
+    if (vim.g.ale_fix_on_save or 0) == 1 then
+        disable_ale()
+    else
+        enable_ale()
+    end
+    vim.cmd("redraw!")
+end
+map("n", "=at", toggle_ale, { silent = true, remap = false, desc = "Toggle ALE" })
 
 -----------------------------------------------------------------
 --  F-key mappings
@@ -925,7 +964,6 @@ map(
     ":map<CR>",
     { silent = true, remap = false, desc = "Show the entire list of mapped keys" }
 )
-map("n", "<F3>", ":call ToggleALE()<CR>", { silent = true, remap = false, desc = "Toggle ALE" })
 map(
     "n",
     "<F4>",

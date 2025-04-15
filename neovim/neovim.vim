@@ -4,8 +4,8 @@
 " DESCRIPTION: Config file for NeoVim (in vimscript). Slowly being
 " being replaced by init.lua which is in NeoVim's native Lua
 " CREATED: Sun 21 Jul 2024
-" LAST MODIFIED: Wed 02 Apr 2025
-" VERSION: 2.0.0
+" LAST MODIFIED: Mon 14 Apr 2025
+" VERSION: 2.0.1
 "---------------------------------------------------------------------
 
 "---------------------------------------------------------------------
@@ -20,7 +20,7 @@ nnoremap gdl :diffget //3<CR>
 let g:ale_disable_lsp = 1
 let g:ale_use_neovim_diagnostics_api = 1
 let g:ale_lint_on_enter = 1
-let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_text_changed = "normal"
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
@@ -63,27 +63,3 @@ nmap <silent> <Leader>k :ALEPrevious<CR>
 nmap <silent> =ad :ALEGoToDefinition<CR>
 nmap <silent> <Leader>h :ALEHover<CR>
 nmap <silent> =ai :ALEInfo<CR>
-" Function to disable all ALE fixing and linting
-function! DisableALE()
-    let g:ale_lint_on_text_changed = 'never'
-    let g:ale_lint_on_insert_leave = 0
-    let g:ale_lint_on_save = 0
-    let g:ale_fix_on_save = 0
-    let g:ale_lint_on_enter = 0
-endfunction
-" Function to re-enable ALE
-function! EnableALE()
-    let g:ale_lint_on_text_changed = 0
-    let g:ale_lint_on_insert_leave = 1
-    let g:ale_lint_on_save = 1
-    let g:ale_fix_on_save = 1
-    let g:ale_lint_on_enter = 1
-endfunction
-" Function to toggle ALE
-function! ToggleALE()
-    if (g:ale_fix_on_save == 1)
-        call DisableALE()
-    else
-        call EnableALE()
-    endif
-endfunction
