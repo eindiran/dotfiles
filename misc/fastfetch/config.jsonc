@@ -12,6 +12,7 @@
     "title",
     "separator",
     "break",
+    "separator",
     {
       "type": "os",
       "format": "{3} {10} {8}"
@@ -32,11 +33,6 @@
     "packages",
     "shell",
     "display",
-    {
-      "type": "command",
-      "text": "brightness -l | tail -n 1 | awk '{ printf \"%.1f%s\", $NF*100, \"%\" }'",
-      "key": "Screen Brightness"
-    },
     "de",
     "wm",
     "wmtheme",
@@ -45,6 +41,7 @@
     "font",
     "terminal",
     "terminalfont",
+    "locale",
     "cpu",
     "gpu",
     "memory",
@@ -59,6 +56,9 @@
     },
     "battery",
     "poweradapter",
+    "separator",
+    "break",
+    "separator",
     {
       "type": "command",
       "text": "$EDITOR --version | head -n 1 | sed -e 's|(.*)||'",
@@ -76,10 +76,15 @@
     },
     {
       "type": "command",
+      "text": "cmake --version | head -n 1",
+      "key": "System CMake"
+    },
+    {
+      "type": "command",
       "text": "python3 --version | head -n 1",
       "key": "System Python"
     },
-    "locale",
+    "separator",
     "break"
   ]
 }
