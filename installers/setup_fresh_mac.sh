@@ -64,6 +64,7 @@ brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
 brew install --cask imhex
 brew install --cask wireshark-chmodbpf
+brew install --cask gimp
 # Install Nerd fonts
 echo "Installing brew fonts..."
 brew install font-hack-nerd-font
