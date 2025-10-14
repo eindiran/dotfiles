@@ -48,6 +48,17 @@ rgh() {
     rg -uu "$@"
 }
 
+rghi() {
+    # Search in hidden files and gitignored files (case-insensitive)
+    # equivalent to --hidden --no-ignore -i
+    rg -uu -i "$@"
+}
+
+rgi() {
+    # case-insensitive search
+    rg -i "$@"
+}
+
 ## fd aliases:
 
 fdfp() {
@@ -68,6 +79,16 @@ fda() {
 fdh() {
     # Search for hidden and gitignored files as well:
     fd --hidden --no-ignore --exclude='.git' "$@"
+}
+
+fdi() {
+    # Search case insenstively
+    fd -i "$@"
+}
+
+fdhi() {
+    # Search for hidden and gitignored files (case-insensitive)
+    fd --hidden --no-ignore --exclude='.git' -i "$@"
 }
 
 fdl() {
