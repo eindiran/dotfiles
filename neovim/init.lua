@@ -949,6 +949,56 @@ end
 map("n", "=at", toggle_ale, { silent = true, remap = false, desc = "Toggle ALE" })
 
 -----------------------------------------------------------------
+--  Transparency controls
+-----------------------------------------------------------------
+
+local transparent_groups = {
+    "Normal",
+    "NormalFloat",
+    "NonText",
+    "LineNr",
+    "SignColumn",
+    "StatusLine",
+    "StatusLineNC",
+    "EndOfBuffer",
+    "FloatBorder",
+    "VertSplit",
+    "MsgArea",
+}
+vim.g.transparency_enabled = false
+
+-- Helper function to set the highlights
+local function set_transparency(enabled)
+    if enabled then
+        -- Set backgrounds to NONE
+        for _, group in ipairs(transparent_groups) do
+            vim.api.nvim_set_hl(0, group, { bg = "NONE", ctermbg = "NONE" })
+        end
+    else
+        -- Reload the colorscheme to restore original backgrounds
+        if vim.g.colors_name then
+            vim.cmd("colorscheme " .. vim.g.colors_name)
+        else
+            vim.notify("Colorscheme not found, cannot restore background.", vim.log.levels.WARN)
+        end
+    end
+end
+
+function _G.ToggleTransparency()
+    vim.g.transparency_enabled = not vim.g.transparency_enabled
+    set_transparency(vim.g.transparency_enabled)
+end
+
+-- Create the user command
+vim.api.nvim_create_user_command("ToggleTransparency", ToggleTransparency, {}) -- luacheck: ignore
+
+-- Create the keybinding (e.g., <Leader>t)
+-- You can change '<Leader>t' to whatever you like.
+vim.keymap.set("n", "<Leader>t", "<Cmd>ToggleTransparency<CR>", {
+    desc = "Toggle background transparency",
+})
+
+-----------------------------------------------------------------
 --  F-key mappings
 --  Other than the F-key mappings defined above ^
 -----------------------------------------------------------------

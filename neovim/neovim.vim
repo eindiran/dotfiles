@@ -34,7 +34,7 @@ let g:ale_linters = {
     \'lua': ['luacheck'],
     \'make': ['checkmake'],
     \'markdown': ['vale'],
-    \'python': ['ruff', 'mypy'],
+    \'python': ['ruff'],
     \'sh': ['shellcheck'],
     \'vue': ['eslint', 'stylelint', 'vls'],
 \}
