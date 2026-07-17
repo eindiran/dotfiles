@@ -39,6 +39,24 @@ vim.opt.rtp:prepend(lazypath)
 -- Set packpath to equal the modified runtimepath
 -- Equivalent to: let &packpath = &runtimepath
 vim.opt.packpath = vim.opt.runtimepath:get()
+-- nvim-treesitter (main) runs `tree-sitter build`; Neovim.app / launchd often omit Homebrew on PATH.
+do
+    if vim.fn.executable("tree-sitter") == 0 then
+        local brew_bins = {}
+        local hp = vim.env.HOMEBREW_PREFIX
+        if hp and hp ~= "" then
+            brew_bins[#brew_bins + 1] = vim.fs.joinpath(hp, "bin")
+        end
+        brew_bins[#brew_bins + 1] = "/opt/homebrew/bin"
+        brew_bins[#brew_bins + 1] = "/usr/local/bin"
+        for _, bindir in ipairs(brew_bins) do
+            if vim.fn.executable(vim.fs.joinpath(bindir, "tree-sitter")) == 1 then
+                vim.env.PATH = bindir .. ":" .. (vim.env.PATH or "")
+                break
+            end
+        end
+    end
+end
 -- Set the <Leader> key to \ (backslash)
 vim.g.mapleader = "\\"
 -- Get system OS info:
@@ -56,47 +74,45 @@ require("lazy").setup({
         "neovim/nvim-lspconfig",
     },
     {
-        -- Tresitter interaction
+        -- Treesitter parsers (nvim-treesitter `main`: no `nvim-treesitter.configs`; use top-level module).
         "nvim-treesitter/nvim-treesitter",
+        lazy = false,
         build = ":TSUpdate",
         config = function()
-            local configs = require("nvim-treesitter.configs")
-
-            configs.setup({
-                ensure_installed = {
-                    "bash",
-                    "c",
-                    "cmake",
-                    "cpp",
-                    "dockerfile",
-                    "html",
-                    "javascript",
-                    "json",
-                    "latex",
-                    "llvm",
-                    "lua",
-                    "make",
-                    "markdown",
-                    "markdown_inline",
-                    "python",
-                    "query",
-                    "rst",
-                    "rust",
-                    "sql",
-                    "toml",
-                    "typescript",
-                    "typst",
-                    "vim",
-                    "vimdoc",
-                    "vue",
-                    "xml",
-                    "yaml",
-                    "zig",
-                },
-                sync_install = true,
-                -- highlight = { enable = true },
-                -- indent = { enable = true },
-            })
+            local ts = require("nvim-treesitter")
+            ts.setup({})
+            local parsers = {
+                "bash",
+                "c",
+                "cmake",
+                "cpp",
+                "dockerfile",
+                "html",
+                "javascript",
+                "json",
+                "latex",
+                "llvm",
+                "lua",
+                "make",
+                "markdown",
+                "markdown_inline",
+                "python",
+                "query",
+                "rst",
+                "rust",
+                "sql",
+                "toml",
+                "typescript",
+                "typst",
+                "vim",
+                "vimdoc",
+                "vue",
+                "xml",
+                "yaml",
+                "zig",
+            }
+            -- Roughly replaces `sync_install = true`: wait for installs on a cold machine (no-op when already present).
+            ts.install(parsers):wait(300000)
         end,
     },
     {
