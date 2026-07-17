@@ -205,7 +205,7 @@ autoload -Uz run-help-git run-help-ip run-help-openssl run-help-sudo
 
 #--------------------------------------------------------------------
 # Dirstack
-DIRSTACKFILE="$HOME/.cache/zsh/dirs"
+export DIRSTACKFILE="$HOME/.cache/zsh/dirs"
 [[ -d ${DIRSTACKFILE:h} ]] || mkdir -p ${DIRSTACKFILE:h}
 
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
@@ -214,7 +214,7 @@ if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
 fi
 
 function chpwd() {
-    print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
+    [[ -n $DIRSTACKFILE ]] && print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
 }
 
 DIRSTACKSIZE=15
@@ -417,5 +417,9 @@ bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Initialize zoxide last (keep at end of file)
+# Initialize zoxide last (keep at end of file).
+if [[ -n "$CLAUDECODE" ]]; then
+    # zoxide is semi-broken when using claude code
+    export _ZO_DOCTOR=0
+fi
 eval "$(zoxide init --cmd cd zsh)"
