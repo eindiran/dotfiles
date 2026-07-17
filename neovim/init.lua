@@ -76,6 +76,7 @@ require("lazy").setup({
     {
         -- Treesitter parsers (nvim-treesitter `main`: no `nvim-treesitter.configs`; use top-level module).
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         lazy = false,
         build = ":TSUpdate",
         config = function()
