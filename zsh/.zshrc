@@ -204,21 +204,6 @@ autoload -Uz run-help-git run-help-ip run-help-openssl run-help-sudo
 
 
 #--------------------------------------------------------------------
-# Dirstack
-export DIRSTACKFILE="$HOME/.cache/zsh/dirs"
-[[ -d ${DIRSTACKFILE:h} ]] || mkdir -p ${DIRSTACKFILE:h}
-
-if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
-    dirstack=( ${(uf)"$(< $DIRSTACKFILE)"} )
-    [[ -d $dirstack[1] ]] && cd $dirstack[1]
-fi
-
-function chpwd() {
-    [[ -n $DIRSTACKFILE ]] && print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
-}
-
-DIRSTACKSIZE=15
-
 # Set various pushd/popd options
 setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
 
