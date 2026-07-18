@@ -205,7 +205,8 @@ autoload -Uz run-help-git run-help-ip run-help-openssl run-help-sudo
 
 #--------------------------------------------------------------------
 # Dirstack
-DIRSTACKFILE="$HOME/.cache/zsh/dirs"
+export DIRSTACKFILE="$HOME/.cache/zsh/dirs"
+[[ -d ${DIRSTACKFILE:h} ]] || mkdir -p ${DIRSTACKFILE:h}
 
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
     dirstack=( ${(uf)"$(< $DIRSTACKFILE)"} )
@@ -213,7 +214,7 @@ if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
 fi
 
 function chpwd() {
-    print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
+    [[ -n $DIRSTACKFILE ]] && print -l $PWD ${(u)${dirstack:#$PWD}} >$DIRSTACKFILE
 }
 
 DIRSTACKSIZE=15
@@ -293,9 +294,8 @@ zstyle ':omz:update' frequency 13
 DISABLE_AUTO_TITLE="true"
 HIST_STAMPS="yyyy-mm-dd"
 
-# Setup zoxide plugin
-# Override 'cd' as default 'z' command:
-ZOXIDE_CMD_OVERRIDE="cd"
+# zoxide is initialized explicitly at the end of this file (its doctor
+# requires init to run last); --cmd cd overrides 'cd' as the z command.
 
 # Setup thefuck plugin
 export THEFUCK_HISTORY_LIMIT=9999
@@ -322,7 +322,6 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         bundler
         dotenv
         thefuck
-        zoxide
     )
 else
     plugins=(
@@ -335,7 +334,6 @@ else
         bundler
         dotenv
         thefuck
-        zoxide
     )
 fi
 
@@ -418,5 +416,13 @@ bindkey -s '^h' '_homefzf\n'
 bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fpath+=~/.zfunc
+autoload -Uz compinit
+compinit
 
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
+# Initialize zoxide last (keep at end of file).
+if [[ -n "$CLAUDECODE" ]]; then
+    # zoxide is semi-broken when using claude code
+    export _ZO_DOCTOR=0
+fi
+eval "$(zoxide init --cmd cd zsh)"
