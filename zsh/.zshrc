@@ -155,7 +155,7 @@ export LC_ALL='en_US.UTF-8'
 export WORKSPACE=$HOME/Workspace  # Support the workspace directory
 
 ### Path:
-export PATH="$HOME/.local/bin:/opt/homebrew/opt/tree-sitter-cli/bin:/opt/homebrew/opt/trash/bin:/opt/homebrew/opt/llvm/bin:$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$WORKSPACE/shell-scripts/scripts:$PATH"
+export PATH="$HOME/.orbstack/bin:$HOME/.local/bin:/opt/homebrew/opt/tree-sitter-cli/bin:/opt/homebrew/opt/trash/bin:/opt/homebrew/opt/llvm/bin:$HOME/bin:/usr/local/bin:$WORKSPACE/git-tools/scripts:/usr/local/opt/ruby/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/opt/coreutils/bin:$HOME/.go/bin:$WORKSPACE/shell-scripts/scripts:$PATH"
 
 ### ld:
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
@@ -418,3 +418,5 @@ bindkey -s '^h' '_homefzf\n'
 bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
