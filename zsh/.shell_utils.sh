@@ -112,6 +112,26 @@ sync_git_tools() {
     )
 }
 
+sync_agent_rules() {
+    # Sync the agent-rules local repo with remote
+    local agentrules_version_old
+    local agentrules_version_new
+    (
+        set -e
+        cd "${WORKSPACE}/agent-rules"
+        agentrules_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}agent-rules version: ${HI_RED}${agentrules_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing agent-rules${ANSI_RESET}"
+        git pull
+        agentrules_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${agentrules_version_new}" != "${agentrules_version_old}" ]]; then
+            echo "${HI_YELLOW}New agent-rules version: ${HI_RED}${agentrules_version_new}${ANSI_RESET}"
+        fi
+        echo "${HI_YELLOW}Rebuilding agent-rules${ANSI_RESET}"
+        make all
+    )
+}
+
 sync_shell_scripts() {
     # Sync the shell-scripts local repo with remote
     local shellscripts_version_old
@@ -548,6 +568,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             update_homebrew; echo_separator
             sync_dotfiles; echo_separator
             sync_git_tools; echo_separator
+            sync_agent_rules; echo_separator
             sync_shell_scripts; echo_separator
             update_neovim_plugins; echo_separator
             dotfiles

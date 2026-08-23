@@ -33,7 +33,6 @@ let g:ale_linters = {
     \'javascript': ['eslint'],
     \'lua': ['luacheck'],
     \'make': ['checkmake'],
-    \'markdown': ['vale'],
     \'python': ['ruff'],
     \'sh': ['shellcheck'],
     \'vue': ['eslint', 'stylelint', 'vls'],
