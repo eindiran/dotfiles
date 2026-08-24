@@ -14,6 +14,7 @@
     forceDeleteBranch = false
     detachedHead = true
     implicitIdentity = true
+    defaultBranchName = false
 [interactive]
     diffFilter = delta --color-only --features=interactive
 [alias]
