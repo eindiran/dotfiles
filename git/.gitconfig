@@ -39,6 +39,7 @@
     log-patch = log --patch --stat
     lp = log --patch --stat
     master = checkout master
+    staging = checkout staging
     mergechanges = "!f() { git merge $1 --no-ff --no-commit; git diff --cached; git merge --abort; }; f"
     mergediff = "!f() { HASH=$1; shift 1; git d --cc $HASH $HASH^1 $HASH^2 $@; }; f"
     nb = checkout -b
