@@ -563,10 +563,11 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             sync_git_tools; echo_separator
             sync_agent_rules; echo_separator
             sync_shell_scripts; echo_separator
-            update_neovim_plugins; echo_separator
             dotfiles
             cd installers
             ./symlink_dotfiles.sh; echo_separator
+            cd ..
+            update_neovim_plugins; echo_separator
             # Final status:
             echo "${BHI_GREEN}Updates complete!${ANSI_RESET}"
             status
