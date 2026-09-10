@@ -9,9 +9,9 @@
 #                  symlink_dotfiles.sh -h  -> Print the usage and exit.
 #                  symlink_dotfiles.sh -> Run the script, installing
 #                      dotfiles into symlinks in $HOME.
-#                  symlink_dotfiles.sh -g -t -a -> Run the script with
-#                      config symlinking for git, htop, and aerospace enabled
-#                      (disabled by default).
+#                  symlink_dotfiles.sh -g -t -> Run the script with
+#                      config symlinking for git and htop (disabled by
+#                      default).
 #
 #   DESCRIPTION: Script to add symlinks from $HOME to the dotfiles files in
 #       the dotfiles/ directory. Will skip links that already exist.
@@ -19,7 +19,6 @@
 #       OPTIONS:
 #                  -h: Print the usage and exit
 #                  -g: Symlink git config files
-#                  -a: Symlink Aerospace config file
 #                  -t: Force symlink htop config file
 #  REQUIREMENTS: ---
 #         NOTES: ---
@@ -50,15 +49,14 @@ DESCRIPTION: Script to add symlinks from \$HOME to the dotfiles files in
     OPTIONS:
                -h: Print the usage and exit
                -g: Symlink git config files
-               -a: Symlink Aerospace config file
                -t: Force symlink htop config file
 
    EXAMPLES:
                symlink_dotfiles.sh -h  -> Print the usage and exit.
                symlink_dotfiles.sh -> Run the script, installing
                    dotfiles into symlinks in \$HOME.
-               symlink_dotfiles.sh -g -t -a -> Run the script with
-                   config symlinking for git, htop, and aerospace enabled
+               symlink_dotfiles.sh -g -t -> Run the script with
+                   config symlinking for git and htop
                    (disabled by default).
 EOF
     exit "$1"
@@ -86,7 +84,6 @@ chklink() {
 
 # Track the optional configs to install:
 install_git_configs=false
-install_aerospace_configs=false
 install_htop_configs=false
 
 
@@ -98,9 +95,6 @@ while getopts "hgat" option; do
             ;;
         g)
             install_git_configs=true
-            ;;
-        a)
-            install_aerospace_configs=true
             ;;
         t)
             install_htop_configs=true
@@ -169,7 +163,6 @@ chklink "${dotfiles_dir}/misc/.fdignore" "${HOME}/.fdignore"
 chklink "${dotfiles_dir}/misc/.rgignore" "${HOME}/.rgignore"
 chklink "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
 chklink "${dotfiles_dir}/misc/.vale.ini" "${HOME}/.vale.ini"
-chklink "${dotfiles_dir}/python/.ruff.toml" "${HOME}/.ruff.toml"
 mkdir -p "${HOME}/.config/fastfetch"
 chklink "${dotfiles_dir}/misc/fastfetch/config.jsonc" "${HOME}/.config/fastfetch/config.jsonc"
 
@@ -188,9 +181,4 @@ if [[ "${install_git_configs}" == true ]]; then
         ff=$(basename "${f}")
         chklink "${tf}" "${HOME}/${ff}"
     done
-fi
-
-if [[ "${install_aerospace_configs}" == true ]]; then
-    echo "Installing Aerospace config"
-    chklink "${dotfiles_dir}/misc/.aerospace.toml" "${HOME}/.aerospace.toml"
 fi
