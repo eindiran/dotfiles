@@ -18,10 +18,9 @@
 #
 #==============================================================================
 
-set -o errexit  # Exit on a command failing
-set -o errtrace # Exit when a function or subshell has an error
-set -o nounset  # Treat unset variables as an error
-set -o pipefail # Return error code for first failed command in pipe
+# Same option line as the installer scripts. zsh has no errtrace option, so
+# the long-form "set -o errtrace" used to abort this script on load.
+set -Eeuo pipefail
 
 # Redirect all all output to stderr
 exec >&2

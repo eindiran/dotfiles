@@ -8,8 +8,8 @@
 #
 #       AUTHOR:      Elliott Indiran <elliott.indiran@protonmail.com>
 #       CREATED:     10/09/2017
-#       MODIFIED:    Sun 30 Jun 2024
-#       REVISION:    v1.5.1
+#       MODIFIED:    Thu 10 Sep 2026
+#       REVISION:    v1.5.2
 #
 # ===============================================================================
 
@@ -25,8 +25,8 @@ fi
 true
 
 #--------------------------------------------------------------------
-# Setup tab completion:
-autoload -Uz compinit
+# Setup tab completion. compinit itself runs exactly once, inside
+# oh-my-zsh.sh; the options and styles here only need to exist before that.
 
 # Allow tab completion in the middle of a word
 setopt COMPLETE_IN_WORD
@@ -41,10 +41,6 @@ setopt EXTENDED_GLOB
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
 zmodload zsh/complist
-compinit
-
-# Support hidden/dotfiles
-_comp_options+=(globdots)
 #--------------------------------------------------------------------
 
 
@@ -168,7 +164,7 @@ export GOBIN="${HOME}/.go/bin"
 ### Editor setup:
 export SUDO_EDITOR=nvim
 export EDITOR=nvim
-export VIM_CONFIG="${HOME}/.config/nvim/init.vim"
+export VIM_CONFIG="${HOME}/.config/nvim/init.lua"
 
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     export PACKAGE_MANAGER=brew
@@ -299,7 +295,6 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         macos
         brew
         zsh-autosuggestions
-        zsh-completions
         zsh-history-substring-search
         zsh-syntax-highlighting
         zsh-fzf-history-search
@@ -311,7 +306,6 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
 else
     plugins=(
         zsh-autosuggestions
-        zsh-completions
         zsh-history-substring-search
         zsh-syntax-highlighting
         zsh-fzf-history-search
@@ -325,7 +319,14 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
+# Completion dirs must be on fpath before oh-my-zsh.sh runs compinit.
+# zsh-completions is added here rather than in plugins=(...) because as a
+# plugin its src/ dir joins fpath only after compinit has already scanned.
+fpath+=(~/.zfunc "${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src")
 source $ZSH/oh-my-zsh.sh
+# Support hidden/dotfiles in completion. compinit resets this list, so it
+# has to come after oh-my-zsh.sh.
+_comp_options+=(globdots)
 #--------------------------------------------------------------------
 
 
@@ -401,9 +402,6 @@ bindkey -s '^h' '_homefzf\n'
 bindkey 'ç' fzf-cd-widget
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-fpath+=~/.zfunc
-autoload -Uz compinit
-compinit
 
 # Initialize zoxide last (keep at end of file).
 if [[ -n "$CLAUDECODE" ]]; then

@@ -6,3 +6,4 @@ tags.lock
 *.swo
 *.swp
 .DS_Store
+tmux/.tmux/plugins/
