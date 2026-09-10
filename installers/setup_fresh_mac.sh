@@ -47,7 +47,7 @@ echo "Installing brew formulae..."
 
 brew install age ansifilter cairo cmake coreutils expect fastfetch \
     ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
-    gnu-sed gnupg go gobject-introspection htop imagemagick java \
+    gnu-sed gnupg go gobject-introspection hadolint htop imagemagick java \
     jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
     poppler pre-commit python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
@@ -85,7 +85,7 @@ rustup update
 # Install cargo packages and binaries:
 echo "Installing cargo packages..."
 cargo install action-validator bat broot du-dust fd-find hexyl hx hyperfine \
-    numbat-cli procs ripgrep skim hwatch
+    numbat-cli procs ripgrep skim hwatch stylua
 
 # Setup git repos:
 echo "Setting up Workspace"
@@ -109,6 +109,8 @@ sudo make install
 # Install dotfiles:
 cd ../dotfiles
 ./installers/symlink_dotfiles.sh -g -t
+echo "Installing neovim plugins and language servers"
+./neovim/plugins.sh
 echo "Creating zsh cache"
 mkdir -p ~/.cache/zsh/
 # Run vale sync
@@ -136,10 +138,6 @@ defaults write -g NSWindowShouldDragOnGesture YES
 # Install checkmake
 echo "Installing checkmake"
 go install github.com/mrtazz/checkmake/cmd/checkmake@latest
-
-echo "Installing go language server"
-go install github.com/nametake/golangci-lint-langserver@latest
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Setup pip for Python
 echo "Setting up top-level venv"

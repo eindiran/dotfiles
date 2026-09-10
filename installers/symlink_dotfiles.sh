@@ -23,7 +23,7 @@
 #  REQUIREMENTS: ---
 #         NOTES: ---
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-#      REVISION: 1.0.2
+#      REVISION: 1.0.3
 #
 #===============================================================================
 
@@ -73,6 +73,10 @@ chklink() {
     elif [[ -f "${_target}" ]]; then
         # File exists as a file
         echo -e "${BHI_RED}WARNING: ${HI_YELLOW}path exists as file ${_target}${ANSI_RESET}"
+        echo -e "${BHI_RED}Skipping ${_target}${ANSI_RESET}"
+    elif [[ -d "${_target}" ]]; then
+        # Real directory: ln -ns would silently create the link inside it
+        echo -e "${BHI_RED}WARNING: ${HI_YELLOW}path exists as directory ${_target}${ANSI_RESET}"
         echo -e "${BHI_RED}Skipping ${_target}${ANSI_RESET}"
     else
         # No file or link:
@@ -145,8 +149,9 @@ chklink "${dotfiles_dir}/fzf" "${HOME}/.fzf"
 
 echo "Installing neovim dotfiles"
 mkdir -p "${HOME}/.config/nvim"
-chklink "${dotfiles_dir}/neovim/neovim.vim" "${HOME}/.config/nvim/neovim.vim"
 chklink "${dotfiles_dir}/neovim/init.lua" "${HOME}/.config/nvim/init.lua"
+chklink "${dotfiles_dir}/neovim/lua" "${HOME}/.config/nvim/lua"
+chklink "${dotfiles_dir}/neovim/after" "${HOME}/.config/nvim/after"
 
 echo "Installing .tmux.conf"
 chklink "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"

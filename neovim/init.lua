@@ -3,8 +3,8 @@
 --  AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
 --  DESCRIPTION: Config file for NeoVim
 --  CREATED: Sun 21 Jul 2024
---  LAST MODIFIED: Mon 14 Apr 2025
---  VERSION: 1.0.15
+--  LAST MODIFIED: Thu 10 Sep 2026
+--  VERSION: 1.1.0
 -----------------------------------------------------------------
 -- luacheck:ignore 542
 -- luacheck:ignore 631
@@ -12,13 +12,9 @@
 -----------------------------------------------------------------
 -- Notes:
 -----------------------------------------------------------------
--- In the even more far off happy world where we move away (mostly) from
--- vimscript plugins, we should consider using some of the following:
--- LSP manager: mason
--- LLM integration: codecompanion (https://github.com/olimorris/codecompanion.nvim)
--- or avante (https://github.com/yetone/avante.nvim)
--- Debugger: nvim-dap (https://github.com/mfussenegger/nvim-dap)
--- Replace ALE?
+-- Language servers, formatting, linting, and completion live in lua/user/*.lua
+-- and after/lsp/*.lua. Future ideas: an LLM plugin (codecompanion or avante)
+-- and nvim-dap in place of vimspector.
 
 -----------------------------------------------------------------
 -- Initial setup
@@ -120,29 +116,8 @@ require("lazy").setup({
         "saghen/blink.cmp",
         dependencies = { "rafamadriz/friendly-snippets" },
         version = "*",
-        opts = {
-            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-            -- 'super-tab' for mappings similar to vscode (tab to accept)
-            -- 'enter' for enter to accept
-            -- 'none' for no mappings
-            --
-            -- All presets have the following mappings:
-            -- C-space: Open menu or open docs if already open
-            -- C-n/C-p or Up/Down: Select next/previous item
-            -- C-e: Hide menu
-            -- C-k: Toggle signature help (if signature.enabled = true)
-            --
-            -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = { preset = "super-tab" },
-            appearance = {
-                nerd_font_variant = "mono",
-            },
-            completion = { documentation = { auto_show = false } },
-            sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-            },
-            fuzzy = { implementation = "prefer_rust_with_warning" },
-        },
+        -- Options live in lua/user/completion.lua
+        opts = require("user.completion"),
         opts_extend = { "sources.default" },
     },
     {
@@ -169,10 +144,26 @@ require("lazy").setup({
         config = true,
     },
     -----------------------------------------------------------------
+    -- LSP servers, formatting, and linting (configured in lua/user/*.lua)
+    -----------------------------------------------------------------
+    { "mason-org/mason.nvim", version = "*" },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        version = "*",
+        dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
+    },
+    { "stevearc/conform.nvim", version = "*" },
+    "mfussenegger/nvim-lint",
+    {
+        -- Neovim runtime and plugin API types for lua_ls
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = { library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } } },
+    },
+    -----------------------------------------------------------------
     -- General plugins that don't require configuration
     -----------------------------------------------------------------
     "echasnovski/mini.nvim", --        Powerful plugin with many features
-    "dense-analysis/ale", --           Multi lang linting manager
     "tpope/vim-fugitive", --           Integration w/ git
     "tpope/vim-abolish", --            Smart handling of advanced regexes
     "junegunn/fzf.vim", --             FZF bindings and delta bindings
@@ -183,90 +174,39 @@ require("lazy").setup({
     -- Filetype specific plugins:
     -----------------------------------------------------------------
     "eindiran/awk-support", --         awk support
-    "eindiran/c-support", --           C/C++ support
     "eindiran/bash-support.vim", --    Shell scripting integration
 })
 map("n", "<F10>", ":Lazy<CR>", { silent = true, remap = false, desc = "Open Lazy" })
 
 -----------------------------------------------------------------
--- Setup LSP configs:
+-- LSP, formatting, and linting: see lua/user/*.lua and after/lsp/*.lua
 -----------------------------------------------------------------
--- Setup blink.cmp capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-capabilities =
-    vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities({}, false))
-
-capabilities = vim.tbl_deep_extend("force", capabilities, {
-    textDocument = {
-        foldingRange = {
-            dynamicRegistration = false,
-            lineFoldingOnly = true,
-        },
-    },
-})
-
--- Python via Jedi
--- vim.lsp.config("jedi_language_server", {
---     cmd = { "jedi-language-server" },
---     filetypes = { "python" },
---     capabilities = capabilities,
--- })
--- vim.lsp.enable("jedi_language_server")
-
--- C/C++ via clangd
-vim.lsp.config("clangd", {
-    cmd = {
-        "clangd",
-        "--clang-tidy",
-        "--background-index",
-        "--offset-encoding=utf-8",
-    },
-    root_markers = { ".clangd", "compile_commands.json" },
-    filetypes = { "c", "cpp" },
-    capabilities = capabilities,
-})
-vim.lsp.enable("clangd")
-
--- Rust Analyzer
-vim.lsp.config("rust_analyzer", {
-    cmd = { "rust-analyzer" },
-    filetypes = { "rs" },
-    capabilities = capabilities,
-})
-vim.lsp.enable("rust_analyzer")
-
--- Zig via zls
-vim.lsp.config("zls", {
-    cmd = { "zls" },
-    filetypes = { "zig", "zir", "zon" },
-    capabilities = capabilities,
-})
-vim.lsp.enable("zls")
-
--- Lua via luals
-vim.lsp.config("luals", {
-    cmd = { "lua-language-server" },
-    filetypes = { "lua" },
-    root_markers = { ".luarc.json", ".luarc.jsonc" },
-    settings = {
-        Lua = {
-            diagnostics = {
-                disable = { "incomplete-signature-doc" },
-                globals = { "MiniMap", "vim" },
-            },
-        },
-    },
-    capabilities = capabilities,
-})
-vim.lsp.enable("luals")
+require("user.lsp")
+require("user.format")
+require("user.lint")
 
 -----------------------------------------------------------------
--- Source vimscript neovim config.
--- This is done to gradually bootstrap into using Lua for the entire
--- config.
+-- fugitive
+-- gdh/gdl are why gd is not used for LSP go-to-definition.
 -----------------------------------------------------------------
-vim.cmd("source " .. vim.fn.expand("~/.config/nvim/neovim.vim"))
+map(
+    "n",
+    "<Leader>gd",
+    ":Gvdiff<CR>",
+    { silent = true, remap = false, desc = "Fugitive: vertical diff" }
+)
+map(
+    "n",
+    "gdh",
+    ":diffget //2<CR>",
+    { silent = true, remap = false, desc = "Fugitive: take target hunk" }
+)
+map(
+    "n",
+    "gdl",
+    ":diffget //3<CR>",
+    { silent = true, remap = false, desc = "Fugitive: take merge hunk" }
+)
 
 -----------------------------------------------------------------
 --  Color scheme
@@ -693,7 +633,7 @@ require("lualine").setup({
                 --   'nvim_lsp', 'nvim_diagnostic', 'nvim_workspace_diagnostic', 'coc', 'ale', 'vim_lsp'.
                 -- or a function that returns a table as such:
                 --   { error=error_cnt, warn=warn_cnt, info=info_cnt, hint=hint_cnt }
-                sources = { "nvim_diagnostic", "ale" },
+                sources = { "nvim_diagnostic" },
 
                 -- Displays diagnostics for the defined severity types
                 sections = { "error", "warn", "info", "hint" },
@@ -849,27 +789,6 @@ require("neo-tree").setup({
 })
 
 -----------------------------------------------------------------
---  Diagnostics
---
------------------------------------------------------------------
-vim.g.diagnostics_active = true
-function _G.toggle_nvim_diagnostics()
-    if vim.g.diagnostics_active then
-        vim.g.diagnostics_active = not vim.g.diagnostics_active
-        vim.diagnostic.hide()
-    else
-        vim.g.diagnostics_active = not vim.g.diagnostics_active
-        vim.diagnostic.show(nil, nil, nil, { virtual_text = { source = true } })
-    end
-end
-map(
-    "n",
-    "<F12>",
-    ":call v:lua.toggle_nvim_diagnostics()<CR>",
-    { silent = true, remap = false, desc = "Toggle whether diagnostics are shown" }
-)
-
------------------------------------------------------------------
 --  Key mappings
 --  Other than the key mappings defined above ^
 --  And the F-key mappings defined below
@@ -925,45 +844,6 @@ map(
     "<Plug>(DeleteGitConflictSection)",
     { silent = true, remap = false, desc = "Delete git conflict section currently under the cursor" }
 )
--- For toggling ALE fix on save
-map("n", "=af", function()
-    local current_value = vim.g.ale_fix_on_save or 0
-    if current_value ~= 0 then
-        vim.g.ale_fix_on_save = 0
-        print("ALE fix on save toggled off (0)")
-    else
-        vim.g.ale_fix_on_save = 1
-        print("ALE fix on save toggled on (1)")
-    end
-end, { silent = true, remap = false, desc = "Toggle ALE autofixers" })
-local function disable_ale()
-    vim.g.ale_lint_on_text_changed = "never" -- Disable linting while typing
-    vim.g.ale_lint_on_insert_leave = 0 -- Disable lint on leaving insert mode
-    vim.g.ale_lint_on_save = 0 -- Disable lint on save
-    vim.g.ale_fix_on_save = 0 -- Disable fix on save
-    vim.g.ale_lint_on_enter = 0 -- Disable lint on buffer enter
-    vim.diagnostic.hide(nil, 0)
-    print("ALE auto linting/fixing disabled.")
-end
-local function enable_ale()
-    vim.g.ale_lint_on_text_changed = "normal"
-    vim.g.ale_lint_on_insert_leave = 1 -- Enable lint on leaving insert mode
-    vim.g.ale_lint_on_save = 1 -- Enable lint on save
-    vim.g.ale_fix_on_save = 1 -- Enable fix on save
-    vim.g.ale_lint_on_enter = 1 -- Enable lint on buffer enter
-    vim.diagnostic.show(nil, 0)
-    vim.cmd("ALELint")
-    print("ALE auto linting/fixing enabled (fix on save ON).")
-end
-local function toggle_ale()
-    if (vim.g.ale_fix_on_save or 0) == 1 then
-        disable_ale()
-    else
-        enable_ale()
-    end
-    vim.cmd("redraw!")
-end
-map("n", "=at", toggle_ale, { silent = true, remap = false, desc = "Toggle ALE" })
 
 -----------------------------------------------------------------
 --  Transparency controls
