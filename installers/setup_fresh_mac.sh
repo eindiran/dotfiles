@@ -49,7 +49,7 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
     ffmpeg fzf gdk-pixbuf gh ghostscript git git-delta git-lfs \
     gnu-sed gnupg go gobject-introspection htop imagemagick java \
     jq librsvg llvm lsd mactex nodejs pandoc perl pkg-config \
-    poppler python python-setuptools rename shellcheck shfmt \
+    poppler pre-commit python python-setuptools rename shellcheck shfmt \
     thefuck tmux tree universal-ctags vale watch wget youtube-dl \
     zoxide freetype lzo sshpass bzip2 wireshark sqlite zig lld \
     lua-language-server trash btop zls uv
@@ -60,7 +60,6 @@ brew install neovim
 pip install --break-system-packages neovim
 echo "Installing brew casks..."
 brew install --cask iterm2
-brew install --cask nikitabobko/tap/aerospace
 brew install --cask freecad
 brew install --cask imhex
 brew install --cask wireshark-chmodbpf
@@ -109,7 +108,7 @@ sudo make install
 
 # Install dotfiles:
 cd ../dotfiles
-./installers/symlink_dotfiles.sh -a -g -t
+./installers/symlink_dotfiles.sh -g -t
 echo "Creating zsh cache"
 mkdir -p ~/.cache/zsh/
 # Run vale sync
@@ -149,7 +148,7 @@ python3 -m venv ~/.venv
 source ~/.venv/bin/activate
 echo "Installing common pip packages..."
 pip install PyGObject art build coverage matplotlib meson mypy ninja \
-    numpy opencv pandas pango pillow precommit pycairo qrcode ruff scipy \
+    numpy opencv pandas pango pillow pycairo qrcode ruff scipy \
     setuptools setuptools sphinx torch twine wheel
 
 echo "Setup completed!"

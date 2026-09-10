@@ -81,13 +81,6 @@ m() {
     make "$@"
 }
 
-update_vim_plugins() {
-    # vim-plug updates and cleanup:
-    echo "${HI_YELLOW}Updating vim-plug plugins${ANSI_RESET}"
-    # Install, then update, then clean
-    "${WORKSPACE}/dotfiles/vim/plugins.sh" -i -u -c
-}
-
 update_neovim_plugins() {
     echo "${HI_YELLOW}Updating lazy.nvim plugins${ANSI_RESET}"
     # Install, then update, then clean

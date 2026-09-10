@@ -3,7 +3,7 @@
 #
 #          FILE: symlink_dotfiles.sh
 #
-#         USAGE: ./symlink_dotfiles.sh [-h] [-g] [-t] [-a]
+#         USAGE: ./symlink_dotfiles.sh [-h] [-g] [-t]
 #
 #      EXAMPLES:
 #                  symlink_dotfiles.sh -h  -> Print the usage and exit.
@@ -23,7 +23,7 @@
 #  REQUIREMENTS: ---
 #         NOTES: ---
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-#      REVISION: 1.0.1
+#      REVISION: 1.0.2
 #
 #===============================================================================
 
@@ -41,7 +41,7 @@ usage() {
     cat <<EOF
        FILE: symlink_dotfiles.sh
 
-      USAGE: ./symlink_dotfiles.sh [-h] [-g] [-t] [-a]
+      USAGE: ./symlink_dotfiles.sh [-h] [-g] [-t]
 
 DESCRIPTION: Script to add symlinks from \$HOME to the dotfiles files in
     the dotfiles/ directory. Will skip links that already exist.
@@ -88,7 +88,7 @@ install_htop_configs=false
 
 
 # Parse args to decide which configs to install
-while getopts "hgat" option; do
+while getopts "hgt" option; do
     case "${option}" in
         h)
             usage 0
@@ -143,16 +143,10 @@ fi
 echo "Installing FZF dotfiles"
 chklink "${dotfiles_dir}/fzf" "${HOME}/.fzf"
 
-if [[ -d "neovim/" ]]; then
-    echo "Installing neovim dotfiles"
-    mkdir -p "${HOME}/.config/nvim"
-    chklink "${dotfiles_dir}/neovim/neovim.vim" "${HOME}/.config/nvim/neovim.vim"
-    chklink "${dotfiles_dir}/neovim/plugs.vim" "${HOME}/.config/nvim/plugs.vim"
-    chklink "${dotfiles_dir}/neovim/init.lua" "${HOME}/.config/nvim/init.lua"
-else
-    echo "Installing .vimrc"
-    chklink "${dotfiles_dir}/vim/.vimrc" "${HOME}/.vimrc"
-fi
+echo "Installing neovim dotfiles"
+mkdir -p "${HOME}/.config/nvim"
+chklink "${dotfiles_dir}/neovim/neovim.vim" "${HOME}/.config/nvim/neovim.vim"
+chklink "${dotfiles_dir}/neovim/init.lua" "${HOME}/.config/nvim/init.lua"
 
 echo "Installing .tmux.conf"
 chklink "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"
