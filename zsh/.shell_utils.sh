@@ -125,6 +125,26 @@ sync_agent_rules() {
     )
 }
 
+sync_agent_skills() {
+    # Sync the agent-skills local repo with remote
+    local agentskills_version_old
+    local agentskills_version_new
+    (
+        set -e
+        cd "${WORKSPACE}/agent-skills"
+        agentskills_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}agent-skills version: ${HI_RED}${agentskills_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing agent-skills${ANSI_RESET}"
+        git pull
+        agentskills_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${agentskills_version_new}" != "${agentskills_version_old}" ]]; then
+            echo "${HI_YELLOW}New agent-skills version: ${HI_RED}${agentskills_version_new}${ANSI_RESET}"
+        fi
+        echo "${HI_YELLOW}Rebuilding agent-skills${ANSI_RESET}"
+        make all
+    )
+}
+
 sync_shell_scripts() {
     # Sync the shell-scripts local repo with remote
     local shellscripts_version_old
@@ -562,6 +582,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             sync_dotfiles; echo_separator
             sync_git_tools; echo_separator
             sync_agent_rules; echo_separator
+            sync_agent_skills; echo_separator
             sync_shell_scripts; echo_separator
             dotfiles
             cd installers
