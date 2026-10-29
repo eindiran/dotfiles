@@ -291,7 +291,6 @@ export THEFUCK_NUM_CLOSE_MATCHES=7
 
 if [[ "${OSTYPE}" =~ ^darwin ]]; then
     plugins=(
-        iterm2
         macos
         brew
         zsh-autosuggestions

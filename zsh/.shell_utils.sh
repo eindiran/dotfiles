@@ -219,10 +219,6 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
         open -W -a $@
     }
 
-    iterm2() {
-        /Applications/iTerm.app/Contents/MacOS/iTerm2 2> /dev/null &
-    }
-
     sudoedit() {
         if [[ -n "$EDITOR" ]]; then
             sudo "$EDITOR" "$@"
