@@ -60,6 +60,7 @@ brew install neovim
 pip install --break-system-packages neovim
 echo "Installing brew casks..."
 brew install --cask iterm2
+brew install --cask ghostty
 brew install --cask freecad
 brew install --cask imhex
 brew install --cask wireshark-chmodbpf

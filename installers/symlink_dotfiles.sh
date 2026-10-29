@@ -23,7 +23,7 @@
 #  REQUIREMENTS: ---
 #         NOTES: ---
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-#      REVISION: 1.0.3
+#      REVISION: 1.0.4
 #
 #===============================================================================
 
@@ -156,6 +156,10 @@ chklink "${dotfiles_dir}/neovim/after" "${HOME}/.config/nvim/after"
 echo "Installing .tmux.conf"
 chklink "${dotfiles_dir}/tmux/.tmux" "${HOME}/.tmux"
 chklink "${dotfiles_dir}/tmux/.tmux.conf" "${HOME}/.tmux.conf"
+
+echo "Installing Ghostty config"
+mkdir -p "${HOME}/.config/ghostty"
+chklink "${dotfiles_dir}/ghostty/config.ghostty" "${HOME}/.config/ghostty/config.ghostty"
 
 echo "Installing miscellaneous configs"
 chklink "${dotfiles_dir}/misc/.fdignore" "${HOME}/.fdignore"

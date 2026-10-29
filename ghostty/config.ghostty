@@ -1,0 +1,12 @@
+theme = Hardcore
+font-family = "Hack Nerd Font Mono"
+font-size = 13
+# ligatures disabled
+font-feature = -calt
+font-feature = -liga
+# transparency 0.18 (except when full screen)
+background-opacity = 0.82
+cursor-style-blink = false
+quit-after-last-window-closed = true
+# split pane dimming 0.08
+unfocused-split-opacity = 0.92
