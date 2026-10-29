@@ -55,6 +55,8 @@ do
 end
 -- Set the <Leader> key to \ (backslash)
 vim.g.mapleader = "\\"
+-- Python provider uses the pynvim venv created by installers/setup_fresh_mac.sh
+vim.g.python3_host_prog = vim.fn.expand("~/.local/share/nvim/venv/bin/python")
 -- Get system OS info:
 local uname_info = vim.loop.os_uname()
 -- Make it so we don't need to type 'vim.keymap.set' every time we

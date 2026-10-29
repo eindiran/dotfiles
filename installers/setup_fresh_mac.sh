@@ -56,8 +56,10 @@ brew install age ansifilter cairo cmake coreutils expect fastfetch \
 echo "Installing neovim..."
 brew unlink utf8proc && brew install --HEAD utf8proc
 brew install neovim
-# Install the python3 neovim package to enable Python support:
-pip install --break-system-packages neovim
+# Install pynvim into a dedicated venv for the Python provider; init.lua points
+# g:python3_host_prog at it, so brew Python upgrades do not break it:
+uv venv ~/.local/share/nvim/venv
+uv pip install --python ~/.local/share/nvim/venv pynvim
 echo "Installing brew casks..."
 brew install --cask ghostty
 brew install --cask freecad
