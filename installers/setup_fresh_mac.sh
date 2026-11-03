@@ -102,11 +102,18 @@ git clone https://github.com/eindiran/git-tools.git
 git clone https://github.com/eindiran/shell-scripts.git
 git clone https://github.com/eindiran/notes.git
 git clone https://github.com/eindiran/brightness.git
+git clone https://github.com/eindiran/agent-rules.git
+git clone https://github.com/eindiran/agent-skills.git
 
 echo "Installing brightness"
 cd brightness
 make
 sudo make install
+
+# monday's sync_agent_skills runs `make all`, which needs the venv from `make install`
+echo "Installing agent-skills tooling"
+cd ../agent-skills
+make install
 
 # Install dotfiles:
 cd ../dotfiles
