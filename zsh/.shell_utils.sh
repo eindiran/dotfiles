@@ -145,6 +145,31 @@ sync_agent_skills() {
     )
 }
 
+sync_agent_skills_home() {
+    # Sync the agent-skills-home local repo with remote. Home machines only: skipped
+    # when the checkout is absent, as on the work laptop
+    local agentskillshome_version_old
+    local agentskillshome_version_new
+    if [[ ! -d "${WORKSPACE}/agent-skills-home" ]]; then
+        echo "${HI_YELLOW}No agent-skills-home checkout, skipping${ANSI_RESET}"
+        return 0
+    fi
+    (
+        set -e
+        cd "${WORKSPACE}/agent-skills-home"
+        agentskillshome_version_old="$(git rev-parse --short HEAD)"
+        echo "${HI_YELLOW}agent-skills-home version: ${HI_RED}${agentskillshome_version_old}${ANSI_RESET}"
+        echo "${HI_YELLOW}Syncing agent-skills-home${ANSI_RESET}"
+        git pull
+        agentskillshome_version_new="$(git rev-parse --short HEAD)"
+        if [[ "${agentskillshome_version_new}" != "${agentskillshome_version_old}" ]]; then
+            echo "${HI_YELLOW}New agent-skills-home version: ${HI_RED}${agentskillshome_version_new}${ANSI_RESET}"
+        fi
+        echo "${HI_YELLOW}Rebuilding agent-skills-home${ANSI_RESET}"
+        make all
+    )
+}
+
 sync_shell_scripts() {
     # Sync the shell-scripts local repo with remote
     local shellscripts_version_old
@@ -579,6 +604,7 @@ if [[ "${OSTYPE}" =~ ^darwin ]]; then
             sync_git_tools; echo_separator
             sync_agent_rules; echo_separator
             sync_agent_skills; echo_separator
+            sync_agent_skills_home; echo_separator
             sync_shell_scripts; echo_separator
             dotfiles
             cd installers
