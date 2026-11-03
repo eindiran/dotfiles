@@ -14,7 +14,10 @@
 #                      default).
 #
 #   DESCRIPTION: Script to add symlinks from $HOME to the dotfiles files in
-#       the dotfiles/ directory. Will skip links that already exist.
+#       the dotfiles/ directory. Will skip links that already exist. If
+#       ~/.cursor exists, also links agent-rules' Cursor rules into
+#       ~/.cursor/rules/ and the agent-skills and agent-skills-home Cursor
+#       skills into ~/.cursor/skills/, and prunes dangling links to them.
 #
 #       OPTIONS:
 #                  -h: Print the usage and exit
@@ -23,7 +26,7 @@
 #  REQUIREMENTS: ---
 #         NOTES: ---
 #        AUTHOR: Elliott Indiran <elliott.indiran@protonmail.com>
-#      REVISION: 1.0.4
+#      REVISION: 1.1.0
 #
 #===============================================================================
 
@@ -44,7 +47,10 @@ usage() {
       USAGE: ./symlink_dotfiles.sh [-h] [-g] [-t]
 
 DESCRIPTION: Script to add symlinks from \$HOME to the dotfiles files in
-    the dotfiles/ directory. Will skip links that already exist.
+    the dotfiles/ directory. Will skip links that already exist. If
+    ~/.cursor exists, also links agent-rules' Cursor rules into
+    ~/.cursor/rules/ and the agent-skills and agent-skills-home Cursor
+    skills into ~/.cursor/skills/, and prunes dangling links to them.
 
     OPTIONS:
                -h: Print the usage and exit
@@ -168,6 +174,45 @@ chklink "${dotfiles_dir}/misc/.editorconfig" "${HOME}/.editorconfig"
 chklink "${dotfiles_dir}/misc/.vale.ini" "${HOME}/.vale.ini"
 mkdir -p "${HOME}/.config/fastfetch"
 chklink "${dotfiles_dir}/misc/fastfetch/config.jsonc" "${HOME}/.config/fastfetch/config.jsonc"
+
+if [[ -d "${HOME}/.cursor" ]]; then
+    # Agent rules and skills live in sibling checkouts; any that are absent (eg
+    # agent-skills-home on the work laptop) are skipped
+    workspace_dir="${WORKSPACE:-$(dirname "${dotfiles_dir}")}"
+    cursor_repos=(agent-rules agent-skills agent-skills-home)
+    mkdir -p "${HOME}/.cursor/rules" "${HOME}/.cursor/skills"
+    echo "Pruning dangling Cursor rule and skill links"
+    # (N-@) matches only dangling symlinks; (N) makes an empty glob expand to nothing
+    for l in "${HOME}"/.cursor/{rules,skills}/*(N-@); do
+        for r in "${cursor_repos[@]}"; do
+            if [[ "$(readlink "${l}")" == "${workspace_dir}/${r}/"* ]]; then
+                echo -e "${BHI_YELLOW}Removing dangling link: ${GREEN}${l}${ANSI_RESET}"
+                rm "${l}"
+                break
+            fi
+        done
+    done
+    echo "Installing Cursor rules"
+    if [[ -d "${workspace_dir}/agent-rules/dist/cursor" ]]; then
+        for f in "${workspace_dir}"/agent-rules/dist/cursor/*.mdc(N); do
+            chklink "${f}" "${HOME}/.cursor/rules/$(basename "${f}")"
+        done
+    else
+        echo "No agent-rules checkout found, skipping"
+    fi
+    echo "Installing Cursor skills"
+    for r in agent-skills agent-skills-home; do
+        if [[ -d "${workspace_dir}/${r}/cursor/skills" ]]; then
+            for d in "${workspace_dir}/${r}"/cursor/skills/*(N/); do
+                chklink "${d}" "${HOME}/.cursor/skills/$(basename "${d}")"
+            done
+        else
+            echo "No ${r} checkout found, skipping"
+        fi
+    done
+else
+    echo "No ~/.cursor found, skipping Cursor rules and skills"
+fi
 
 if [[ "${install_htop_configs}" == true ]]; then
     echo "Installing htop config"
